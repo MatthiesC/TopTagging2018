@@ -32,19 +32,19 @@ using namespace uhh2examples;
 
 class TTEfficiencyMainSelectionModule: public AnalysisModule {
 public:
-    
+
   explicit TTEfficiencyMainSelectionModule(Context & ctx);
   virtual bool process(Event & event) override;
 
 private:
-    
+
   //correctors
   std::unique_ptr<CommonModules> common;
   std::unique_ptr<TopJetCorrectionModules> topjet_corr;
   std::unique_ptr<GenericJetResolutionSmearer> topjetJER_smearer;
   std::unique_ptr<TopJetGroomer> topjet_groomer;
   std::unique_ptr<uhh2::AnalysisModule> pileupRW;
-  
+
   //cleaners
   std::unique_ptr<JetLeptonCleaner> jet_lepton_cleaner;
   std::unique_ptr<TopJetLeptonDeltaRCleaner> topjet_cleaner_dRlep;
@@ -53,8 +53,6 @@ private:
 
   //reweighting and scale factors
   std::vector<std::unique_ptr<AnalysisModule>> reweighting_modules;
-  std::unique_ptr<uhh2::AnalysisModule> muo_tight_SF, muo_trigger_SF;
-  //std::unique_ptr<uhh2::AnalysisModule> muo_medium_noniso_SF;
   std::unique_ptr<AnalysisModule> btagwAK8, subjet_btagwAK8;
 
   //selections
@@ -62,20 +60,20 @@ private:
 
   std::unique_ptr<AndSelection> first_selection;
 
-  std::unique_ptr<uhh2::Selection> hadronic_selection, lepton_jets_seletion, dilepton_selection, tau_jets_selection; 
-  std::unique_ptr<MergedSelection> merged_selection, mergedW_selection, mergedQB_selection, mergedEvent_Selection; 
+  std::unique_ptr<uhh2::Selection> hadronic_selection, lepton_jets_seletion, dilepton_selection, tau_jets_selection;
+  std::unique_ptr<MergedSelection> merged_selection, mergedW_selection, mergedQB_selection, mergedEvent_Selection;
   std::unique_ptr<MassDiffSelection> massDiff_selection;
   std::unique_ptr<DPhiMuBSelection> dphi_selection;
 
   //histograms
-  std::unique_ptr<BTagMCEfficiencyHists> hists_btag_eff, hists_btag_medium_eff;
+  //std::unique_ptr<BTagMCEfficiencyHists<DeepCSVBTag>> hists_btag_eff, hists_btag_medium_eff;
   std::vector<std::unique_ptr<uhh2::Hists>> hists_before_sel;
-  std::vector<std::unique_ptr<uhh2::Hists>> hists_after_sel; 
+  std::vector<std::unique_ptr<uhh2::Hists>> hists_after_sel;
   std::unique_ptr<uhh2::Hists> hists_notrigger, hists_trigger;
   std::unique_ptr<ProbeJetHists> hists_all, hists_all_400, hists_all_400to550, hists_all_550 ,hists_tagged;
   std::unique_ptr<ProbeJetHists> hists_noTag, hists_tau32_wp1, hists_tau32_wp2, hists_tagged_wp1, hists_tagged_wp2;
-  std::unique_ptr<ProbeJetHists> hists_merged, hists_mergedW, hists_mergedQB, hists_lightjets, hists_unmerged, hists_dilepton, hists_lepton_jets, hists_taujets, hists_hadronic; 
-  std::unique_ptr<ProbeJetHists> hists_merged_400, hists_mergedW_400, hists_mergedQB_400, hists_lightjets_400, hists_unmerged_400, hists_dilepton_400, hists_lepton_jets_400, hists_taujets_400, hists_hadronic_400; 
+  std::unique_ptr<ProbeJetHists> hists_merged, hists_mergedW, hists_mergedQB, hists_lightjets, hists_unmerged, hists_dilepton, hists_lepton_jets, hists_taujets, hists_hadronic;
+  std::unique_ptr<ProbeJetHists> hists_merged_400, hists_mergedW_400, hists_mergedQB_400, hists_lightjets_400, hists_unmerged_400, hists_dilepton_400, hists_lepton_jets_400, hists_taujets_400, hists_hadronic_400;
 
   std::vector<std::unique_ptr<ProbeJetHists>> h_tau32, h_tau32_mass, h_tau32_btag, h_tau32_mass_btag, h_tau32_mass_btag_pt400to550, h_tau32_mass_btag_pt550, h_tau32_mass_btag_pt400;
 
@@ -86,7 +84,7 @@ private:
   bool invert_merged_selection;
 
   Event::Handle<std::vector<Particle>> add_genjet;
-  
+
 };
 
 
@@ -102,7 +100,7 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
   string triggerName = ctx.get("Trigger", "<not set>");
 
   isMC = (ctx.get("dataset_type") == "MC");
-  
+
   useHTT = (ctx.get("useHTT", "<not set>") == "TRUE");
   usePUPPI = (ctx.get("usePUPPI", "<not set>") == "TRUE");
 
@@ -124,9 +122,9 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
 
    MuonId muid = AndId<Muon>(MuonID(Muon::CutBasedIdTight), PtEtaCut(55., 2.4));
    ElectronId eleid = AndId<Electron>(ElectronID_Fall17_medium_noIso, PtEtaCut(55., 2.4));
- 
 
-  JetId jetid = AndId<Jet>(JetPFID(JetPFID::WP_TIGHT), PtEtaCut(30.0, 2.4));
+
+  JetId jetid = AndId<Jet>(JetPFID(JetPFID::WP_TIGHT_CHS), PtEtaCut(30.0, 2.4));
 
   string PU_variation ="central";
   PU_variation = ctx.get("PU_variation","central");
@@ -149,21 +147,25 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
   common->set_muon_id(muid);
   common->set_electron_id(eleid);
   common->switch_jetlepcleaner(true);
+  common->switch_metcorrection(true);
   common->switch_jetPtSorter();
-  common->switch_metcorrection();
   common->set_HTjetid(jetid);
   if(isMC) common->disable_metfilters();
   common->disable_mcpileupreweight();
+  // common->disable_jersmear();           // disable until JEC available
+  // common->disable_jec();                // disable until JEC available
+  // common->switch_metcorrection(false);  // disable until JEC available
+  // common->switch_jetlepcleaner(false);  // disable until JEC available
   common->init(ctx, PU_variation);
   cout << "common init" <<endl;
- 
-  if(usePUPPI) topjet_corr.reset(new TopJetCorrectionModules(ctx, TopJetCorrectionModules::AK8_PUPPI));
-  else topjet_corr.reset(new TopJetCorrectionModules(ctx, TopJetCorrectionModules::AK8_CHS));
 
-  if(isMC) {
-    add_genjet = ctx.get_handle<std::vector<Particle>>("slimmedGenJetsAK8");
-    topjetJER_smearer.reset(new GenericJetResolutionSmearer(ctx, "topjets", "slimmedGenJetsAK8"));
-  }
+  // if(usePUPPI) topjet_corr.reset(new TopJetCorrectionModules(ctx, TopJetCorrectionModules::AK8_PUPPI));
+  // else topjet_corr.reset(new TopJetCorrectionModules(ctx, TopJetCorrectionModules::AK8_CHS));
+  //
+  // if(isMC) {
+  //   add_genjet = ctx.get_handle<std::vector<Particle>>("slimmedGenJetsAK8");
+  //   topjetJER_smearer.reset(new GenericJetResolutionSmearer(ctx, "topjets", "slimmedGenJetsAK8"));
+  // }
   //if(subjet_correction) topjet_groomer.reset(new TopJetGroomer()); // just take the subjet sum (make sure that the subjets are corrected properly)
   // else topjet_groomer.reset(new TopJetGroomer(false)); //undo the subjet JEC corrections in case you want to correct the resulting subjet sum
 
@@ -193,26 +195,20 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
   //  btagwAK8.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_LOOSE, "jets","central","mujets","incl","MCBtagEfficiencies"));
   //btagwAK8.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, "jets","central","mujets","incl","MCBtagEfficiencies"));
 
-  // muo_tight_SF.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/dreyert/Analysis94X_v1/CMSSW_9_4_1/src/UHH2/common/data/MuonID_94X_RunBCDEF_SF_ID.root","NUM_TightID_DEN_genTracks",0., "tightID", false, "central"));
-  //  cout << "muonID done" << endl;
-  // muo_trigger_SF.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/dreyert/Analysis94X_v1/CMSSW_9_4_1/src/UHH2/common/data/MuonTrigger_EfficienciesAndSF_RunBtoF_Nov17Nov2017.root","Mu50_PtEtaBins",0., "muonTrigger", false,  "central"));
- 
- 
   //=============================
-  //selections 
+  //selections
   //=============================
 
   topjet_sel.reset(new NTopJetSelection(2));
 
   trigger_sel = uhh2::make_unique<TriggerSelection>("HLT_Mu50_v*");
-  //trigger_sel = uhh2::make_unique<TriggerSelection>("HLT_TkMu50_v*");
 
   twoDcut.reset(new TwoDCut(.4, 25.));
   met_sel.reset(new METCut(50., std::numeric_limits<double>::infinity()));
   ptW_sel.reset(new PtWSelection(150.));
   bjetCloseToLepton_sel.reset(new NMuonBTagSelection(1, 999, DeepCSVBTag(DeepCSVBTag::WP_MEDIUM) ));
- 
-  first_selection.reset(new AndSelection(ctx,"first selection"));  
+
+  first_selection.reset(new AndSelection(ctx,"first selection"));
   first_selection->add<NMuonSelection>("Number of muons == 1",1,1);
   first_selection->add<NJetSelection>("Number of jets >= 2",2);
   first_selection->add<NTopJetSelection>("Number of topjets >= 1",1);
@@ -224,8 +220,8 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
   tau_jets_selection.reset( new DecayChannelSelection(ctx, "ttbargen", "tau_jets"));
 
   //double jet_radius = 0.;
-  //if (useHTT) jet_radius = 1.5; 
-  //else jet_radius = 0.8; 
+  //if (useHTT) jet_radius = 1.5;
+  //else jet_radius = 0.8;
 
   //merged selections
   //merged_selection.reset( new MergedSelection(ctx, "ttbargen", jet_radius));
@@ -236,17 +232,20 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
   //mass diff selection
   // massDiff_selection.reset( new MassDiffSelection() );
   // dphi_selection.reset(new DPhiMuBSelection(CSVBTag(CSVBTag::WP_MEDIUM), 1.2));
-       
 
-  //=============================         
+
+  //=============================
   //histograms
   //=============================
 
-  hists_btag_eff.reset(new BTagMCEfficiencyHists(ctx,"BTagLoose",DeepCSVBTag(DeepCSVBTag::WP_LOOSE)));
-  hists_btag_medium_eff.reset(new BTagMCEfficiencyHists(ctx,"BTagMedium",DeepCSVBTag(DeepCSVBTag::WP_MEDIUM)));
+  //hists_btag_eff.reset(new BTagMCEfficiencyHists<DeepCSVBTag>(ctx,"BTagLoose",DeepCSVBTag::WP_LOOSE));
+  //hists_btag_medium_eff.reset(new BTagMCEfficiencyHists<DeepCSVBTag>(ctx,"BTagMedium",DeepCSVBTag::WP_MEDIUM));
+
+
   // hists_subjet_btag_eff.reset(new BTagMCEfficiencyHists(ctx,"SubjetBTag",CSVBTag::WP_LOOSE, "topjets") );
 
 
+  cout << "setup hists" << endl;
   hists_before_sel.emplace_back(new EventHists(ctx, "Event_presel"));
   hists_before_sel.emplace_back(new MuonHists(ctx, "Muon_presel"));
   hists_before_sel.emplace_back(new ElectronHists(ctx, "Electron_presel"));
@@ -264,10 +263,10 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
 
 
 bool TTEfficiencyMainSelectionModule::process(Event & event) {
-  
- //=============================         
+
+ //=============================
   //apply top pt reweighting
- //=============================         
+ //=============================
 
  // for (auto & rew : reweighting_modules) {
  //   rew->process(event);
@@ -277,64 +276,57 @@ bool TTEfficiencyMainSelectionModule::process(Event & event) {
   //}
 
 
-  //=============================         
+  //=============================
   //run corrections
-  //=============================         
+  //=============================
   bool ok = common->process(event);
   if(!ok) return false;
- 
-  topjet_corr->process(event); //apply AK8 corrections on the full jet and AK4 corrections on the subjets
-  if(isMC) topjetJER_smearer->process(event);
 
-  //=============================         
+  // topjet_corr->process(event); //apply AK8 corrections on the full jet and AK4 corrections on the subjets
+  // if(isMC) topjetJER_smearer->process(event);
+
+  //=============================
   //run cleaners
-  //=============================       
+  //=============================
   jet_cleaner->process(event);
   topjet_cleaner->process(event);
-  //topjet_cleaner_dRlep->process(event); //remove topjets that overlap with a lepton (e/mu)
-  
-   // muo_medium_noniso_SF->process(event);
-  // muo_tight_SF->process(event);
-  
+  topjet_cleaner_dRlep->process(event); //remove topjets that overlap with a lepton (e/mu)
 
-  //======================================        
+  //======================================
   //fill histograms before selection
-  //====================================== 
+  //======================================
   for(auto & h : hists_before_sel){
     h->fill(event);
   }
-  // muo_trigger_SF->process(event);
 
-  //======================================        
+  //======================================
   //apply selections
-  //======================================        
+  //======================================
   if(!trigger_sel->passes(event)) return false;
-  if(!first_selection->passes(event)) return false; 
-  if(!twoDcut->passes(event)) return false; 
-  if(!met_sel->passes(event)) return false; 
-  if(!ptW_sel->passes(event)) return false; 
-  hists_btag_eff->fill(event);
-  hists_btag_medium_eff->fill(event);
-  if(!bjetCloseToLepton_sel->passes(event)) return false; 
-  
+  if(!first_selection->passes(event)) return false;
+  if(!twoDcut->passes(event)) return false;
+  if(!met_sel->passes(event)) return false;
+  if(!ptW_sel->passes(event)) return false;
+  //hists_btag_eff->fill(event);
+  //hists_btag_medium_eff->fill(event);
+  if(!bjetCloseToLepton_sel->passes(event)) return false;
 
-  //====================================================         
+
+  //====================================================
   //apply b tagging scale factors after the selection
-  //==================================================== 
+  //====================================================
   // btagwAK8->process(event);
-  
 
-  //======================================        
+
+  //======================================
   //fill histograms after selection
-  //====================================== 
+  //======================================
 
   for(auto & h : hists_after_sel){
     h->fill(event);
   }
-   
+
   return true;
 }
 
 UHH2_REGISTER_ANALYSIS_MODULE(TTEfficiencyMainSelectionModule)
-
-
