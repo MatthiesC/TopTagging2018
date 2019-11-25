@@ -1,12 +1,24 @@
 #include "UHH2/TopTagging/include/TopTaggingUtils.h"
 #include "UHH2/core/include/LorentzVector.h"
 
+
 bool TopJetLeptonDeltaRCleaner::process(uhh2::Event & event) {
 
   assert(event.topjets);
   std::vector<TopJet> cleaned_topjets;
 
   for(const auto & tjet : *event.topjets){
+
+    if(minDR_ < 0.0){
+      double Rmin = 0.1;
+      double Rmax = 1.5;
+      double rho = 600.;
+      double reff = rho/tjet.pt();
+      if( reff <  Rmin ) minDR_ = Rmin;
+      else if( reff >  Rmax ) minDR_ = Rmax;
+      else minDR_ = reff;
+    }
+
     bool skip_tjet(false);
 
     if(event.muons){
@@ -38,7 +50,7 @@ TopJetCorrectionModules::TopJetCorrectionModules(uhh2::Context & ctx, jet_type t
 
   std::vector<std::string> JEC_TOP_MC, JEC_TOP_B, JEC_TOP_C, JEC_TOP_D, JEC_TOP_E, JEC_TOP_F;
   std::vector<std::string> JEC_SUB_MC, JEC_SUB_B, JEC_SUB_C, JEC_SUB_D, JEC_SUB_E, JEC_SUB_F;
-  
+
   if(_type == AK8_PUPPI || _type == CA15_PUPPI){
     if(is_mc){
       JEC_TOP_MC = JERFiles::Fall17_17Nov2017_V8_L123_AK8PFPuppi_MC;
@@ -46,13 +58,13 @@ TopJetCorrectionModules::TopJetCorrectionModules(uhh2::Context & ctx, jet_type t
     }else{
       // JEC_TOP_MC = JERFiles::Fall17_17Nov2017_V4_L123_AK8PFPuppi_MC;
       // JEC_SUB_MC = JERFiles::Fall17_17Nov2017_V4_L123_AK4PFPuppi_MC;
-     
+
       JEC_TOP_B = JERFiles::Fall17_17Nov2017_V8_B_L123_AK8PFPuppi_DATA;
       JEC_TOP_C = JERFiles::Fall17_17Nov2017_V8_C_L123_AK8PFPuppi_DATA;
       JEC_TOP_D = JERFiles::Fall17_17Nov2017_V8_D_L123_AK8PFPuppi_DATA;
       JEC_TOP_E = JERFiles::Fall17_17Nov2017_V8_E_L123_AK8PFPuppi_DATA;
       JEC_TOP_F = JERFiles::Fall17_17Nov2017_V8_F_L123_AK8PFPuppi_DATA;
-     
+
       JEC_SUB_B = JERFiles::Fall17_17Nov2017_V8_B_L123_AK4PFPuppi_DATA;
       JEC_SUB_C = JERFiles::Fall17_17Nov2017_V8_C_L123_AK4PFPuppi_DATA;
       JEC_SUB_D = JERFiles::Fall17_17Nov2017_V8_D_L123_AK4PFPuppi_DATA;
@@ -60,7 +72,7 @@ TopJetCorrectionModules::TopJetCorrectionModules(uhh2::Context & ctx, jet_type t
       JEC_SUB_F = JERFiles::Fall17_17Nov2017_V8_F_L123_AK4PFPuppi_DATA;
     }
   }
-  
+
   if(_type == AK8_CHS || _type == CA15_CHS){
     if(is_mc){
       JEC_TOP_MC = JERFiles::Fall17_17Nov2017_V8_L123_AK8PFchs_MC;
@@ -68,13 +80,13 @@ TopJetCorrectionModules::TopJetCorrectionModules(uhh2::Context & ctx, jet_type t
     }else{
       //JEC_TOP_MC = JERFiles::Fall17_17Nov2017_V4_L123_AK8PFchs_MC;
       //JEC_SUB_MC = JERFiles::Fall17_17Nov2017_V4_L123_AK4PFchs_MC;
- 
+
       JEC_TOP_B = JERFiles::Fall17_17Nov2017_V8_B_L123_AK8PFchs_DATA;
       JEC_TOP_C = JERFiles::Fall17_17Nov2017_V8_C_L123_AK8PFchs_DATA;
       JEC_TOP_D = JERFiles::Fall17_17Nov2017_V8_D_L123_AK8PFchs_DATA;
       JEC_TOP_E = JERFiles::Fall17_17Nov2017_V8_E_L123_AK8PFchs_DATA;
       JEC_TOP_F = JERFiles::Fall17_17Nov2017_V8_F_L123_AK8PFchs_DATA;
-     
+
       JEC_SUB_B = JERFiles::Fall17_17Nov2017_V8_B_L123_AK4PFchs_DATA;
       JEC_SUB_C = JERFiles::Fall17_17Nov2017_V8_C_L123_AK4PFchs_DATA;
       JEC_SUB_D = JERFiles::Fall17_17Nov2017_V8_D_L123_AK4PFchs_DATA;
@@ -94,7 +106,7 @@ TopJetCorrectionModules::TopJetCorrectionModules(uhh2::Context & ctx, jet_type t
       // JEC_TOP_EF = JERFiles::Summer16_23Sep2016_V4_EF_L23_AK8PFchs_DATA;
       // JEC_TOP_FG = JERFiles::Summer16_23Sep2016_V4_G_L23_AK8PFchs_DATA;
       // JEC_TOP_H = JERFiles::Summer16_23Sep2016_V4_H_L23_AK8PFchs_DATA;
-     
+
       // JEC_SUB_BCD = JERFiles::Summer16_23Sep2016_V4_BCD_L23_AK4PFchs_DATA;
       // JEC_SUB_EF = JERFiles::Summer16_23Sep2016_V4_EF_L23_AK4PFchs_DATA;
       // JEC_SUB_FG = JERFiles::Summer16_23Sep2016_V4_G_L23_AK4PFchs_DATA;
@@ -124,29 +136,29 @@ TopJetCorrectionModules::TopJetCorrectionModules(uhh2::Context & ctx, jet_type t
 }
 
 
-bool TopJetCorrectionModules::process(uhh2::Event & event) { 
+bool TopJetCorrectionModules::process(uhh2::Event & event) {
 
   assert(event.topjets);
- 
+
   if(is_mc){
     topjet_corrector_MC->process(event);
     subjet_corrector_MC->process(event);
   }else{
     //   topjet_corrector_MC->process(event);
     //  subjet_corrector_MC->process(event);
- 
+
     if(event.run <= runnr_B) {
       topjet_corrector_B->process(event);
       subjet_corrector_B->process(event);
-    }         
+    }
     else if(event.run <= runnr_C) {
       topjet_corrector_C->process(event);
       subjet_corrector_C->process(event);
-    } 
+    }
     else if(event.run <= runnr_D) {
       topjet_corrector_D->process(event);
       subjet_corrector_D->process(event);
-    } 
+    }
     else if(event.run <= runnr_E) {
       topjet_corrector_E->process(event);
       subjet_corrector_E->process(event);
@@ -155,7 +167,7 @@ bool TopJetCorrectionModules::process(uhh2::Event & event) {
       topjet_corrector_F->process(event);
       subjet_corrector_F->process(event);
     }
-   
+
   }
   return true;
 }
@@ -168,13 +180,13 @@ bool HOTVRPileupCorrectionModule::process(uhh2::Event & event){
   for(auto & topjet : *event.topjets){
     auto subjets = topjet.subjets();
     for(auto & subjet : subjets){
-      
-      double subjet_pt = subjet.pt(); 
+
+      double subjet_pt = subjet.pt();
       double subjet_area = subjet.jetArea();
 
       double pileup_factor = 1. - ((rho*subjet_area)/subjet_pt);
 
-      subjet.set_JEC_factor_raw(1.); //don't set the raw JEC? (L2L3 corrections should be applied on top) 
+      subjet.set_JEC_factor_raw(1.); //don't set the raw JEC? (L2L3 corrections should be applied on top)
       if(_area_correction){
 	subjet.set_JEC_L1factor_raw(1./pileup_factor);
 	subjet.set_v4(subjet.v4()*pileup_factor);
@@ -187,7 +199,7 @@ bool HOTVRPileupCorrectionModule::process(uhh2::Event & event){
 }
 
 
-bool TopJetGroomer::process(uhh2::Event & event) { 
+bool TopJetGroomer::process(uhh2::Event & event) {
 
   assert(event.topjets);
 
@@ -208,7 +220,7 @@ bool TopJetGroomer::process(uhh2::Event & event) {
 bool GetLeadingBjetLepHem(const uhh2::Event &event, Jet &bjet, JetId btag){
   //get the muon
   Muon mu = event.muons->at(0);
-  
+
   //get the bjet
   double max_pt = 0.;
   double pi = 3.14159265359;
@@ -219,7 +231,7 @@ bool GetLeadingBjetLepHem(const uhh2::Event &event, Jet &bjet, JetId btag){
     Jet b_candidate;
     if( btag(ak4jet, event) && (uhh2::deltaPhi(ak4jet,mu) < (2*pi/3)) ){
       b_candidate = ak4jet;
-      b_candidate_found = true; 
+      b_candidate_found = true;
     }
     if(b_candidate_found){
       if( b_candidate.pt() > max_pt){
@@ -227,7 +239,7 @@ bool GetLeadingBjetLepHem(const uhh2::Event &event, Jet &bjet, JetId btag){
 	max_pt = b_candidate.pt();
       }
     }
-  } 
+  }
 
   if(b_candidate_found) return true;
   else std::cout << "No Bjet candidate found in leptonic hemisphere in event:  " << event.event << std::endl;
@@ -243,7 +255,7 @@ PartonShowerWeight::PartonShowerWeight(uhh2::Context & ctx, std::string sys){
   if(sys == "ISRup_sqrt2") weightIndex = 2;
   else if(sys == "ISRup_2") weightIndex = 6;
   else if(sys == "ISRup_4") weightIndex = 10;
-  
+
   else if(sys == "ISRdown_sqrt2") weightIndex = 4;
   else if(sys == "ISRdown_2") weightIndex = 8;
   else if(sys == "ISRdown_4") weightIndex = 12;
@@ -268,16 +280,16 @@ bool PartonShowerWeight::process(uhh2::Event & event){
 
   if( weightIndex == -1) return true;
   if( event.genInfo->weights().size() == 1) {
-    //cout << "no parton shower weights stored. Nothing to be done." << endl;
+    std::cout << "no parton shower weights stored. Nothing to be done." << std::endl;
     return true;
   }
-  
+
   double centralWeight = event.genInfo->weights().at(0);
   double PSweight = event.genInfo->weights().at(weightIndex);
-  
+
   double factor = PSweight/centralWeight;
   event.weight *= factor;
-			 
+
   return true;
 }
 

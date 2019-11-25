@@ -21,7 +21,9 @@ void write_theta_files_FSR(){
 
   TString PDF_dir = "fill_PDF_TRUE";
 
-  std::vector<TString> MCNames {"TTbar_mergedTop_2018", "TTbar_semimerged_2018", "TTbar_notmerged_2018", "QCD_2018", "DYJets_2018", "SingleTop_2018", "WJets_2018"};
+  std::vector<TString> MCNames {"TTbar_mergedTop_2018", "TTbar_semimerged_2018", "TTbar_notmerged_2018", "SingleTop_mergedTop_2018", "SingleTop_semimerged_2018", "SingleTop_notmerged_2018", "QCD_2018", "DYJets_2018", "WJets_2018"};
+  // std::vector<TString> MCNames {"mergedTop_2018", "semimergedTop_2018", "notmergedTop_2018", "QCD_2018", "DYJets_2018", "WJets_2018"};
+  // std::vector<TString> MCNames {"mergedTop_2018", "semimergedTop_2018", "Backgrounds_2018"};
 
   std::vector< vector<TString> > systematics {
     {"Btag_bc__plus", "BTAG_bc_up"}, {"Btag_udsg__plus", "BTAG_udsg_up"},
@@ -33,7 +35,13 @@ void write_theta_files_FSR(){
     {"ScaleMuR__plus", "ScaleVariationMuR_up"}, {"ScaleMuR__minus", "ScaleVariationMuR_down"},
     {"JEC__plus", "JEC_up"}, {"JEC__minus", "JEC_down"},
     {"JER__plus", "JER_up"}, {"JER__minus", "JER_down"},
-    {"FSR__plus", "FSR_up_2"}, {"FSR__minus", "FSR_down_2"}
+    {"FSR__plus", "FSR_up_2"}, {"FSR__minus", "FSR_down_2"},
+    {"TagEffi_3prong__plus", "TagEffi_3prong_up"},
+    {"TagEffi_3prong__minus", "TagEffi_3prong_down"},
+    {"TagEffi_2prong__plus", "TagEffi_2prong_up"},
+    {"TagEffi_2prong__minus", "TagEffi_2prong_down"},
+    {"TagEffi_1prong__plus", "TagEffi_1prong_up"},
+    {"TagEffi_1prong__minus", "TagEffi_1prong_down"}
   };
 
   std::vector< vector<TString> > model_systematics {
@@ -41,8 +49,17 @@ void write_theta_files_FSR(){
     // {"shower_model","Herwig"}
   };
 
-  std::vector< vector<TString> > observables {
+  std::vector< vector<TString> > observables_PUPPI {
     //  {"ProbeJet_pt400_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "400_PASSFAIL"}};
+    {"ProbeJet_pt300to400_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "300to400_PASSFAIL"},
+    {"ProbeJet_pt400to480_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "400to480_PASSFAIL"},
+    {"ProbeJet_pt480to600_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "480to600_PASSFAIL"},
+    {"ProbeJet_pt600_WPXXX_PASSFAIL", "Mass_PASSFAIL__",  "600_PASSFAIL"}};
+
+  std::vector< vector<TString> > observables_HOTVR {
+    //  {"ProbeJet_pt400_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "400_PASSFAIL"}};
+    {"ProbeJet_pt200to250_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "200to250_PASSFAIL"},
+    {"ProbeJet_pt250to300_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "250to300_PASSFAIL"},
     {"ProbeJet_pt300to400_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "300to400_PASSFAIL"},
     {"ProbeJet_pt400to480_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "400to480_PASSFAIL"},
     {"ProbeJet_pt480to600_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "480to600_PASSFAIL"},
@@ -57,15 +74,15 @@ void write_theta_files_FSR(){
     //std::vector<bool> rebinning = {true};
     std::vector<bool> rebinning = {true, false};
 
-    // std::vector<TString> statsys = {"stat", "sys"};
-    std::vector<TString> statsys = {"stat"};
+    std::vector<TString> statsys = {"stat", "sys"};
+    // std::vector<TString> statsys = {"stat"};
     // std::vector<TString> statsys = {"sys"};
 
     std::vector<bool> ttbarscaling  = {true, false};
     //std::vector<bool> ttbarscaling  = { false};
 
-    std::vector<TString> JetCollections = {"PUPPI"};
-    // std::vector<TString> JetCollections = {"HOTVR"};
+    // std::vector<TString> JetCollections = {"PUPPI", "HOTVR"};
+    std::vector<TString> JetCollections = {"HOTVR"};
     // std::vector<TString> JetCollections = {"PUPPI","CHS"};
 
     std::vector<TString> vPassFail = {"pass", "fail"};
@@ -105,6 +122,10 @@ void write_theta_files_FSR(){
       std::vector<TString> wps;
       if(JetCollection == "PUPPI") wps = wps_PUPPI;
       if(JetCollection == "HOTVR") wps = wps_HOTVR;
+
+      std::vector< vector<TString> > observables;
+      if(JetCollection == "PUPPI") observables = observables_PUPPI;
+      if(JetCollection == "HOTVR") observables = observables_HOTVR;
       //=======================
       //load input files
       //=======================
@@ -120,13 +141,15 @@ void write_theta_files_FSR(){
         nominalFile->SetName(MCName);
         vFiles.emplace_back(nominalFile);
         for(const auto & systematic: systematics){
-          if(systematic.at(1).Contains("FSR") && !MCName.Contains("TTbar")) continue;
+          // if(systematic.at(1).Contains("FSR") && !MCName.Contains("TTbar")) continue;
+          if(systematic.at(1).Contains("FSR") && !MCName.Contains("Top")) continue;
           TFile* file = new TFile(Path+systematic.at(1)+"/uhh2.AnalysisModuleRunner.MC."+MCName+".root","READ");
           cout << Path+systematic.at(1)+"/uhh2.AnalysisModuleRunner.MC."+MCName+".root" << endl;
           file->SetName(MCName+"__"+systematic.at(0));
           vFiles.emplace_back(file);
         }
-        if(MCName.Contains("TTbar")){
+        // if(MCName.Contains("TTbar")){
+        if(MCName.Contains("Top")){
           for(const auto & model_systematic: model_systematics){
             TFile* file = new TFile(Path+model_systematic.at(1)+"/uhh2.AnalysisModuleRunner.MC."+MCName+".root","READ");
             //cout <<Path+model_systematic.at(1)+"/uhh2.AnalysisModuleRunner.MC."+MCName+".root" << endl;
@@ -211,7 +234,7 @@ void write_theta_files_FSR(){
                     //======================
                     double scale = 1.;
                     if (scaleTTbar){
-                      scale = getTTbarScale(dataFile, MCFiles, dirName, "mass_sub");
+                      // scale = getTTbarScale(dataFile, MCFiles, dirName, "mass_sub");
                     }
 
                     //=======================
@@ -229,7 +252,6 @@ void write_theta_files_FSR(){
                         TString MCName = MCFiles.at(i).at(j)->GetName();
 
                         cout <<  MCName << endl;
-                        //if(MCName.Containes
 
                         TH1F* hist_file;
                         MCFiles.at(i).at(j)->GetObject(dirName+"/"+histName, hist_file);
@@ -248,7 +270,8 @@ void write_theta_files_FSR(){
                         }
 
                         // scale TTbar to data -> better starting values for the fit
-                        if( MCName.Contains("TTbar") && scaleTTbar) hist->Scale(scale);
+                        // if( MCName.Contains("TTbar") && scaleTTbar) hist->Scale(scale);
+                        if( MCName.Contains("Top") && scaleTTbar) hist->Scale(scale);
 
                         hist->SetName(categoryName+MCName);
 
@@ -263,11 +286,13 @@ void write_theta_files_FSR(){
                         }
 
                         if( j != 0 && !MCName.Contains("__plus") && !MCName.Contains("__minus") ){
-                          if(MCName.Contains("TTbar")) write_symmetric_uncertainty(hist, h_nominal, outputFile);
+                          // if(MCName.Contains("TTbar")) write_symmetric_uncertainty(hist, h_nominal, outputFile);
+                          if(MCName.Contains("Top")) write_symmetric_uncertainty(hist, h_nominal, outputFile);
                         }else{
                           outputFile->cd();
                           hist->Write();
                         }
+
                       }
 
                       //=====
@@ -405,7 +430,8 @@ void write_theta_files_FSR(){
     double int_tt = 0.;
     for(const auto & mc: MCFiles){
       TH1F * hist = (TH1F*)mc.at(0)->Get(dirName+"/"+histName);
-      if( ((TString)mc.at(0)->GetName()).Contains("TTbar")){
+      // if( ((TString)mc.at(0)->GetName()).Contains("TTbar")){
+      if( ((TString)mc.at(0)->GetName()).Contains("Top")){
         int_tt += hist->Integral();
       }else{
         int_bkg += hist->Integral();

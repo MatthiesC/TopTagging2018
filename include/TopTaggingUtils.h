@@ -36,10 +36,10 @@ class TopJetCorrectionModules : public uhh2::AnalysisModule {
  // const int runnr_BCD = 276811;
  // const int runnr_EFearly = 278802;
  // const int runnr_FlateG = 280385;
- const int runnr_B = 299329; 
- const int runnr_C = 302029; 
- const int runnr_D = 303434; 
- const int runnr_E = 304797; 
+ const int runnr_B = 299329;
+ const int runnr_C = 302029;
+ const int runnr_D = 303434;
+ const int runnr_E = 304797;
 
 
 };
@@ -51,7 +51,7 @@ class HOTVRPileupCorrectionModule : public uhh2::AnalysisModule {
   virtual bool process(uhh2::Event & event) override;
 
  private:
-  bool _area_correction; 
+  bool _area_correction;
 };
 
 
@@ -60,7 +60,7 @@ class TopJetGroomer : public uhh2::AnalysisModule {
 
   explicit TopJetGroomer(bool corrected = true) : _corrected(corrected) {}
   virtual bool process(uhh2::Event & event) override;
- 
+
  private:
   bool _corrected;
 
@@ -81,27 +81,27 @@ bool GetLeadingBjetLepHem(const uhh2::Event &event, Jet &bjet, JetId btag);
 
 namespace JERFiles {
 
- 
+
   extern const std::vector<std::string> Fall17_17Nov2017_V8_B_L123_AK4PFchs_DATA;
   extern const std::vector<std::string> Fall17_17Nov2017_V8_C_L123_AK4PFchs_DATA;
   extern const std::vector<std::string> Fall17_17Nov2017_V8_D_L123_AK4PFchs_DATA;
   extern const std::vector<std::string> Fall17_17Nov2017_V8_E_L123_AK4PFchs_DATA;
   extern const std::vector<std::string> Fall17_17Nov2017_V8_F_L123_AK4PFchs_DATA;
- 
+
   //AK4 Puppi
   extern const std::vector<std::string> Fall17_17Nov2017_V8_B_L123_AK4PFPuppi_DATA;
   extern const std::vector<std::string> Fall17_17Nov2017_V8_C_L123_AK4PFPuppi_DATA;
   extern const std::vector<std::string> Fall17_17Nov2017_V8_D_L123_AK4PFPuppi_DATA;
   extern const std::vector<std::string> Fall17_17Nov2017_V8_E_L123_AK4PFPuppi_DATA;
   extern const std::vector<std::string> Fall17_17Nov2017_V8_F_L123_AK4PFPuppi_DATA;
-  
+
   //AK8
   extern const std::vector<std::string> Fall17_17Nov2017_V8_B_L123_AK8PFchs_DATA;
   extern const std::vector<std::string> Fall17_17Nov2017_V8_C_L123_AK8PFchs_DATA;
   extern const std::vector<std::string> Fall17_17Nov2017_V8_D_L123_AK8PFchs_DATA;
   extern const std::vector<std::string> Fall17_17Nov2017_V8_E_L123_AK8PFchs_DATA;
   extern const std::vector<std::string> Fall17_17Nov2017_V8_F_L123_AK8PFchs_DATA;
- 
+
   //AK8 Puppi
   extern const std::vector<std::string> Fall17_17Nov2017_V8_B_L123_AK8PFPuppi_DATA;
   extern const std::vector<std::string> Fall17_17Nov2017_V8_C_L123_AK8PFPuppi_DATA;
@@ -119,9 +119,6 @@ namespace JERFiles {
   extern const std::vector<std::string> Summer16_23Sep2016_V4_EF_L1RC_AK4PFchs_DATA;
   extern const std::vector<std::string> Summer16_23Sep2016_V4_G_L1RC_AK4PFchs_DATA;
   extern const std::vector<std::string> Summer16_23Sep2016_V4_H_L1RC_AK4PFchs_DATA;
-  extern const std::vector<std::string> Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC; 
+  extern const std::vector<std::string> Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;
   */
 }
-
-
-

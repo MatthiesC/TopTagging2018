@@ -24,7 +24,8 @@
 #include "UHH2/TopTagging/include/ProbeJetHists.h"
 #include <UHH2/common/include/Utils.h>
 #include "UHH2/TopTagging/include/TopTaggingUtils.h"
-
+#include "UHH2/TopTagging/include/TopJetCorrections.h"
+#include "UHH2/HOTVR/include/HOTVRJetCorrectionModule.h"
 
 using namespace std;
 using namespace uhh2;
@@ -40,7 +41,8 @@ private:
 
   //correctors
   std::unique_ptr<CommonModules> common;
-  std::unique_ptr<TopJetCorrectionModules> topjet_corr;
+  std::unique_ptr<TopJetCorrections> topjetCorr;
+  std::unique_ptr<AnalysisModule> HOTVRCorr;
   std::unique_ptr<GenericJetResolutionSmearer> topjetJER_smearer;
   std::unique_ptr<TopJetGroomer> topjet_groomer;
   std::unique_ptr<uhh2::AnalysisModule> pileupRW;
@@ -66,7 +68,7 @@ private:
   std::unique_ptr<DPhiMuBSelection> dphi_selection;
 
   //histograms
-  //std::unique_ptr<BTagMCEfficiencyHists<DeepCSVBTag>> hists_btag_eff, hists_btag_medium_eff;
+  std::unique_ptr<BTagMCEfficiencyHists> hists_btag_loose_eff, hists_btag_medium_eff;
   std::vector<std::unique_ptr<uhh2::Hists>> hists_before_sel;
   std::vector<std::unique_ptr<uhh2::Hists>> hists_after_sel;
   std::unique_ptr<uhh2::Hists> hists_notrigger, hists_trigger;
@@ -77,7 +79,7 @@ private:
 
   std::vector<std::unique_ptr<ProbeJetHists>> h_tau32, h_tau32_mass, h_tau32_btag, h_tau32_mass_btag, h_tau32_mass_btag_pt400to550, h_tau32_mass_btag_pt550, h_tau32_mass_btag_pt400;
 
-  bool useHTT, usePUPPI;
+  bool useHTT, usePUPPI, useHOTVR;
   string version;
 
   bool isMC;
@@ -103,9 +105,12 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
 
   useHTT = (ctx.get("useHTT", "<not set>") == "TRUE");
   usePUPPI = (ctx.get("usePUPPI", "<not set>") == "TRUE");
+  useHOTVR = (ctx.get("useHOTVR", "<not set>") == "TRUE");
 
   if(usePUPPI) cout << "use PUPPI topjets" << endl;
+  else if(useHOTVR) cout << "use HOTVR topjets" << endl;
   else cout << "use CHS topjets" << endl;
+
 
   if(useHTT) cout << "run the HTT" << endl;
   else cout << "run CMS tagger" << endl;
@@ -159,24 +164,28 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
   common->init(ctx, PU_variation);
   cout << "common init" <<endl;
 
-  // if(usePUPPI) topjet_corr.reset(new TopJetCorrectionModules(ctx, TopJetCorrectionModules::AK8_PUPPI));
-  // else topjet_corr.reset(new TopJetCorrectionModules(ctx, TopJetCorrectionModules::AK8_CHS));
-  //
-  // if(isMC) {
-  //   add_genjet = ctx.get_handle<std::vector<Particle>>("slimmedGenJetsAK8");
-  //   topjetJER_smearer.reset(new GenericJetResolutionSmearer(ctx, "topjets", "slimmedGenJetsAK8"));
-  // }
-  //if(subjet_correction) topjet_groomer.reset(new TopJetGroomer()); // just take the subjet sum (make sure that the subjets are corrected properly)
-  // else topjet_groomer.reset(new TopJetGroomer(false)); //undo the subjet JEC corrections in case you want to correct the resulting subjet sum
+  if(usePUPPI){
+    cout << "TopJet Corrections = PUPPI" << endl;
+    topjetCorr.reset(new TopJetCorrections());
+    topjetCorr->init(ctx);
+  }
 
+  if(useHOTVR){
+    cout << "TopJet Corrections = HOTVR" << endl;
+    HOTVRCorr.reset(new HOTVRJetCorrectionModule(ctx));
+  }
 
   //=============================
   // cleaners
   //=============================
-
   jet_cleaner.reset(new JetCleaner(ctx, 30., 2.4));
-  if (useHTT) topjet_cleaner_dRlep.reset(new TopJetLeptonDeltaRCleaner(1.5));
-  else topjet_cleaner_dRlep.reset(new TopJetLeptonDeltaRCleaner(0.8));
+
+  double radius = 0.0;
+  if(useHTT) radius = 1.5;
+  else if(useHOTVR) radius = -2.0;
+  else radius = 0.8;
+
+  topjet_cleaner_dRlep.reset(new TopJetLeptonDeltaRCleaner(radius));
 
   if(useHTT) topjet_cleaner.reset(new TopJetCleaner(ctx, TopJetId(PtEtaCut(150., 2.4))));
   else topjet_cleaner.reset(new TopJetCleaner(ctx, TopJetId(PtEtaCut(170., 2.4))));
@@ -237,9 +246,11 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
   //=============================
   //histograms
   //=============================
+  JetId id_btag_loose = BTag(BTag::DEEPCSV, BTag::WP_LOOSE);
+  JetId id_btag_medium = BTag(BTag::DEEPCSV, BTag::WP_MEDIUM);
 
-  //hists_btag_eff.reset(new BTagMCEfficiencyHists<DeepCSVBTag>(ctx,"BTagLoose",DeepCSVBTag::WP_LOOSE));
-  //hists_btag_medium_eff.reset(new BTagMCEfficiencyHists<DeepCSVBTag>(ctx,"BTagMedium",DeepCSVBTag::WP_MEDIUM));
+  hists_btag_loose_eff.reset(new BTagMCEfficiencyHists(ctx,"BTagLoose", id_btag_loose));
+  hists_btag_medium_eff.reset(new BTagMCEfficiencyHists(ctx,"BTagMedium", id_btag_medium));
 
 
   // hists_subjet_btag_eff.reset(new BTagMCEfficiencyHists(ctx,"SubjetBTag",CSVBTag::WP_LOOSE, "topjets") );
@@ -282,8 +293,12 @@ bool TTEfficiencyMainSelectionModule::process(Event & event) {
   bool ok = common->process(event);
   if(!ok) return false;
 
-  // topjet_corr->process(event); //apply AK8 corrections on the full jet and AK4 corrections on the subjets
-  // if(isMC) topjetJER_smearer->process(event);
+  if(useHOTVR){
+    HOTVRCorr->process(event);
+  }
+  else{
+    topjetCorr->process(event);
+  }
 
   //=============================
   //run cleaners
@@ -307,16 +322,9 @@ bool TTEfficiencyMainSelectionModule::process(Event & event) {
   if(!twoDcut->passes(event)) return false;
   if(!met_sel->passes(event)) return false;
   if(!ptW_sel->passes(event)) return false;
-  //hists_btag_eff->fill(event);
-  //hists_btag_medium_eff->fill(event);
+  hists_btag_loose_eff->fill(event);
+  hists_btag_medium_eff->fill(event);
   if(!bjetCloseToLepton_sel->passes(event)) return false;
-
-
-  //====================================================
-  //apply b tagging scale factors after the selection
-  //====================================================
-  // btagwAK8->process(event);
-
 
   //======================================
   //fill histograms after selection

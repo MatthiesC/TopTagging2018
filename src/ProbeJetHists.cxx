@@ -12,7 +12,7 @@ using namespace std;
 using namespace uhh2;
 using namespace uhh2examples;
 
-ProbeJetHists::ProbeJetHists(Context & ctx, const string & dirname): Hists(ctx, dirname){
+ProbeJetHists::ProbeJetHists(Context & ctx, const string & dirname, const TString direction): Hists(ctx, dirname){
 
   fill_PDF = (ctx.get("fill_PDF", "FALSE") == "TRUE");
   if(!(ctx.get("dataset_type") == "MC")) fill_PDF = false;
@@ -30,14 +30,16 @@ ProbeJetHists::ProbeJetHists(Context & ctx, const string & dirname): Hists(ctx, 
 
   book<TH1F>("pt_W", "leptonic W p_{T} [GeV]", 100,0.,1000.);
 
-  book<TH1F>("mass", "Probe jet mass [GeV]", 50, 0, 500);
+  book<TH1F>("mass", "Probe jet mass [GeV]", 100, 0, 500);
   book<TH1F>("mass_sub", "Soft drop mass [GeV]", 100, 0, 500);
 
-  book<TH1F>("mass_SD", "Probe jet soft drop mass raw [GeV]", 50, 0, 500);
-  book<TH1F>("mass_SD_Corr", "Probe jet soft drop mass corrected [GeV]", 40, 0, 300);
-  book<TH1F>("mass_pruned", "Probe jet pruned mass [GeV]", 50, 0, 500);
+  book<TH1F>("mass_SD", "Probe jet soft drop mass raw [GeV]", 100, 0, 500);
+  book<TH1F>("mass_SD_Corr", "Probe jet soft drop mass corrected [GeV]", 100, 0, 500);
+  book<TH1F>("mass_pruned", "Probe jet pruned mass [GeV]", 100, 0, 500);
 
   book<TH1F>("tau32", "Probe jet #tau3/#tau2", 40, 0, 1);
+  book<TH1F>("tau32_scan", "Probe jet #tau3/#tau2", 100, 0, 1);
+  book<TH1F>("tau32_groomed", "Probe jet #tau3/#tau2", 40, 0, 1);
   book<TH1F>("tau21", "Probe jet #tau2/#tau1", 40, 0, 1);
   book<TH1F>("tau2", "Probe jet #tau2", 40, 0, 1);
   book<TH1F>("tau3", "Probe jet #tau3", 40, 0, 1);
@@ -96,6 +98,53 @@ ProbeJetHists::ProbeJetHists(Context & ctx, const string & dirname): Hists(ctx, 
   //scatter plots
   h_ratio_mLB_vs_mB = book<TH2D>("ratio_mLB_vs_mB", ";m_{probe jet}/m_{b-jet+#mu};m_{probe jet}/m_{b-jet}",  100, 0., 10., 1000, 0., 100.);
   h_tau32_vs_pt = book<TH2D>("tau32_vs_pt", ";p_{T} [GeV];#tau_{3}/#tau_{2}",200, 0., 2000,  40, 0, 1);
+
+
+  // is 'up' is selected, scale pass region up and fail region down
+  // do the opposite if 'down' is selected
+
+  factor = 1.0;
+
+  TString samplename = (TString) ctx.get("dataset_version", "");
+  TString histname = (TString) dirname;
+
+  double variation_3prong = 0.05;
+  double variation_2prong = 0.1;
+  double variation_1prong = 0.1;
+
+
+  if(samplename.Contains("mergedTop")){
+    if(direction == "up_3prong"){
+      if(histname.Contains("pass"))      factor = 1.0 + variation_3prong;
+      else if(histname.Contains("fail")) factor = 1.0 - variation_3prong;
+    }
+    else if(direction == "down_3prong"){
+      if(histname.Contains("pass"))      factor = 1.0 - variation_3prong;
+      else if(histname.Contains("fail")) factor = 1.0 + variation_3prong;
+    }
+  }
+  else if(samplename.Contains("semimerged")){
+    if(direction == "up_2prong"){
+      if(histname.Contains("pass"))      factor = 1.0 + variation_2prong;
+      else if(histname.Contains("fail")) factor = 1.0 - variation_2prong;
+    }
+    else if(direction == "down_2prong"){
+      if(histname.Contains("pass"))      factor = 1.0 - variation_2prong;
+      else if(histname.Contains("fail")) factor = 1.0 + variation_2prong;
+    }
+  }
+  else{
+    if(direction == "up_1prong"){
+      if(histname.Contains("pass"))      factor = 1.0 + variation_1prong;
+      else if(histname.Contains("fail")) factor = 1.0 - variation_1prong;
+    }
+    else if(direction == "down_1prong"){
+      if(histname.Contains("pass"))      factor = 1.0 - variation_1prong;
+      else if(histname.Contains("fail")) factor = 1.0 + variation_1prong;
+    }
+  }
+
+
 }
 
 void ProbeJetHists::fill(const Event & event){
@@ -108,7 +157,7 @@ void ProbeJetHists::fill(const Event & event){
   // use histogram pointers as members as in 'UHH2/common/include/ElectronHists.h'
 
   // Don't forget to always use the weight when filling.
-  double weight = event.weight;
+  double weight = event.weight * factor;
 
   TVector2 muon;
   muon.SetMagPhi(event.muons->at(0).pt(), event.muons->at(0).phi());
@@ -188,6 +237,8 @@ void ProbeJetHists::fill(const Event & event){
   if (jet.has_tag(jet.tagname2tag("mass"))) hist("HTTmass_corr")->Fill(jet.get_tag(jet.tagname2tag("mass"))/jet.JEC_factor_raw(), weight);
 
   hist("tau32")->Fill(jet.tau3()/jet.tau2(), weight);
+  hist("tau32_scan")->Fill(jet.tau3()/jet.tau2(), weight);
+  hist("tau32_groomed")->Fill(jet.tau3_groomed()/jet.tau2_groomed(), weight);
   hist("tau21")->Fill(jet.tau2()/jet.tau1(), weight);
   hist("tau3")->Fill(jet.tau3(), weight);
   hist("tau2")->Fill(jet.tau2(), weight);

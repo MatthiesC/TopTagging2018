@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd" [
+
+<!ENTITY INdir    "/nfs/dust/cms/user/schwarzd/TopTagging/Selection/JERdown/">
+<!ENTITY OUTdir   "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel/JER_down">
+
+<!ENTITY TTbar_semilep "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_semilep_2018.root">
+<!ENTITY TTbar_had     "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_had_2018.root">
+<!ENTITY TTbar_dilep   "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_dilep_2018.root">
+
+<!ENTITY ST_tch_antitop  "&INdir;/uhh2.AnalysisModuleRunner.MC.ST_tch_antitop_2018.root">
+<!ENTITY ST_tch_top      "&INdir;/uhh2.AnalysisModuleRunner.MC.ST_tch_top_2018.root">
+<!ENTITY ST_tWch_antitop "&INdir;/uhh2.AnalysisModuleRunner.MC.ST_tWch_antitop_2018.root">
+<!ENTITY ST_tWch_top     "&INdir;/uhh2.AnalysisModuleRunner.MC.ST_tWch_top_2018.root">
+<!ENTITY ST_sch          "&INdir;/uhh2.AnalysisModuleRunner.MC.ST_sch_2018.root">
+
+<!ENTITY WJets_HT100to200   "&INdir;/uhh2.AnalysisModuleRunner.MC.WJets_HT100to200_2018.root">
+<!ENTITY WJets_HT200to400   "&INdir;/uhh2.AnalysisModuleRunner.MC.WJets_HT200to400_2018.root">
+<!ENTITY WJets_HT400to600   "&INdir;/uhh2.AnalysisModuleRunner.MC.WJets_HT400to600_2018.root">
+<!ENTITY WJets_HT600to800   "&INdir;/uhh2.AnalysisModuleRunner.MC.WJets_HT600to800_2018.root">
+<!ENTITY WJets_HT800to1200  "&INdir;/uhh2.AnalysisModuleRunner.MC.WJets_HT800to1200_2018.root">
+<!ENTITY WJets_HT1200to2500 "&INdir;/uhh2.AnalysisModuleRunner.MC.WJets_HT1200to2500_2018.root">
+<!ENTITY WJets_HT2500toInf  "&INdir;/uhh2.AnalysisModuleRunner.MC.WJets_HT2500toInf_2018.root">
+
+<!ENTITY QCD_PT50to80    "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT50to80_2018.root">
+<!ENTITY QCD_PT80to120   "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT80to120_2018.root">
+<!ENTITY QCD_PT120to170  "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT120to170_2018.root">
+<!ENTITY QCD_PT170to300  "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT170to300_2018.root">
+<!ENTITY QCD_PT300to470  "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT300to470_2018.root">
+<!ENTITY QCD_PT470to600  "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT470to600_2018.root">
+<!ENTITY QCD_PT600to800  "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT600to800_2018.root">
+<!ENTITY QCD_PT800to1000 "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT800to1000_2018.root">
+<!ENTITY QCD_PT1000toInf "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT1000toInf_2018.root">
+
+<!ENTITY DYJets_HT100to200   "&INdir;/uhh2.AnalysisModuleRunner.MC.DYJets_HT100to200_2018.root">
+<!ENTITY DYJets_HT200to400   "&INdir;/uhh2.AnalysisModuleRunner.MC.DYJets_HT200to400_2018.root">
+<!ENTITY DYJets_HT400to600   "&INdir;/uhh2.AnalysisModuleRunner.MC.DYJets_HT400to600_2018.root">
+<!ENTITY DYJets_HT600to800   "&INdir;/uhh2.AnalysisModuleRunner.MC.DYJets_HT600to800_2018.root">
+<!ENTITY DYJets_HT800to1200  "&INdir;/uhh2.AnalysisModuleRunner.MC.DYJets_HT800to1200_2018.root">
+<!ENTITY DYJets_HT1200to2500 "&INdir;/uhh2.AnalysisModuleRunner.MC.DYJets_HT1200to2500_2018.root">
+<!ENTITY DYJets_HT2500toInf  "&INdir;/uhh2.AnalysisModuleRunner.MC.DYJets_HT2500toInf_2018.root">
+
+]>
+
+<!--
+<ConfigParse NEventsBreak="20000" LastBreak="0" FileSplit="0" />
+<ConfigSGE RAM ="4" DISK ="2" Mail="dennis.schwarz@desy.de" Notification="as" Workdir="workdir_PostSel_JERdown"/>
+-->
+
+<!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
+<JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
+    <Library Name="libSUHH2TopTagging"/>
+    <Package Name="SUHH2TopTagging.par" />
+    <Library Name="libfastjet" />
+    <Library Name="libfastjettools" />
+
+    <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="59740" >
+
+<!--
+  ████████ ████████
+     ██       ██
+     ██       ██
+     ██       ██
+     ██       ██
+-->
+
+    <!-- semilep -->
+
+    <InputData Version="TTbar_semilep_2018" Lumi="83703610.934" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_semilep;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="TTbar_semilep_mergedTop_2018" Lumi="83703610.934" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_semilep;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="TTbar_semilep_semimerged_2018" Lumi="83703610.934" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_semilep;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="TTbar_semilep_notmerged_2018" Lumi="83703610.934" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_semilep;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <!-- dilep -->
+
+    <InputData Version="TTbar_dilep_2018" Lumi="53077886.468" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_dilep;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="TTbar_dilep_mergedTop_2018" Lumi="53077886.468" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_dilep;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="TTbar_dilep_semimerged_2018" Lumi="53077886.468" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_dilep;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="TTbar_dilep_notmerged_2018" Lumi="53077886.468" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_dilep;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <!-- hadronic -->
+
+    <InputData Version="TTbar_had_2018" Lumi="110354799.266" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_had;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="TTbar_had_mergedTop_2018" Lumi="110354799.266" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_had;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="TTbar_had_semimerged_2018" Lumi="110354799.266" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_had;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="TTbar_had_notmerged_2018" Lumi="110354799.266" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_had;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+
+<!--
+    ███████ ██ ███    ██  ██████  ██      ███████     ████████
+    ██      ██ ████   ██ ██       ██      ██             ██
+    ███████ ██ ██ ██  ██ ██   ███ ██      █████          ██
+         ██ ██ ██  ██ ██ ██    ██ ██      ██             ██
+    ███████ ██ ██   ████  ██████  ███████ ███████        ██
+-->
+
+
+
+<InputData Version="ST_tch_top_2018" Lumi="5992141.808" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tch_top;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_tch_antitop_2018" Lumi="4029309.273" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tch_antitop;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_tWch_antitop_2018" Lumi="12339449.8" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tWch_antitop;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_tWch_top_2018" Lumi="15548592.94" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tWch_top;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+
+<InputData Version="ST_sch_2018" Lumi="5891712.126" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_sch;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+
+
+<!-- merged Top -->
+<InputData Version="ST_tch_top_mergedTop_2018" Lumi="5992141.808" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tch_top;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_tch_antitop_mergedTop_2018" Lumi="4029309.273" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tch_antitop;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_tWch_antitop_mergedTop_2018" Lumi="12339449.8" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tWch_antitop;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_tWch_top_mergedTop_2018" Lumi="15548592.94" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tWch_top;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_sch_mergedTop_2018" Lumi="5891712.126" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_sch;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+
+<!-- semimerged Top -->
+<InputData Version="ST_tch_top_semimerged_2018" Lumi="5992141.808" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tch_top;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_tch_antitop_semimerged_2018" Lumi="4029309.273" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tch_antitop;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_tWch_antitop_semimerged_2018" Lumi="12339449.8" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tWch_antitop;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_tWch_top_semimerged_2018" Lumi="15548592.94" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tWch_top;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_sch_semimerged_2018" Lumi="5891712.126" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_sch;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<!-- not merged Top -->
+<InputData Version="ST_tch_top_notmerged_2018" Lumi="5992141.808" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tch_top;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_tch_antitop_notmerged_2018" Lumi="4029309.273" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tch_antitop;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_tWch_antitop_notmerged_2018" Lumi="12339449.8" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tWch_antitop;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_tWch_top_notmerged_2018" Lumi="15548592.94" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_tWch_top;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="ST_sch_notmerged_2018" Lumi="5891712.126" Type="MC" NEventsMax="-1" Cacheable="False">
+  <In FileName="&ST_sch;" Lumi="0.0"/>
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<!--
+ ██████   ██████ ██████
+██    ██ ██      ██   ██
+██    ██ ██      ██   ██
+██ ▄▄ ██ ██      ██   ██
+ ██████   ██████ ██████
+    ▀▀
+-->
+
+    <InputData Version="QCD_PT50to80_2018" Lumi="54.15140796" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&QCD_PT50to80;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="QCD_PT80to120_2018" Lumi="287.614" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&QCD_PT80to120;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="QCD_PT120to170_2018" Lumi="1015.527" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&QCD_PT120to170;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="QCD_PT170to300_2018" Lumi="5107.685832" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&QCD_PT170to300;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="QCD_PT300to470_2018" Lumi="47401.644" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&QCD_PT300to470;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="QCD_PT470to600_2018" Lumi="350055.5081" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&QCD_PT470to600;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="QCD_PT600to800_2018" Lumi="920718.9474" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&QCD_PT600to800;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="QCD_PT800to1000_2018" Lumi="5156993.227" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&QCD_PT800to1000;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="QCD_PT1000toInf_2018" Lumi="9953379.759" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&QCD_PT1000toInf;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+<!--
+    ██████  ██    ██
+    ██   ██  ██  ██
+    ██   ██   ████
+    ██   ██    ██
+    ██████     ██
+-->
+
+    <InputData Version="DYJets_HT100to200_2018" Lumi="71396.35" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&DYJets_HT100to200;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="DYJets_HT200to400_2018" Lumi="230937.81" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&DYJets_HT200to400;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+
+    <InputData Version="DYJets_HT400to600_2018" Lumi="1407620.555" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&DYJets_HT400to600;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+
+    <InputData Version="DYJets_HT600to800_2018" Lumi="5004011.193" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&DYJets_HT600to800;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="DYJets_HT800to1200_2018" Lumi="3834606.58" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&DYJets_HT800to1200;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="DYJets_HT1200to2500_2018" Lumi="2798205.529" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&DYJets_HT1200to2500;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="DYJets_HT2500toInf_2018" Lumi="121910077.1" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&DYJets_HT2500toInf;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+<!--
+    ██     ██      ██ ███████ ████████ ███████
+    ██     ██      ██ ██         ██    ██
+    ██  █  ██      ██ █████      ██    ███████
+    ██ ███ ██ ██   ██ ██         ██         ██
+     ███ ███   █████  ███████    ██    ███████
+-->
+
+    <InputData Version="WJets_HT100to200_2018" Lumi="21641.310" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&WJets_HT100to200;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="WJets_HT200to400_2018" Lumi="61166.284" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&WJets_HT200to400;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="WJets_HT400to600_2018" Lumi="100759.189" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&WJets_HT400to600;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="WJets_HT600to800_2018" Lumi="1522039.569" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&WJets_HT600to800;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="WJets_HT800to1200_2018" Lumi="1506237.607" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&WJets_HT800to1200;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="WJets_HT1200to2500_2018" Lumi="6874435.411" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&WJets_HT1200to2500;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="WJets_HT2500toInf_2018" Lumi="411111168.2" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&WJets_HT2500toInf;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+
+
+   <UserConfig>
+      <Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices" />
+      <Item Name="ElectronCollection" Value="slimmedElectronsUSER" />
+      <Item Name="MuonCollection" Value="slimmedMuonsUSER" />
+      <Item Name="JetCollection" Value="jetsAk4CHS" />
+      <Item Name="METName" Value="slimmedMETs" />
+      <Item Name="GenJetCollection" Value="slimmedGenJets" />
+      <Item Name="TopJetCollection" Value="jetsAk8PuppiSubstructure_SoftDropPuppi" />
+      <Item Name="GenTopJetCollection" Value="genjetsAk8SubstructureSoftDrop" />
+      <!-- <Item Name="TopJetCollection" Value="jetAk8CHSSubstructure_SoftDropCHS" /> -->
+      <!-- <Item Name="TopJetCollection" Value="hotvrPuppi" /> -->
+      <Item Name="GenParticleCollection" Value="GenParticles" />
+      <Item Name="additionalBranches" Value="hotvrGen hotvrPuppi" />
+
+	    <Item Name="lumihists_lumi_per_bin" Value="1"/>
+
+
+
+      <!-- the class name of the AnalysisModule subclasses to run: -->
+      <Item Name="AnalysisModule" Value="TTEfficiencyPostSelectionModule" />
+
+      <!-- tell AnalysisModuleRunner NOT to use the MC event weight from SFrame; rather let
+           MCLumiWeight (called via CommonModules) calculate the MC event weight. The MC
+           event weight assigned by MCLumiWeight is InputData.Lumi / Cycle.TargetLumi. -->
+      <Item Name="use_sframe_weight" Value="false" />
+
+      <Item Name="pileup_directory_data" Value="/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/MyDataPileupHistogram2018.root"/>
+      <Item Name="pileup_directory_data_up" Value="/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/MyDataPileupHistogram2018_72383.root"/>
+      <Item Name="pileup_directory_data_down" Value="/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/MyDataPileupHistogram2018_66017.root"/>
+      <Item Name="pileup_directory_25ns" Value="/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/MyMCPileupHistogram.root"/>
+      <Item Name="lumi_file" Value="/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.root"/>
+
+      <Item Name="BTagCalibration" Value="/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/DeepCSV_102XSF_WP_V1.csv"/>
+      <Item Name="MCBtagEfficiencies" Value="/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/TopTagging/BTagEffiHist/BTagMCEfficiencyHists.root" />
+
+	    <!-- <Item Name="SubjetBTagCalibration" Value="/nfs/dust/cms/user/dreyert/CMSSW_8_0_24_patch1/src/UHH2/common/data/subjet_CSVv2_Moriond17_B_H.csv"/> -->
+	    <!-- <Item Name="MCSubjetBtagEfficiencies" Value="/nfs/dust/cms/user/dreyert/CMSSW_8_0_24_patch1/src/UHH2/scripts/BTagMCEfficiencyHistsSubjetBTag_PUPPI_Moriond.root" /> -->
+
+      <!-- Some test configuration; see TopTaggingStudiesModule.cxx for how to access it: -->
+      <Item Name="useHTT" Value="FALSE" />
+      <Item Name="usePUPPI" Value="TRUE" />
+	    <!--   <Item Name="TopJetCorrectionMode" Value="SUB" /> -->
+	    <Item Name="MergedSelection" Value="all" />
+
+
+      <Item Name="BTag_variation" Value="central"/>
+	    <Item Name="SubjetBTag_variation" Value="central"/>
+	    <Item Name="MuonID_variation" Value="none" />
+	    <Item Name="MuonTrigger_variation" Value="none" />
+	    <Item Name="PU_variation" Value="central"/>
+	    <Item Name="ScaleVariationMuR" Value="none" />
+	    <Item Name="ScaleVariationMuF" Value="none" />
+	    <Item Name="fill_PDF" Value="FALSE"/>
+	    <Item Name="TopPtReweight" Value="FALSE"/>
+	    <Item Name="mass_scale" Value="default"/>
+
+    </UserConfig>
+  </Cycle>
+</JobConfiguration>

@@ -15,7 +15,7 @@
 
 
 namespace uhh2 {
-    
+
 /* Select events with at least two jets in which the leading two jets have deltaphi > 2.7 and the third jet pt is
  * below 20% of the average of the leading two jets, where the minimum deltaphi and
  * maximum third jet pt fraction can be changed in the constructor.
@@ -53,10 +53,10 @@ class PtWSelection: public uhh2::Selection {
 class HTlepCut: public uhh2::Selection {
   public:
     explicit HTlepCut(double minHTLep_, double maxHTLep_, bool useMuons_ = true, bool useElectrons_ = true);
-    virtual bool passes(const uhh2::Event&) override; 
+    virtual bool passes(const uhh2::Event&) override;
 
   private:
-    double minHTLep, maxHTLep; 
+    double minHTLep, maxHTLep;
     bool useMuons, useElectrons;
 };
 
@@ -85,7 +85,7 @@ class NMuonBTagSelection: public uhh2::Selection {
   public:
 
     explicit NMuonBTagSelection(int min_nbtag, int max_nbtag=999, JetId btag=CSVBTag(CSVBTag::WP_LOOSE), double ptmin=0., double etamax=infinity );
- 
+
     virtual bool passes(const uhh2::Event &) override;
 
   private:
@@ -105,14 +105,16 @@ class MergedSelection: public uhh2::Selection {
     explicit MergedSelection( uhh2::Context& ctx,  const std::string ttbarGen_name_, double radius_ , mergingOpt opt_ = oFullyMerged);
     virtual bool passes(const uhh2::Event &) override;
     bool passes_probe(const uhh2::Event &event, const TopJet &probe_jet);
+    bool passes_probe_ST(const uhh2::Event &event, const TopJet &probe_jet);
+    bool is_same_particle(GenParticle p1, GenParticle p2);
 
   private:
     uhh2::Event::Handle<TTbarGen> h_ttbarGen;
      const std::string ttbarGen_name;
     double radius;
     mergingOpt opt;
+    bool isTTbar;
 };
-
 
 class DecayChannelSelection: public uhh2::Selection {
   public:
@@ -135,7 +137,7 @@ class MassDiffSelection: public uhh2::Selection{
   private:
     JetId btag_;
 };
-  
+
 
 class DPhiMuBSelection: public uhh2::Selection{
   public:
@@ -176,6 +178,3 @@ class HadronicTopSelection: pubic uhh2::Selection{
   */
 
 }
-
-
-

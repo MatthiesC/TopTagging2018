@@ -15,6 +15,7 @@
 #include <UHH2/common/include/ObjectIdUtils.h>
 #include <UHH2/common/include/MuonIds.h>
 #include <UHH2/common/include/ElectronIds.h>
+#include <UHH2/common/include/TopJetIds.h>
 #include <UHH2/common/include/JetIds.h>
 #include "UHH2/common/include/NSelections.h"
 #include "UHH2/common/include/MCWeight.h"
@@ -24,6 +25,7 @@
 #include "UHH2/TopTagging/include/ProbeJetHists.h"
 #include <UHH2/common/include/Utils.h>
 #include "UHH2/TopTagging/include/TopTaggingUtils.h"
+#include "UHH2/HOTVR/include/HOTVRIds.h"
 
 
 using namespace std;
@@ -46,6 +48,8 @@ private:
   //reweighting and scale factors
   std::vector<std::unique_ptr<AnalysisModule>> reweighting_modules;
   std::unique_ptr<uhh2::AnalysisModule> muo_tight_SF, muo_trigger_SF_before, muo_trigger_SF_after;
+  std::unique_ptr<uhh2::AnalysisModule> sf_btag;
+
   std::unique_ptr<AnalysisModule> btagwAK8, subjet_btagwAK8;
   std::unique_ptr<AnalysisModule> subjet_btagwAK8_300to400, subjet_btagwAK8_400to480, subjet_btagwAK8_480to600, subjet_btagwAK8_600;
   std::unique_ptr<uhh2::AnalysisModule> scale_variation;
@@ -53,6 +57,9 @@ private:
   std::unique_ptr<GenericJetResolutionSmearer> topjetJER_smearer;
 
   //selections
+  TopJetId hotvr_tag;
+  // HOTVRTopTag hotvr_tag;
+
   std::unique_ptr<uhh2::Selection> hadronic_selection, lepton_jets_seletion, dilepton_selection, tau_jets_selection;
   std::unique_ptr<MergedSelection> merged_selection, mergedW_selection, mergedQB_selection, mergedEvent_selection;
   std::unique_ptr<MassDiffSelection> massDiff_selection;
@@ -61,37 +68,28 @@ private:
   std::unique_ptr<uhh2::Selection> ptW_sel;
 
   //histograms
-  //std::unique_ptr<BTagMCEfficiencyHists<DeepCSVBTag>> hists_btag_eff, hists_btag_medium_eff, hists_subjet_btag_eff;
-  //std::unique_ptr<BTagMCEfficiencyHists<DeepCSVBTag>> hists_subjet_btag_eff_300to400, hists_subjet_btag_eff_400to480, hists_subjet_btag_eff_480to600, hists_subjet_btag_eff_600;
   std::vector<std::unique_ptr<uhh2::Hists>> hists_before_sel;
   std::vector<std::unique_ptr<uhh2::Hists>> hists_after_sel;
   std::unique_ptr<uhh2::Hists> hists_notrigger, hists_trigger;
-  std::unique_ptr<ProbeJetHists> hists_all, hists_all_400, hists_all_400to550, hists_all_550 ,hists_tagged;
+  std::unique_ptr<ProbeJetHists> hists_all, hists_all_200to250, hists_all_250to300, hists_all_300to400, hists_all_400, hists_all_400to550, hists_all_550 ,hists_tagged;
   std::unique_ptr<ProbeJetHists>  hists_dilepton, hists_lepton_jets, hists_taujets, hists_hadronic, hists_dilepton_400, hists_lepton_jets_400, hists_taujets_400, hists_hadronic_400;
-
-  std::vector<std::unique_ptr<ProbeJetHists>> h_tau32, h_tau32_mass, h_tau32_btag, h_tau32_mass_btag, h_tau32_mass_btag_pt400to550, h_tau32_mass_btag_pt550, h_tau32_mass_btag_pt400, h_tau32_btag_pt400;
-
   std::vector<std::vector<std::unique_ptr<ProbeJetHists>>> h_probe_all_pass, h_probe_mass_pass, h_probe_btag_pass, h_probe_mass_btag_pass;
   std::vector<std::vector<std::unique_ptr<ProbeJetHists>>> h_probe_all_fail, h_probe_mass_fail, h_probe_btag_fail, h_probe_mass_btag_fail;
 
-  std::vector<std::vector<std::unique_ptr<ProbeJetHists>>> h_probeNPV_all_pass, h_probeNPV_mass_pass, h_probeNPV_btag_pass, h_probeNPV_mass_btag_pass;
-  std::vector<std::vector<std::unique_ptr<ProbeJetHists>>> h_probeNPV_all_fail, h_probeNPV_mass_fail, h_probeNPV_btag_fail, h_probeNPV_mass_btag_fail;
-
-
   //variables and functions
   string mass_scale;
-  bool useHTT, usePUPPI;
+  bool useHTT, usePUPPI, useHOTVR;
   string version;
   bool fill_PDF;
   bool isMC;
   bool invert_merged_selection;
   bool merged_category;
+  bool isTTbar;
+  bool isSingleTop;
 
-  const std::vector<double> pt_bins{-1,-400 , 300, 400, 480, 600};
-  const std::vector<int> npv_bins{0,20,30};
+  const std::vector<double> pt_bins{-1,-400 , 200, 250, 300, 400, 480, 600};
 
   bool get_pt_cut(unsigned int bin, const double pt);
-  bool get_npv_cut(unsigned int bin, const int npv);
   bool get_tau32_cut(unsigned int bin, const double tau32, const std::vector<double> wps);
 };
 
@@ -111,6 +109,7 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
 
   useHTT = (ctx.get("useHTT", "<not set>") == "TRUE");
   usePUPPI = (ctx.get("usePUPPI", "<not set>") == "TRUE");
+  useHOTVR = (ctx.get("useHOTVR", "<not set>") == "TRUE");
 
   fill_PDF = (ctx.get("fill_PDF", "FALSE") == "TRUE");
 
@@ -154,9 +153,19 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
   string PS_variation = "central";
   PS_variation = ctx.get("PS_variation", "central");
 
+  string TagEffi_variation = "central";
+  TagEffi_variation = ctx.get("TagEffi_variation", "central");
+
+
   bool TopPtReweighting = false;
   TopPtReweighting = (ctx.get("TopPtReweight","FALSE")== "TRUE");
 
+
+  if ( vers.Contains("TTbar") ) isTTbar = true;
+  else                          isTTbar = false;
+
+  if ( vers.Contains("ST") ) isSingleTop = true;
+  else                       isSingleTop = false;
 
   //===========================
   //setup corrections
@@ -173,7 +182,6 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
   common->init(ctx, PU_variation);
   cout << "common init" <<endl;
 
-
   //==============================
   //reweighting and scale factors
   //==============================
@@ -187,18 +195,16 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
 
   ps_weights.reset(new PartonShowerWeight(ctx, PS_variation));
 
-  // This needs update in CMSSW10
-  // btagwAK8.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, DeepCSVBTag(DeepCSVBTag::WP_MEDIUM), "jets", BTag_variation,"comb","incl","MCBtagEfficiencies"));
+  BTag::algo btag_algo = BTag::DEEPCSV;
+  BTag::wp btag_wp = BTag::WP_MEDIUM;
+  cout << "before btag sf module" << endl;
+  // sf_btag.reset(new MCBTagScaleFactor(ctx, btag_algo, btag_wp, "jets", BTag_variation, "mujets", "incl", "MCBtagEfficiencies"));
+  sf_btag.reset(new MCBTagScaleFactor(ctx, btag_algo, btag_wp, "jets", BTag_variation, "mujets", "incl", "MCBtagEfficiencies"));
+  cout << "after btag sf module" << endl;
 
-  //subjet_btagwAK8.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_LOOSE, DeepCSVBTag(DeepCSVBTag::WP_LOOSE), "topjets",BTag_variation,"lt","incl","MCSubjetBtagEfficiencies","", "SubjetBTagCalibration"));
-  // subjet_btagwAK8_300to400.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_LOOSE, DeepCSVBTag(DeepCSVBTag::WP_LOOSE), "topjets",BTag_variation,"lt","incl","MCSubjetBtagEfficiencies_300to400","", "SubjetBTagCalibration"));
-  //subjet_btagwAK8_400to480.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_LOOSE, DeepCSVBTag(DeepCSVBTag::WP_LOOSE), "topjets",BTag_variation,"lt","incl","MCSubjetBtagEfficiencies_400to480","", "SubjetBTagCalibration"));
-  //subjet_btagwAK8_480to600.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_LOOSE, DeepCSVBTag(DeepCSVBTag::WP_LOOSE), "topjets",BTag_variation,"lt","incl","MCSubjetBtagEfficiencies_480to600","", "SubjetBTagCalibration"));
-  //subjet_btagwAK8_600.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_LOOSE, DeepCSVBTag(DeepCSVBTag::WP_LOOSE), "topjets",BTag_variation,"lt","incl","MCSubjetBtagEfficiencies_600","", "SubjetBTagCalibration"));
-
-  muo_tight_SF.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/Muon_ID_SF_RunABCD.root","NUM_TightID_DEN_TrackerMuons_pt_abseta",0., "tightID", false, "central"));
-  muo_trigger_SF_before.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/Muon_Trigger_Eff_SF_AfterMuonHLTUpdate.root","Mu50_OR_OldMu100_OR_TkMu100_PtEtaBins",0., "muonTrigger", false,  "central"));
-  muo_trigger_SF_after.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/Muon_Trigger_Eff_SF_BeforeMuonHLTUpdate.root","Mu50_OR_OldMu100_OR_TkMu100_PtEtaBins",0., "muonTrigger", false,  "central"));
+  muo_tight_SF.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/Muon_ID_SF_RunABCD.root","NUM_TightID_DEN_TrackerMuons_pt_abseta",0., "tightID", true, MuonID_variation));
+  muo_trigger_SF_before.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/Muon_Trigger_Eff_SF_AfterMuonHLTUpdate.root","Mu50_OR_OldMu100_OR_TkMu100_PtEtaBins",0., "muonTrigger", false,  MuonTrigger_variation));
+  muo_trigger_SF_after.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/Muon_Trigger_Eff_SF_BeforeMuonHLTUpdate.root","Mu50_OR_OldMu100_OR_TkMu100_PtEtaBins",0., "muonTrigger", false,  MuonTrigger_variation));
 
   scale_variation.reset(new MCScaleVariation(ctx));
 
@@ -216,6 +222,7 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
   //---------
   double jet_radius = 0.;
   if (useHTT) jet_radius = 1.5;
+  if (useHOTVR) jet_radius = -1.0;
   else jet_radius = 0.8;
 
   merged_selection.reset( new MergedSelection(ctx, "ttbargen", jet_radius));
@@ -235,11 +242,21 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
   invert_merged_selection = false;
   if (merged == "notmergedTop") {invert_merged_selection = true; merged_category = false;}
 
-  if (!(vers.Contains("TTbar"))){
+  if(!(vers.Contains("TTbar")) && !(vers.Contains("ST")) ){
     merged_category = false;
     invert_merged_selection = false;
   }
 
+  //===========================
+  // HOTVR tag
+  //===========================
+  // deactivate mass cut, other values are standard
+  double fpt_max   = 0.8;    // maximum pt fraction of leading subjet
+  double m_min     = 0.;   // minimum topjet mass
+  double m_max     = 10000.;   // maximum topjet mass
+  double mpair_min = 50.;    // minimum pairwise mass of first three subjets
+  double tau32_max = 0.56;   // maximum nsubjetiness tau_3/2
+  hotvr_tag = AndId<TopJet>(HOTVRTopTag(fpt_max, m_min, m_max, mpair_min), Tau32Groomed(tau32_max));
 
   //===========================
   //additional selections
@@ -255,15 +272,6 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
   //===========================
   //histograms
   //===========================
-
-  // This needs update in CMSSW10
-  //hists_subjet_btag_eff.reset(new BTagMCEfficiencyHists<DeepCSVBTag>(ctx,"SubjetBTag",DeepCSVBTag::WP_LOOSE, "topjets") );
-  //hists_subjet_btag_eff_300to400.reset(new BTagMCEfficiencyHists<DeepCSVBTag>(ctx,"SubjetBTag_300to400",DeepCSVBTag::WP_LOOSE, "topjets") );
-  //hists_subjet_btag_eff_400to480.reset(new BTagMCEfficiencyHists<DeepCSVBTag>(ctx,"SubjetBTag_400to480",DeepCSVBTag::WP_LOOSE, "topjets") );
-  //hists_subjet_btag_eff_480to600.reset(new BTagMCEfficiencyHists<DeepCSVBTag>(ctx,"SubjetBTag_480to600",DeepCSVBTag::WP_LOOSE, "topjets") );
-  //hists_subjet_btag_eff_600.reset(new BTagMCEfficiencyHists<DeepCSVBTag>(ctx,"SubjetBTag_600",DeepCSVBTag::WP_LOOSE, "topjets") );
-
-
   hists_after_sel.emplace_back(new EventHists(ctx, "Event_sel"));
   hists_after_sel.emplace_back(new MuonHists(ctx, "Muon_sel"));
   hists_after_sel.emplace_back(new ElectronHists(ctx, "Electron_sel"));
@@ -273,21 +281,13 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
   std::vector<TString> wps;
   std::vector<TString> wps_PUPPI{"", "_wp1", "_wp2", "_wp3", "_wp4","_wp5"};
   std::vector<TString> wps_CHS{"", "_wp1", "_wp2", "_wp3", "_wp4","_wp5"};
+  std::vector<TString> wps_HOTVR{""};
 
   if(usePUPPI) wps = wps_PUPPI;
+  else if(useHOTVR) wps = wps_HOTVR;
   else wps = wps_CHS;
 
   TString name = "ProbeJet";
-  for(int i = 1; i <= 4; i++){
-    h_tau32.emplace_back(new ProbeJetHists(ctx, (name+"_tau32_wp"+TString::Format("%1.0i",i)).Data() ) );
-    h_tau32_mass.emplace_back(new ProbeJetHists(ctx, (name+"_tau32_mass_wp"+TString::Format("%1.0i",i)).Data() ) );
-    h_tau32_btag.emplace_back(new ProbeJetHists(ctx, (name+"_tau32_btag_wp"+TString::Format("%1.0i",i)).Data() ) );
-    h_tau32_mass_btag.emplace_back(new ProbeJetHists(ctx, (name+"_tau32_mass_btag_wp"+TString::Format("%1.0i",i)).Data() ) );
-    h_tau32_btag_pt400.emplace_back(new ProbeJetHists(ctx, (name+"_tau32_btag_pt400_wp"+TString::Format("%1.0i",i)).Data() ) );
-    h_tau32_mass_btag_pt400.emplace_back(new ProbeJetHists(ctx, (name+"_tau32_mass_btag_pt400_wp"+TString::Format("%1.0i",i)).Data() ) );
-    h_tau32_mass_btag_pt400to550.emplace_back(new ProbeJetHists(ctx, (name+"_tau32_mass_btag_pt400to550_wp"+TString::Format("%1.0i",i)).Data() ) );
-    h_tau32_mass_btag_pt550.emplace_back(new ProbeJetHists(ctx, (name+"_tau32_mass_btag_pt550_wp"+TString::Format("%1.0i",i)).Data() ) );
-  }
 
   h_probe_all_pass.resize(pt_bins.size());
   h_probe_mass_pass.resize(pt_bins.size());
@@ -308,41 +308,19 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
     else ptString = "pt"+TString::Format("%3.0f",fabs(pt_bins.at(bin)));
 
     for(unsigned int b = 0; b < wps.size(); ++b){
-      h_probe_all_pass.at(bin).emplace_back(new ProbeJetHists(ctx, (name+"_"+ptString+wps.at(b)+"_all_pass").Data()));
-      h_probe_btag_pass.at(bin).emplace_back(new ProbeJetHists(ctx,  (name+"_"+ptString+wps.at(b)+"_btag_pass").Data()));
+      h_probe_all_pass.at(bin).emplace_back(new ProbeJetHists(ctx, (name+"_"+ptString+wps.at(b)+"_all_pass").Data(), TagEffi_variation));
+      h_probe_btag_pass.at(bin).emplace_back(new ProbeJetHists(ctx,  (name+"_"+ptString+wps.at(b)+"_btag_pass").Data(), TagEffi_variation));
 
-      h_probe_all_fail.at(bin).emplace_back(new ProbeJetHists(ctx, (name+"_"+ptString+wps.at(b)+"_all_fail").Data()));
-      h_probe_btag_fail.at(bin).emplace_back(new ProbeJetHists(ctx,  (name+"_"+ptString+wps.at(b)+"_btag_fail").Data()));
+      h_probe_all_fail.at(bin).emplace_back(new ProbeJetHists(ctx, (name+"_"+ptString+wps.at(b)+"_all_fail").Data(), TagEffi_variation));
+      h_probe_btag_fail.at(bin).emplace_back(new ProbeJetHists(ctx,  (name+"_"+ptString+wps.at(b)+"_btag_fail").Data(), TagEffi_variation));
 
-    }
-  }
-
-  h_probeNPV_all_pass.resize(npv_bins.size());
-  h_probeNPV_mass_pass.resize(npv_bins.size());
-  h_probeNPV_btag_pass.resize(npv_bins.size());
-  h_probeNPV_mass_btag_pass.resize(npv_bins.size());
-
-  h_probeNPV_all_fail.resize(npv_bins.size());
-  h_probeNPV_mass_fail.resize(npv_bins.size());
-  h_probeNPV_btag_fail.resize(npv_bins.size());
-  h_probeNPV_mass_btag_fail.resize(npv_bins.size());
-
-  for(unsigned int bin = 0; bin < npv_bins.size(); ++bin){
-    TString npvString = "";
-    if(npv_bins.at(bin) == 0 && bin+1 < npv_bins.size() && npv_bins.at(bin+1) >= 0) npvString = "npv00to"+TString::Format("%2.0i",npv_bins.at(bin+1));
-    else if(npv_bins.at(bin) >= 0 && bin+1 < npv_bins.size() && npv_bins.at(bin+1) >= 0) npvString = "npv"+TString::Format("%2.0i",npv_bins.at(bin))+"to"+TString::Format("%2.0i",npv_bins.at(bin+1));
-    else npvString = "npv"+TString::Format("%2.0i",abs(npv_bins.at(bin)));
-
-    for(unsigned int b = 0; b < wps.size(); ++b){
-      h_probeNPV_all_pass.at(bin).emplace_back(new ProbeJetHists(ctx, (name+"_"+npvString+wps.at(b)+"_all_pass").Data()));
-      h_probeNPV_btag_pass.at(bin).emplace_back(new ProbeJetHists(ctx,  (name+"_"+npvString+wps.at(b)+"_btag_pass").Data()));
-
-      h_probeNPV_all_fail.at(bin).emplace_back(new ProbeJetHists(ctx, (name+"_"+npvString+wps.at(b)+"_all_fail").Data()));
-      h_probeNPV_btag_fail.at(bin).emplace_back(new ProbeJetHists(ctx,  (name+"_"+npvString+wps.at(b)+"_btag_fail").Data()));
     }
   }
 
   hists_all.reset(new ProbeJetHists(ctx, "ProbeJet_All"));
+  hists_all_200to250.reset(new ProbeJetHists(ctx, "ProbeJet_All_Pt200to250"));
+  hists_all_250to300.reset(new ProbeJetHists(ctx, "ProbeJet_All_Pt250to300"));
+  hists_all_300to400.reset(new ProbeJetHists(ctx, "ProbeJet_All_Pt300to400"));
   hists_all_400.reset(new ProbeJetHists(ctx, "ProbeJet_All_Pt400"));
   hists_all_400to550.reset(new ProbeJetHists(ctx, "ProbeJet_All_Pt400to550"));
   hists_all_550.reset(new ProbeJetHists(ctx, "ProbeJet_All_Pt550"));
@@ -389,10 +367,10 @@ bool TTEfficiencyPostSelectionModule::process(Event & event) {
   if(event.run < hlt_runnr) muo_trigger_SF_before->process(event);
   else                      muo_trigger_SF_after->process(event);
   muo_tight_SF->process(event);
-
+  sf_btag->process(event);
   scale_variation->process(event);
 
-  ps_weights->process(event);
+  if(isTTbar) ps_weights->process(event);
 
   for(auto & h : hists_after_sel){
     h->fill(event);
@@ -469,11 +447,10 @@ bool TTEfficiencyPostSelectionModule::process(Event & event) {
   //===================
 
   hists_all->fill_probe(event, probe_jet);
-  // if(probejet_pt > 300 && probejet_pt < 400 ) hists_subjet_btag_eff_300to400->fill(event);
-  // if(probejet_pt >= 400 && probejet_pt < 480 ) hists_subjet_btag_eff_400to480->fill(event);
-  // if(probejet_pt >= 480 && probejet_pt < 600 ) hists_subjet_btag_eff_480to600->fill(event);
-  // if(probejet_pt >= 600 ) hists_subjet_btag_eff_600->fill(event);
 
+  if(probejet_pt > 200 && probejet_pt < 250) hists_all_200to250->fill_probe(event, probe_jet);
+  if(probejet_pt > 250 && probejet_pt < 300) hists_all_250to300->fill_probe(event, probe_jet);
+  if(probejet_pt > 300 && probejet_pt < 400) hists_all_300to400->fill_probe(event, probe_jet);
   if(probejet_pt > 400) hists_all_400->fill_probe(event, probe_jet);
   if(probejet_pt > 400 && probejet_pt < 550) hists_all_400to550->fill_probe(event, probe_jet);
   if(probejet_pt > 550) hists_all_550->fill_probe(event, probe_jet);
@@ -508,27 +485,32 @@ bool TTEfficiencyPostSelectionModule::process(Event & event) {
 
   std::vector<double> tau32_wps_CHS_new           {-1, 0.40, 0.50, 0.57, 0.67, 0.81};
   std::vector<double> tau32_wps_PUPPI_new         {-1, 0.40, 0.46, 0.54, 0.65, 0.80};
+  std::vector<double> tau32_wps_HOTVR_new         {-1};
 
   std::vector<double> tau32_wps_new;
   std::vector<double> fRec_wps_new;
-  if(!useHTT && !usePUPPI) tau32_wps_new = tau32_wps_CHS_new;
-  else if(!useHTT && usePUPPI) tau32_wps_new = tau32_wps_PUPPI_new;
+  if(usePUPPI) tau32_wps_new = tau32_wps_PUPPI_new;
+  else if(useHOTVR) tau32_wps_new = tau32_wps_HOTVR_new;
+  else tau32_wps_new = tau32_wps_CHS_new;
 
+  bool pass_hotvr = false;
+  if(hotvr_tag(probe_jet, event)) pass_hotvr = true;
 
   for(unsigned int wp = 0; wp < tau32_wps_new.size(); ++wp){
 
     bool tau_cut = get_tau32_cut(wp, probejet_tau32, tau32_wps_new);
 
-    if(tau_cut) toptag.push_back(true);
+    if(usePUPPI && tau_cut) toptag.push_back(true);
+    else if(useHOTVR && pass_hotvr) toptag.push_back(true);
     else toptag.push_back(false);
 
-    if(tau_cut && mass_cut) toptag_mass.push_back(true);
+    if(usePUPPI && tau_cut && mass_cut) toptag_mass.push_back(true);
     else toptag_mass.push_back(false);
 
-    if(tau_cut && subjet_btag) toptag_btag.push_back(true);
+    if(usePUPPI && tau_cut && subjet_btag) toptag_btag.push_back(true);
     else toptag_btag.push_back(false);
 
-    if(tau_cut && mass_cut && subjet_btag) toptag_mass_btag.push_back(true);
+    if(usePUPPI && tau_cut && mass_cut && subjet_btag) toptag_mass_btag.push_back(true);
     else toptag_mass_btag.push_back(false);
   }
 
@@ -542,33 +524,14 @@ bool TTEfficiencyPostSelectionModule::process(Event & event) {
 
       bool pt_cut = get_pt_cut(bin, probejet_pt);
       if(pt_cut){
-	if(toptag.at(wp)) h_probe_all_pass.at(bin).at(wp)->fill_probe(event, probe_jet);
+        if(toptag.at(wp)) h_probe_all_pass.at(bin).at(wp)->fill_probe(event, probe_jet);
         else h_probe_all_fail.at(bin).at(wp)->fill_probe(event, probe_jet);
 
-	//	if(toptag_mass.at(wp)) h_probe_mass_pass.at(bin).at(wp)->fill_probe(event, probe_jet);
-	//	else h_probe_mass_fail.at(bin).at(wp)->fill_probe(event, probe_jet);
+        //	if(toptag_mass.at(wp)) h_probe_mass_pass.at(bin).at(wp)->fill_probe(event, probe_jet);
+        //	else h_probe_mass_fail.at(bin).at(wp)->fill_probe(event, probe_jet);
       }
 
     }
-  }
-
- //fill NPV hists
-  if(probejet_pt > 400){
-    for(unsigned int bin = 0; bin < npv_bins.size(); ++bin){
-      for(unsigned int wp = 0; wp < tau32_wps_new.size(); ++wp){
-
-	bool npv_cut = get_npv_cut(bin,  event.pvs->size());
-	if(npv_cut){
-	  if(toptag.at(wp)) h_probeNPV_all_pass.at(bin).at(wp)->fill_probe(event, probe_jet);
-	  else h_probeNPV_all_fail.at(bin).at(wp)->fill_probe(event, probe_jet);
-
-	  //  if(toptag_mass.at(wp)) h_probeNPV_mass_pass.at(bin).at(wp)->fill_probe(event, probe_jet);
-	  //  else h_probeNPV_mass_fail.at(bin).at(wp)->fill_probe(event, probe_jet);
-	}
-
-      }
-    }
-
   }
 
   //subjet_btagwAK8->process(event);
@@ -584,37 +547,18 @@ bool TTEfficiencyPostSelectionModule::process(Event & event) {
 
       bool pt_cut = get_pt_cut(bin, probejet_pt);
       if(pt_cut){
-	if(toptag_btag.at(wp)) h_probe_btag_pass.at(bin).at(wp)->fill_probe(event, probe_jet);
-	else h_probe_btag_fail.at(bin).at(wp)->fill_probe(event, probe_jet);
+        if(toptag_btag.at(wp)) h_probe_btag_pass.at(bin).at(wp)->fill_probe(event, probe_jet);
+        else h_probe_btag_fail.at(bin).at(wp)->fill_probe(event, probe_jet);
 
-	//	if(toptag_mass_btag.at(wp)) h_probe_mass_btag_pass.at(bin).at(wp)->fill_probe(event, probe_jet);
-	//	else h_probe_mass_btag_fail.at(bin).at(wp)->fill_probe(event, probe_jet);
+        //	if(toptag_mass_btag.at(wp)) h_probe_mass_btag_pass.at(bin).at(wp)->fill_probe(event, probe_jet);
+        //	else h_probe_mass_btag_fail.at(bin).at(wp)->fill_probe(event, probe_jet);
       }
 
     }
   }
 
-
-  //Fill NPV hists
-  if(probejet_pt > 400){
-
-    for(unsigned int bin = 0; bin < npv_bins.size(); ++bin){
-      for(unsigned int wp = 0; wp < tau32_wps_new.size(); ++wp){
-
-	bool npv_cut = get_npv_cut(bin, event.pvs->size());
-	if(npv_cut){
-	  if(toptag_btag.at(wp)) h_probeNPV_btag_pass.at(bin).at(wp)->fill_probe(event, probe_jet);
-	  else h_probeNPV_btag_fail.at(bin).at(wp)->fill_probe(event, probe_jet);
-
-	  //	  if(toptag_mass_btag.at(wp)) h_probeNPV_mass_btag_pass.at(bin).at(wp)->fill_probe(event, probe_jet);
-	  //	  else h_probeNPV_mass_btag_fail.at(bin).at(wp)->fill_probe(event, probe_jet);
-	}
-
-      }
-    }
-  }
-
-  return true;
+  // do not save analysis tree
+  return false;
 }
 
 bool TTEfficiencyPostSelectionModule::get_pt_cut(unsigned int bin, const double pt){
@@ -629,21 +573,6 @@ bool TTEfficiencyPostSelectionModule::get_pt_cut(unsigned int bin, const double 
     if( pt > fabs(pt_bins.at(bin)) ) m_pt_cut = true;
   }
   return m_pt_cut;
-}
-
-
-bool TTEfficiencyPostSelectionModule::get_npv_cut(unsigned int bin, const int npv){
-  if(bin > npv_bins.size()) return false;
-
-  bool m_npv_cut = false;
-  if(npv_bins.at(bin) == -1) m_npv_cut = true;
-  else if(npv_bins.at(bin) >= 0 && bin+1 < npv_bins.size() && npv_bins.at(bin+1) >= 0){
-    if( npv > npv_bins.at(bin) && npv <= npv_bins.at(bin+1) ) m_npv_cut = true;
-  }
-  else{
-    if( npv > fabs(npv_bins.at(bin)) ) m_npv_cut = true;
-  }
-  return m_npv_cut;
 }
 
 bool TTEfficiencyPostSelectionModule::get_tau32_cut(unsigned int bin, const double tau32, const std::vector<double> wps){
