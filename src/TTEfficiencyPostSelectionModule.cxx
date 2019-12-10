@@ -57,6 +57,7 @@ private:
   std::unique_ptr<GenericJetResolutionSmearer> topjetJER_smearer;
 
   //selections
+  std::unique_ptr<Selection> sel_badhcal;
   TopJetId hotvr_tag;
   // HOTVRTopTag hotvr_tag;
 
@@ -167,6 +168,9 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
   if ( vers.Contains("ST") ) isSingleTop = true;
   else                       isSingleTop = false;
 
+
+
+  Year year = extract_year(ctx);
   //===========================
   //setup corrections
   //===========================
@@ -181,6 +185,8 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
   common->disable_jetpfidfilter();
   common->init(ctx, PU_variation);
   cout << "common init" <<endl;
+
+  sel_badhcal.reset(new BadHCALSelection(ctx));
 
   //==============================
   //reweighting and scale factors
@@ -202,9 +208,27 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
   sf_btag.reset(new MCBTagScaleFactor(ctx, btag_algo, btag_wp, "jets", BTag_variation, "mujets", "incl", "MCBtagEfficiencies"));
   cout << "after btag sf module" << endl;
 
-  muo_tight_SF.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/Muon_ID_SF_RunABCD.root","NUM_TightID_DEN_TrackerMuons_pt_abseta",0., "tightID", true, MuonID_variation));
-  muo_trigger_SF_before.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/Muon_Trigger_Eff_SF_AfterMuonHLTUpdate.root","Mu50_OR_OldMu100_OR_TkMu100_PtEtaBins",0., "muonTrigger", false,  MuonTrigger_variation));
-  muo_trigger_SF_after.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/Muon_Trigger_Eff_SF_BeforeMuonHLTUpdate.root","Mu50_OR_OldMu100_OR_TkMu100_PtEtaBins",0., "muonTrigger", false,  MuonTrigger_variation));
+  TString muonID_file, muonTR_file;
+  if     (year == Year::is2016v3){
+    muo_tight_SF.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2016/MuonID_EfficienciesAndSF_average_RunBtoH.root","NUM_TightID_DEN_genTracks_eta_pt",1, "tightID", false, MuonID_variation));
+    muo_trigger_SF_before.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2016/MuonTrigger_EfficienciesAndSF_average_RunBtoH.root","IsoMu50_OR_IsoTkMu50_PtEtaBins",1, "muonTrigger", false, MuonTrigger_variation));
+    muo_trigger_SF_before.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2016/MuonTrigger_EfficienciesAndSF_average_RunBtoH.root","IsoMu50_OR_IsoTkMu50_PtEtaBins",1, "muonTrigger", false, MuonTrigger_variation));
+  }
+  else if(year == Year::is2017v2){
+    muo_tight_SF.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2017/MuonID_94X_RunBCDEF_SF_ID.root","NUM_TightID_DEN_genTracks_pt_abseta",0., "tightID", true, MuonID_variation));
+    muo_trigger_SF_before.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2017/MuonTrigger_EfficienciesAndSF_RunBtoF_Nov17Nov2017.root","Mu50_PtEtaBins",0., "muonTrigger", false, MuonTrigger_variation));
+    muo_trigger_SF_after.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2017/MuonTrigger_EfficienciesAndSF_RunBtoF_Nov17Nov2017.root","Mu50_PtEtaBins",0., "muonTrigger", false, MuonTrigger_variation));
+  }
+  else if(year == Year::is2018){
+    muo_tight_SF.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/Muon_ID_SF_RunABCD.root","NUM_TightID_DEN_TrackerMuons_pt_abseta",0., "tightID", true, MuonID_variation));
+    muo_trigger_SF_before.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/Muon_Trigger_Eff_SF_AfterMuonHLTUpdate.root","Mu50_OR_OldMu100_OR_TkMu100_PtEtaBins",0., "muonTrigger", false,  MuonTrigger_variation));
+    muo_trigger_SF_after.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2018/Muon_Trigger_Eff_SF_BeforeMuonHLTUpdate.root","Mu50_OR_OldMu100_OR_TkMu100_PtEtaBins",0., "muonTrigger", false,  MuonTrigger_variation));
+  }
+  else{
+    cout << "[ERROR] Year is not found!" << endl;
+  }
+
+
 
   scale_variation.reset(new MCScaleVariation(ctx));
 
@@ -347,6 +371,8 @@ bool TTEfficiencyPostSelectionModule::process(Event & event) {
   //run corrections
   bool ok = common->process(event);
   if(!ok) return false;
+
+  if(!sel_badhcal->passes(event)) return false;
 
 
   //if(!ptW_sel->passes(event)) return false; // uncomment for comparisons with the old pythia tune

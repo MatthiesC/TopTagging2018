@@ -58,10 +58,9 @@ private:
   std::unique_ptr<AnalysisModule> btagwAK8, subjet_btagwAK8;
 
   //selections
+  std::unique_ptr<Selection> sel_badhcal;
   std::unique_ptr<uhh2::Selection> topjet_sel, ptW_sel, trigger_sel,  met_sel, bjetCloseToLepton_sel, twoDcut;
-
   std::unique_ptr<AndSelection> first_selection;
-
   std::unique_ptr<uhh2::Selection> hadronic_selection, lepton_jets_seletion, dilepton_selection, tau_jets_selection;
   std::unique_ptr<MergedSelection> merged_selection, mergedW_selection, mergedQB_selection, mergedEvent_Selection;
   std::unique_ptr<MassDiffSelection> massDiff_selection;
@@ -208,10 +207,9 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
   //selections
   //=============================
 
+  sel_badhcal.reset(new BadHCALSelection(ctx));
   topjet_sel.reset(new NTopJetSelection(2));
-
   trigger_sel = uhh2::make_unique<TriggerSelection>("HLT_Mu50_v*");
-
   twoDcut.reset(new TwoDCut(.4, 25.));
   met_sel.reset(new METCut(50., std::numeric_limits<double>::infinity()));
   ptW_sel.reset(new PtWSelection(150.));
@@ -322,6 +320,7 @@ bool TTEfficiencyMainSelectionModule::process(Event & event) {
   if(!twoDcut->passes(event)) return false;
   if(!met_sel->passes(event)) return false;
   if(!ptW_sel->passes(event)) return false;
+  if(!sel_badhcal->passes(event)) return false;
   hists_btag_loose_eff->fill(event);
   hists_btag_medium_eff->fill(event);
   if(!bjetCloseToLepton_sel->passes(event)) return false;

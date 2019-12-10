@@ -67,7 +67,7 @@
        ██       ██
   -->
 
-  <!-- <InputData Version="TTbar_semilep_2018" Lumi="83703610.934" Type="MC" NEventsMax="-1" Cacheable="False">
+  <InputData Version="TTbar_semilep_2018" Lumi="83703610.934" Type="MC" NEventsMax="-1" Cacheable="False">
     <In FileName="&TTbar_semilep;" Lumi="0.0"/>
     <InputTree Name="AnalysisTree"/>
     <OutputTree Name="AnalysisTree"/>
@@ -83,7 +83,7 @@
     <In FileName="&TTbar_had;" Lumi="0.0"/>
     <InputTree Name="AnalysisTree"/>
     <OutputTree Name="AnalysisTree"/>
-  </InputData> -->
+  </InputData>
 
 
   <!--

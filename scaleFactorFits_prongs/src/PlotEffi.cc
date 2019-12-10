@@ -4,11 +4,14 @@ using namespace std;
 
 void PlotEffi(TString dir, TString jet, TString wp);
 void SetSameCentralValue(TGraphAsymmErrors* stat, TGraphAsymmErrors* tot);
+TString year = "2018";
 
 
 
 int main(int argc, char* argv[]){
-  TString plotdir="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_FSR_f_prongs/";
+  if(argc > 1) year = argv[1];
+
+  TString plotdir="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_FSR_f_prongs/"+year+"/";
   // vector<TString> jetcols = {"PUPPI"};
   vector<TString> jetcols = {"PUPPI", "HOTVR"};
   vector<TString> wps_PUPPI = {"wp1", "wp2", "wp3", "wp4", "wp5", "wp1_btag", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"};
@@ -24,18 +27,23 @@ int main(int argc, char* argv[]){
     }
   }
 }
- 
+
 void PlotEffi(TString dir, TString jet, TString wp){
   TString filename = dir+"eff_hists_"+jet+"_"+wp+".root";
   TFile *file = new TFile(filename);
   vector<TString> procnames = {"TTbar_mergedTop_2018", "TTbar_semimerged_2018", "TTbar_notmerged_2018", "SingleTop_mergedTop_2018", "SingleTop_semimerged_2018", "SingleTop_notmerged_2018", "QCD_2018", "DYJets_2018", "WJets_2018"};
   // vector<TString> procnames = {"mergedTop_2018", "semimergedTop_2018", "notmergedTop_2018", "QCD_2018", "DYJets_2018", "WJets_2018"};
   // vector<TString> procnames = {"mergedTop_2018", "semimergedTop_2018", "Backgrounds_2018"};
+
   vector<TGraphAsymmErrors*> pre_stat, pre_tot, post_stat, post_tot;
-  for(auto pname: procnames) pre_stat.push_back((TGraphAsymmErrors*) file->Get("effPreFit_"+pname+"_stat"));
-  for(auto pname: procnames) pre_tot.push_back((TGraphAsymmErrors*) file->Get("effPreFit_"+pname+"_tot"));
-  for(auto pname: procnames) post_stat.push_back((TGraphAsymmErrors*) file->Get("effPostFit_"+pname+"_stat"));
-  for(auto pname: procnames) post_tot.push_back((TGraphAsymmErrors*) file->Get("effPostFit_"+pname+"_tot"));
+  for(auto pname: procnames){
+    if(year == "2016")      pname.ReplaceAll("2018", "2016v3");
+    else if(year == "2017") pname.ReplaceAll("2018", "2017v2");
+    pre_stat.push_back((TGraphAsymmErrors*) file->Get("effPreFit_"+pname+"_stat"));
+    pre_tot.push_back((TGraphAsymmErrors*) file->Get("effPreFit_"+pname+"_tot"));
+    post_stat.push_back((TGraphAsymmErrors*) file->Get("effPostFit_"+pname+"_stat"));
+    post_tot.push_back((TGraphAsymmErrors*) file->Get("effPostFit_"+pname+"_tot"));
+  }
 
   SetupGlobalStyle();
   for(unsigned int i=0; i<pre_stat.size(); i++){
@@ -79,7 +87,7 @@ void PlotEffi(TString dir, TString jet, TString wp){
     leg->AddEntry(post_stat[i], "post fit", "pl");
     leg->Draw();
     gPad->RedrawAxis();
-    c->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_prongs/Effi_"+jet+"_"+wp+"_"+procnames[i]+".pdf");
+    c->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_prongs/"+year+"/Effi_"+jet+"_"+wp+"_"+procnames[i]+".pdf");
     delete c;
   }
 

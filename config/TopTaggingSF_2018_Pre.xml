@@ -58,7 +58,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="25" />
-<ConfigSGE RAM ="2" DISK ="2" Mail="dennis.schwarz@desy.de" Notification="as" Workdir="workdir_Pre"/>
+<ConfigSGE RAM ="2" DISK ="2" Mail="dennis.schwarz@desy.de" Notification="as" Workdir="workdir_Pre2018"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -379,7 +379,7 @@
     <!-- <Item Name="TopJetCollection" Value="jetAk8CHSSubstructure_SoftDropCHS" /> -->
     <!-- <Item Name="TopJetCollection" Value="hotvrPuppi" /> -->
     <Item Name="GenParticleCollection" Value="GenParticles" />
-    <Item Name="additionalBranches" Value="hotvrGen hotvrPuppi" />
+    <Item Name="additionalBranches" Value="hotvrGen hotvrPuppi jetAk8CHSSubstructure_SoftDropCHS" />
 
 
     <!-- the class name of the AnalysisModule subclasses to run: -->

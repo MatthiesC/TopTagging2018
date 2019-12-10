@@ -18,7 +18,8 @@ outdir="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/"
 def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write_report = False):
     if write_report:report.reopen_file()
 
-    inputpath = "thetaFiles_NoFSRnotmerged/mass_sub/"
+    year = '2018'
+    inputpath = "thetaFiles_NoFSRnotmerged/"+year+"/mass_sub/"
     print 'use files in', inputpath
 
     model_stat = build_model_from_rootfile(inputpath+fname_stat, include_mc_uncertainties=True)
@@ -78,13 +79,14 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
         rate_unc_DY = math.log(1.1)
     if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp1" in fname_sys:
         TagEffi_3prong_unc = 0.5
+        rate_unc_QCD = math.log(1.8)
     #wp2
     if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp2" in fname_sys:
-        TagEffi_3prong_unc = 0.8
-        TagEffi_2prong_unc = 0.6
-        TagEffi_1prong_unc = 0.6
-        rate_unc_QCD = math.log(1.5)
-        rate_unc_WJets = math.log(1.5)
+        TagEffi_3prong_unc = 0.5
+        TagEffi_2prong_unc = 0.5
+        TagEffi_1prong_unc = 0.5
+        rate_unc_QCD = math.log(1.6)
+        rate_unc_WJets = math.log(1.4)
     if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp2" in fname_sys:
         TagEffi_3prong_unc = 0.5
         rate_unc_QCD = math.log(1.8)
@@ -93,9 +95,11 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
         rate_unc_QCD = math.log(1.8)
     #wp3
     if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp3" in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        rate_unc_QCD = math.log(1.6)
-        rate_unc_WJets = math.log(1.4)
+        TagEffi_3prong_unc = 0.3
+        TagEffi_2prong_unc = 0.5
+        TagEffi_1prong_unc = 0.5
+        rate_unc_QCD = math.log(1.8)
+        # rate_unc_WJets = math.log(1.5)
         rate_unc_BKG = math.log(1.4)
     if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp3" in fname_sys:
         TagEffi_3prong_unc = 0.5
@@ -105,7 +109,7 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
     #wp4
     if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp4" in fname_sys:
         TagEffi_3prong_unc = 0.5
-        rate_unc_QCD = math.log(1.6)
+        rate_unc_QCD = math.log(1.5)
     if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp4" in fname_sys:
         TagEffi_3prong_unc = 0.5
         rate_unc_QCD = math.log(1.6)
@@ -116,23 +120,26 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
         TagEffi_2prong_unc = 0.3
         TagEffi_1prong_unc = 0.3
         rate_unc_QCD = math.log(1.8)
-        # rate_unc_WJets = math.log(1.4)
     if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp5" in fname_sys:
         TagEffi_3prong_unc = 0.5
         rate_unc_QCD = math.log(1.6)
         rate_unc_WJets = math.log(1.4)
     #wp1 btag
     if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp1_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.6
-        TagEffi_1prong_unc = 0.6
-        rate_unc_QCD = math.log(1.7)
-        rate_unc_WJets = math.log(1.4)
-    if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp1_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.5
+        TagEffi_3prong_unc = 0.7
         TagEffi_2prong_unc = 0.5
         TagEffi_1prong_unc = 0.5
-        rate_unc_QCD = math.log(1.6)
+        rate_unc_QCD = math.log(1.7)
+        rate_unc_WJets = math.log(1.2)
+        rate_unc_SingleTop = math.log(1.2)
+        rate_unc_WJets = math.log(1.2)
+        rate_unc_DY = math.log(1.2)
+    if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp1_btag" in fname_sys:
+        TagEffi_3prong_unc = 0.6
+        TagEffi_2prong_unc = 0.5
+        TagEffi_1prong_unc = 0.5
+        rate_unc_QCD = math.log(1.9)
+        rate_unc_WJets = math.log(1.4)
     if '480to600' in fname_sys and 'PUPPI' in fname_sys and "wp1_btag" in fname_sys:
         TagEffi_3prong_unc = 0.5
         TagEffi_2prong_unc = 0.3
@@ -145,10 +152,11 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
         rate_unc_QCD = math.log(1.8)
         rate_unc_BKG = math.log(2.0)
     if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp2_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.3
-        TagEffi_1prong_unc = 0.3
-        rate_unc_QCD = math.log(1.6)
+        TagEffi_3prong_unc = 0.6
+        TagEffi_2prong_unc = 0.5
+        TagEffi_1prong_unc = 0.5
+        rate_unc_QCD = math.log(1.9)
+        rate_unc_WJets = math.log(1.4)
     if '480to600' in fname_sys and 'PUPPI' in fname_sys and "wp2_btag" in fname_sys:
         TagEffi_3prong_unc = 0.5
         TagEffi_2prong_unc = 0.3
@@ -170,6 +178,8 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
         TagEffi_3prong_unc = 0.5
         TagEffi_2prong_unc = 0.3
         TagEffi_1prong_unc = 0.3
+        rate_unc_QCD = math.log(1.8)
+        rate_unc_WJets = math.log(1.2)
     if '480to600' in fname_sys and 'PUPPI' in fname_sys and "wp4_btag" in fname_sys:
         TagEffi_3prong_unc = 0.5
         TagEffi_2prong_unc = 0.3
@@ -177,10 +187,10 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
     #wp5 btag
     if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp5_btag" in fname_sys:
         TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.6
-        TagEffi_1prong_unc = 0.6
-        rate_unc_QCD = math.log(1.7)
-        rate_unc_WJets = math.log(1.4)
+        TagEffi_2prong_unc = 0.3
+        TagEffi_1prong_unc = 0.3
+        rate_unc_QCD = math.log(1.6)
+        rate_unc_WJets = math.log(1.5)
     if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp5_btag" in fname_sys:
         TagEffi_3prong_unc = 0.5
         TagEffi_2prong_unc = 0.3
@@ -189,21 +199,22 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
         rate_unc_QCD = math.log(1.8)
     #HOTVR
     if '200to250' in fname_sys and 'HOTVR' in fname_sys:
-        TagEffi_3prong_unc = 0.6
-        TagEffi_2prong_unc = 0.4
-        TagEffi_1prong_unc = 0.4
-        rate_unc_QCD = math.log(2.0)
+        TagEffi_3prong_unc = 0.5
+        TagEffi_2prong_unc = 0.5
+        TagEffi_1prong_unc = 0.5
+        rate_unc_QCD = math.log(1.4)
     if '250to300' in fname_sys and 'HOTVR' in fname_sys:
-        TagEffi_3prong_unc = 0.6
-        TagEffi_2prong_unc = 0.4
-        TagEffi_1prong_unc = 0.4
-        rate_unc_QCD = math.log(1.6)
+        TagEffi_3prong_unc = 0.5
+        TagEffi_2prong_unc = 0.5
+        TagEffi_1prong_unc = 0.5
+        rate_unc_QCD = math.log(1.8)
+        rate_unc_WJets = math.log(1.4)
     if '300to400' in fname_sys and 'HOTVR' in fname_sys:
         TagEffi_3prong_unc = 0.6
         TagEffi_2prong_unc = 0.4
         TagEffi_1prong_unc = 0.4
         rate_unc_QCD = math.log(1.6)
-        rate_unc_WJets = math.log(1.4)        
+        rate_unc_WJets = math.log(1.4)
     if '400to480' in fname_sys and 'HOTVR' in fname_sys:
         TagEffi_3prong_unc = 0.5
         TagEffi_2prong_unc = 0.3
@@ -251,10 +262,10 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
     options = Options()
     options.set('minimizer', 'strategy', 'robust')
 
-    if '200to250' in fname_sys and 'HOTVR' in fname_sys:
-        options.set('minimizer', 'minuit_tolerance_factor', '8')
-    if '250to300' in fname_sys and 'HOTVR' in fname_sys:
-        options.set('minimizer', 'minuit_tolerance_factor', '6')
+    # if '200to250' in fname_sys and 'HOTVR' in fname_sys:
+    #     options.set('minimizer', 'minuit_tolerance_factor', '8')
+    # if '250to300' in fname_sys and 'HOTVR' in fname_sys:
+    #     options.set('minimizer', 'minuit_tolerance_factor', '6')
 
     n_name_stat = deepcopy(outname_stat)
     n_name_stat = n_name_stat.replace(".root","_")
@@ -275,10 +286,10 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
     print 'plot/write'
     print '============'
 
-    PlotPostFitCorrelations(model_stat, mle_output_stat['background_only'], outdir+"fitResults_FSR_f_prongs/nuissance/Corr_"+n_name_stat)
-    PlotPostFitCorrelations(model_sys, mle_output_sys['background_only'], outdir+"fitResults_FSR_f_prongs/nuissance/Corr_"+n_name_sys)
-    writeOutputFile(inputpath+fname_stat,  outdir+"fitResults_FSR_f_prongs/mass_sub/"+outname_stat, mle_output_stat['background_only'], model_stat)
-    writeOutputFile(inputpath+fname_sys,  outdir+"fitResults_FSR_f_prongs/mass_sub/"+outname_sys, mle_output_sys['background_only'], model_sys)
+    PlotPostFitCorrelations(model_stat, mle_output_stat['background_only'], outdir+"fitResults_FSR_f_prongs/"+year+"/nuissance/Corr_"+n_name_stat)
+    PlotPostFitCorrelations(model_sys, mle_output_sys['background_only'], outdir+"fitResults_FSR_f_prongs/"+year+"/nuissance/Corr_"+n_name_sys)
+    writeOutputFile(inputpath+fname_stat,  outdir+"fitResults_FSR_f_prongs/"+year+"/mass_sub/"+outname_stat, mle_output_stat['background_only'], model_stat)
+    writeOutputFile(inputpath+fname_sys,  outdir+"fitResults_FSR_f_prongs/"+year+"/mass_sub/"+outname_sys, mle_output_sys['background_only'], model_sys)
 
     if calc_sfs:
         sfs = SFcalculation(inputpath+fname_stat, inputpath+fname_sys, mle_output_stat['background_only'], mle_output_sys['background_only'], model_stat, model_sys)
@@ -291,8 +302,8 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
             sfs.setMassWindow(140,220)
         if not 'HOTVR' in fname_stat:
             print 'set extra mass files'
-            sfs.setMassEffHists("thetaFiles_NoFSRnotmerged/mass_sub/fine/"+fname_stat);
-            sfs.setMassEffHistsSys("thetaFiles_NoFSRnotmerged/mass_sub/fine/"+fname_sys);
+            sfs.setMassEffHists("thetaFiles_NoFSRnotmerged/"+year+"/mass_sub/fine/"+fname_stat);
+            sfs.setMassEffHistsSys("thetaFiles_NoFSRnotmerged/"+year+"/mass_sub/fine/"+fname_sys);
 
         dictOut_stat = sfs.calcEfficiencies('stat')
         dictOut_sys = sfs.calcEfficiencies('sys')
@@ -305,10 +316,10 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
         del pf_vals['__cov']
 
     postfit_stat = ThetaPostFitPlot(mle_output_stat)
-    postfit_stat.make_plots(outdir+"fitResults_FSR_f_prongs/nuissance/",n_name_stat)
+    postfit_stat.make_plots(outdir+"fitResults_FSR_f_prongs/"+year+"/nuissance/",n_name_stat)
 
     postfit_sys = ThetaPostFitPlot(mle_output_sys)
-    postfit_sys.make_plots(outdir+"fitResults_FSR_f_prongs/nuissance/",n_name_sys)
+    postfit_sys.make_plots(outdir+"fitResults_FSR_f_prongs/"+year+"/nuissance/",n_name_sys)
 
     if calc_sfs:
         return [dictOut_stat, dictOut_sys]
@@ -322,8 +333,8 @@ calculate_scaleFactors = True
 #run("thetaFile_400_PUPPI_sys_.root", "Hists_400_PUPPI_sys.root")
 
 # wps = ["_wp1", "_wp2", "_wp3", "_wp4", "_wp5", "_wp1_btag", "_wp2_btag", "_wp3_btag", "_wp4_btag", "_wp5_btag"]
-# wps = ["_wp5_btag"]
-wps = []
+wps = ["_wp5_btag"]
+# wps = []
 for wp in wps:
     print 'run PUPPI, ',wp
     d_300to400 = run("thetaFile_300to400_PUPPI_stat"+wp+".root", "thetaFile_300to400_PUPPI_sys"+wp+".root", "Hists_300to400_PUPPI_stat"+wp+".root", "Hists_300to400_PUPPI_sys"+wp+".root", calculate_scaleFactors)
@@ -341,8 +352,8 @@ for wp in wps:
         WriteEffGraphs_separate(outdir+"ScaleFactors_FSR_f_prongs/eff_hists_PUPPI"+wp+".root", dicts_stat, dicts_sys, bins)
 
 
-wpsHOTVR = ["_"]
-# wpsHOTVR = []
+# wpsHOTVR = ["_"]
+wpsHOTVR = []
 bins = array('d', [200, 250, 300, 400, 480, 600, 1100])
 for wp in wpsHOTVR:
     print 'run HOTVR, ',wp

@@ -8,7 +8,8 @@
 #include "UHH2/common/include/JetIds.h"
 #include "UHH2/common/include/TopJetIds.h"
 #include "UHH2/common/include/Utils.h"
-
+#include <TRandom.h>
+#include <TRandomGen.h>
 
 #include "UHH2/common/include/ReconstructionHypothesisDiscriminators.h"
 
@@ -162,6 +163,25 @@ class LeadingAddJetSelection: public uhh2::Selection{
      JetId btag_;
      double ptMin_;
 };
+
+class BadHCALSelection: public uhh2::Selection {
+  public:
+    BadHCALSelection(uhh2::Context &ctx, long int seed = 123456789);
+    virtual bool passes(const uhh2::Event &event) override;
+
+  private:
+    TRandom *m_rng;
+    long int m_seed;
+    Year year;
+    int m_runnumber = 319077;
+    double m_lumi_ratio = 0.64844705699; // (Run 319077(17.370008 pb-1) + Run C + Run D) / all 2018
+
+    double m_interval_eta = -1.3;
+    double m_interval_phi_low = -1.57;
+    double m_interval_phi_high = -0.87;
+
+  };
+
 
   /*
 class HadronicTopSelection: pubic uhh2::Selection{

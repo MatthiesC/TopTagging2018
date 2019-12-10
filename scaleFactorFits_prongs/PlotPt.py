@@ -2,6 +2,7 @@
 import os
 import sys
 
+
 def replace_steer(PathRootFile, PlotName, year):
     PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PreFit_prongs/"+year+"/"
     filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs"
@@ -37,9 +38,9 @@ PathRootFile= "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/TopTag
 jets = ["PUPPI", "HOTVR"]
 
 for jet in jets:
-    rootname=PathRootFile+"thetaFile_tau32_"+year+"_"+jet+".root"
-    plotname="PreFit_tau32_"+jet
+    rootname=PathRootFile+"thetaFile_pt_"+year+"_"+jet+".root"
+    plotname="PreFit_pt_"+jet
     replace_steer(rootname, plotname, year)
     os.system("/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/bin/Plots -f toptagging_prongs_temp.steer")
     os.chdir(PathPlots)
-    os.system("epstopdf PreFit_tau32_"+jet+"_Main_tau32.eps")
+    os.system("epstopdf PreFit_pt_"+jet+"_Main_pt.eps")

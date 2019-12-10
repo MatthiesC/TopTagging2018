@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import os
+import sys
 
 def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR):
     outfile = open(PathPlots+"SFLatex.tex","w")
@@ -100,7 +101,11 @@ def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR):
 
 
 ####### MAIN
-PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_prongs/"
+year = "2018"
+if len(sys.argv) > 1:
+    year = sys.argv[1]
+
+PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_prongs/"+year+"/"
 jets = ["PUPPI", "HOTVR"]
 # jets = ["PUPPI"]
 # jets = ["HOTVR"]
@@ -108,9 +113,9 @@ wps_PUPPI = ["wp1", "wp2", "wp3", "wp4", "wp5", "wp1_btag", "wp2_btag", "wp3_bta
 wps_HOTVR = [""]
 
 print "create SF plots..."
-os.system("./PlotSF")
+os.system("./PlotSF "+year)
 print "create Effi plots..."
-os.system("./PlotEffi")
+os.system("./PlotEffi "+year)
 print "creating latex document..."
 os.chdir(PathPlots)
 write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR)

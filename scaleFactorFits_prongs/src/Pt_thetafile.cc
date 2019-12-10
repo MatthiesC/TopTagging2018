@@ -1,9 +1,9 @@
 #include "../include/CentralInclude.h"
 
 using namespace std;
+
+void HistCosmetics(TH1F* hist);
 TString year = "2018";
-
-
 
 int main(int argc, char* argv[]){
   if(argc > 1) year = argv[1];
@@ -32,13 +32,12 @@ int main(int argc, char* argv[]){
 
   for(auto jet: Jets){
 
-    TString histname = "ProbeJet_All_Pt400/tau32";
+    TString histname = "ProbeJet_All_Pt400/pt";
     TString InputPath = InputPath_PUPPI;
     if(jet == "HOTVR"){
-      histname += "_groomed";
       InputPath = InputPath_HOTVR;
     }
-    TFile *outputFile = new TFile("thetaFile_tau32_"+year+"_"+jet+".root","RECREATE");
+    TFile *outputFile = new TFile("thetaFile_pt_"+year+"_"+jet+".root","RECREATE");
     // first get and write data
     cout << "write data..." << endl;
     TString dataname = "uhh2.AnalysisModuleRunner.DATA.SingleMu_2018.root";
@@ -46,8 +45,9 @@ int main(int argc, char* argv[]){
     else if(year == "2017") dataname.ReplaceAll("2018", "2017v2");
     TFile* f_data = new TFile(InputPath+dataname);
     TH1F* h_data = (TH1F*) f_data->Get(histname);
+    HistCosmetics(h_data);
     outputFile->cd();
-    h_data->Write("tau32__DATA");
+    h_data->Write("pt__DATA");
     for(auto mcname: MCNames){
       if(year == "2016")      mcname.ReplaceAll("2018", "2016v3");
       else if(year == "2017") mcname.ReplaceAll("2018", "2017v2");
@@ -55,18 +55,25 @@ int main(int argc, char* argv[]){
       cout << "write " << mcname << "..." << endl;
       TFile* f_nom = new TFile(InputPath+"uhh2.AnalysisModuleRunner.MC."+mcname+".root");
       TH1F* h_nom = (TH1F*) f_nom->Get(histname);
+      HistCosmetics(h_nom);
       outputFile->cd();
-      h_nom->Write("tau32__" + mcname);
+      h_nom->Write("pt__" + mcname);
       for(auto sys: systematics){
         // now do all systematics
         cout << "write " << mcname << "(" << sys[0] << ")" <<"..." << endl;
         TFile * f_sys = new TFile(InputPath+sys[1]+"/"+"uhh2.AnalysisModuleRunner.MC."+mcname+".root");
         TH1F* h_sys = (TH1F*) f_sys->Get(histname);
+        HistCosmetics(h_sys);
         outputFile->cd();
-        h_sys->Write("tau32__" + mcname + "__" + sys[0]);
+        h_sys->Write("pt__" + mcname + "__" + sys[0]);
       }
     }
     outputFile->Close();
   }
   return 0;
+}
+
+void HistCosmetics(TH1F* hist){
+  hist->Rebin(5);
+  hist->GetXaxis()->SetRangeUser(400, 1000);
 }

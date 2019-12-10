@@ -21,9 +21,18 @@ void write_theta_files_FSR(){
 
   TString PDF_dir = "fill_PDF_TRUE";
 
+  TString year = "2018";
+
   std::vector<TString> MCNames {"TTbar_mergedTop_2018", "TTbar_semimerged_2018", "TTbar_notmerged_2018", "SingleTop_mergedTop_2018", "SingleTop_semimerged_2018", "SingleTop_notmerged_2018", "QCD_2018", "DYJets_2018", "WJets_2018"};
   // std::vector<TString> MCNames {"mergedTop_2018", "semimergedTop_2018", "notmergedTop_2018", "QCD_2018", "DYJets_2018", "WJets_2018"};
   // std::vector<TString> MCNames {"mergedTop_2018", "semimergedTop_2018", "Backgrounds_2018"};
+
+  if(year != "2018"){
+    for(auto mcname: MCNames){
+      if(year == "2016")      mcname.ReplaceAll("2018", "2016v3");
+      else if(year == "2017") mcname.ReplaceAll("2018", "2017v2");
+    }
+  }
 
   std::vector< vector<TString> > systematics {
     {"Btag_bc__plus", "BTAG_bc_up"}, {"Btag_udsg__plus", "BTAG_udsg_up"},
@@ -81,8 +90,8 @@ void write_theta_files_FSR(){
     std::vector<bool> ttbarscaling  = {true, false};
     //std::vector<bool> ttbarscaling  = { false};
 
-    // std::vector<TString> JetCollections = {"PUPPI", "HOTVR"};
-    std::vector<TString> JetCollections = {"HOTVR"};
+    std::vector<TString> JetCollections = {"PUPPI", "HOTVR"};
+    // std::vector<TString> JetCollections = {"HOTVR"};
     // std::vector<TString> JetCollections = {"PUPPI","CHS"};
 
     std::vector<TString> vPassFail = {"pass", "fail"};
@@ -192,7 +201,7 @@ void write_theta_files_FSR(){
                     TString binName =  observables.at(bin).at(2);
                     binName.ReplaceAll("_PASSFAIL", "");
 
-                    TString outName = "thetaFiles_NoFSRnotmerged/"+variable+"/"+fine+"thetaFile_"+binName+"_"+JetCollection+"_"+Statsys+"_"+wp+scaled+".root";
+                    TString outName = "thetaFiles_NoFSRnotmerged/"+year+"/"+variable+"/"+fine+"thetaFile_"+binName+"_"+JetCollection+"_"+Statsys+"_"+wp+scaled+".root";
                     outputFile = new TFile(outName,"RECREATE");
                     cout << outName << endl;
                   }

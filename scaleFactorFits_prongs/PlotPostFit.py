@@ -1,8 +1,9 @@
 #!/usr/bin/python
 import os
+import sys
 
-def replace_steer(PathRootFile, PlotName):
-    PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PostFit_prongs/"
+def replace_steer(PathRootFile, PlotName, year):
+    PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PostFit_prongs/"+year+"/"
     filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs"
     oldfile = open(filename+".steer",'r')       # open file for read
     newfile = open("toptagging_prongs_temp.steer", 'w') # create new file to write
@@ -85,8 +86,12 @@ def write_latex(PathPlots,ptbins_PUPPI, ptbins_HOTVR, jets, uncerts, wps_PUPPI, 
 
 
 ####### MAIN
-PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PostFit_prongs/"
-PathRootFile= "/afs/desy.de/user/s/schwarzd/Plots/TopTagging/fitResults_FSR_f_prongs/mass_sub/"
+year = "2018"
+if len(sys.argv) > 1:
+    year = sys.argv[1]
+
+PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PostFit_prongs/"+year+"/"
+PathRootFile= "/afs/desy.de/user/s/schwarzd/Plots/TopTagging/fitResults_FSR_f_prongs/"+year+"/mass_sub/"
 ptbins_PUPPI = ["300to400", "400to480", "480to600", "600"]
 ptbins_HOTVR = ["200to250", "250to300", "300to400", "400to480", "480to600", "600"]
 jets = ["PUPPI", "HOTVR"]
@@ -108,7 +113,7 @@ for jet in jets:
             for wp in wps:
                 rootname=PathRootFile+"Hists_"+pt+"_"+jet+"_"+unc+"_"+wp+".root"
                 plotname="PostFit_"+pt+"_"+jet+"_"+unc+"_"+wp
-                replace_steer(rootname, plotname)
+                replace_steer(rootname, plotname, year)
                 os.system("/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/bin/Plots -f toptagging_prongs_temp.steer")
 
 print "creating latex document..."

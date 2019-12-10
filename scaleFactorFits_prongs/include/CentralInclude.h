@@ -139,7 +139,7 @@ void CMSSimLabel(bool prelim, double x=0.24, double y=0.9){
 
 void LumiInfo(double lumi = 19.7, bool bratio = false)
 {
-  TString infotext = TString::Format("%3.1f fb^{-1} (8 TeV)", lumi);
+  TString infotext = TString::Format("%3.1f fb^{-1} (13 TeV)", lumi);
   TLatex *text1 = new TLatex(3.5, 24, infotext);
   text1->SetNDC();
   text1->SetTextAlign(33);
