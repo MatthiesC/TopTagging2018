@@ -22,8 +22,6 @@
 <!ENTITY WJets_HT1200to2500 "&INdir;/uhh2.AnalysisModuleRunner.MC.WJets_HT1200to2500_2017v2.root">
 <!ENTITY WJets_HT2500toInf  "&INdir;/uhh2.AnalysisModuleRunner.MC.WJets_HT2500toInf_2017v2.root">
 
-<!ENTITY QCD_PT50to80    "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT50to80_2017v2.root">
-<!ENTITY QCD_PT80to120   "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT80to120_2017v2.root">
 <!ENTITY QCD_PT120to170  "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT120to170_2017v2.root">
 <!ENTITY QCD_PT170to300  "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT170to300_2017v2.root">
 <!ENTITY QCD_PT300to470  "&INdir;/uhh2.AnalysisModuleRunner.MC.QCD_PT300to470_2017v2.root">
@@ -286,17 +284,6 @@
 ▀▀
 -->
 
-<InputData Version="QCD_PT50to80_2017v2" Lumi="63.38724552" Type="MC" NEventsMax="-1" Cacheable="False">
-  <In FileName="&QCD_PT50to80;" Lumi="0.0"/>
-  <InputTree Name="AnalysisTree"/>
-  <OutputTree Name="AnalysisTree"/>
-</InputData>
-
-<InputData Version="QCD_PT80to120_2017v2" Lumi="248.4389353" Type="MC" NEventsMax="-1" Cacheable="False">
-  <In FileName="&QCD_PT80to120;" Lumi="0.0"/>
-  <InputTree Name="AnalysisTree"/>
-  <OutputTree Name="AnalysisTree"/>
-</InputData>
 
 <InputData Version="QCD_PT120to170_2017v2" Lumi="892.6900519" Type="MC" NEventsMax="-1" Cacheable="False">
   <In FileName="&QCD_PT120to170;" Lumi="0.0"/>

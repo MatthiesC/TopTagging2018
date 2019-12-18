@@ -2,7 +2,7 @@
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd" [
 
 <!ENTITY INdir    "/nfs/dust/cms/user/schwarzd/TopTagging/PreSel/">
-<!ENTITY OUTdir   "/nfs/dust/cms/user/schwarzd/TopTagging/Selection/">
+<!ENTITY OUTdir   "/nfs/dust/cms/user/schwarzd/TopTagging/Selection/JECup/">
 
 <!ENTITY TTbar_semilep "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_semilep_2017v2.root">
 <!ENTITY TTbar_had     "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_had_2017v2.root">
@@ -42,17 +42,11 @@
 <!ENTITY DYJets_HT1200to2500 "&INdir;/uhh2.AnalysisModuleRunner.MC.DYJets_HT1200to2500_2017v2.root">
 <!ENTITY DYJets_HT2500toInf  "&INdir;/uhh2.AnalysisModuleRunner.MC.DYJets_HT2500toInf_2017v2.root">
 
-<!ENTITY SingleMu_B "&INdir;/uhh2.AnalysisModuleRunner.DATA.SingleMu_B_2017v2.root">
-<!ENTITY SingleMu_C "&INdir;/uhh2.AnalysisModuleRunner.DATA.SingleMu_C_2017v2.root">
-<!ENTITY SingleMu_D "&INdir;/uhh2.AnalysisModuleRunner.DATA.SingleMu_D_2017v2.root">
-<!ENTITY SingleMu_E "&INdir;/uhh2.AnalysisModuleRunner.DATA.SingleMu_E_2017v2.root">
-<!ENTITY SingleMu_F "&INdir;/uhh2.AnalysisModuleRunner.DATA.SingleMu_F_2017v2.root">
-
 ]>
 
 <!--
 <ConfigParse NEventsBreak="100000" LastBreak="0" FileSplit="0" />
-<ConfigSGE RAM ="4" DISK ="2" Mail="dennis.schwarz@desy.de" Notification="as" Workdir="workdir_Sel2017"/>
+<ConfigSGE RAM ="4" DISK ="2" Mail="dennis.schwarz@desy.de" Notification="as" Workdir="workdir_JECup2017"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -63,46 +57,6 @@
   <Library Name="libfastjettools" />
 
   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="41530" >
-    <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
-
-
-<!--
-    ██████   █████  ████████  █████
-    ██   ██ ██   ██    ██    ██   ██
-    ██   ██ ███████    ██    ███████
-    ██   ██ ██   ██    ██    ██   ██
-    ██████  ██   ██    ██    ██   ██
--->
-
-    <InputData Version="SingleMu_B_2017v2" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
-      <In FileName="&SingleMu_B;" Lumi="0.0"/>
-      <InputTree Name="AnalysisTree"/>
-      <OutputTree Name="AnalysisTree"/>
-    </InputData>
-
-    <InputData Version="SingleMu_C_2017v2" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
-      <In FileName="&SingleMu_C;" Lumi="0.0"/>
-      <InputTree Name="AnalysisTree"/>
-      <OutputTree Name="AnalysisTree"/>
-    </InputData>
-
-    <InputData Version="SingleMu_D_2017v2" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
-      <In FileName="&SingleMu_D;" Lumi="0.0"/>
-      <InputTree Name="AnalysisTree"/>
-      <OutputTree Name="AnalysisTree"/>
-    </InputData>
-
-    <InputData Version="SingleMu_E_2017v2" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
-      <In FileName="&SingleMu_E;" Lumi="0.0"/>
-      <InputTree Name="AnalysisTree"/>
-      <OutputTree Name="AnalysisTree"/>
-    </InputData>
-
-    <InputData Version="SingleMu_F_2017v2" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
-      <In FileName="&SingleMu_F;" Lumi="0.0"/>
-      <InputTree Name="AnalysisTree"/>
-      <OutputTree Name="AnalysisTree"/>
-    </InputData>
 
 <!--
   ████████ ████████
@@ -385,6 +339,9 @@
     <Item Name="useHTT" Value="FALSE" />
     <Item Name="usePUPPI" Value="TRUE" />
     <Item Name="TopJetCorrectionMode" Value="SUB" />
+
+    <Item Name="jecsmear_direction" Value="up" />       <!-- has to be: nominal, up or down! -->
+    <Item Name="jersmear_direction" Value="nominal" />            <!-- has to be: nominal, up or down! -->
 
     <!-- the class name of the AnalysisModule subclasses to run: -->
     <Item Name="AnalysisModule" Value="TTEfficiencyMainSelectionModule" />

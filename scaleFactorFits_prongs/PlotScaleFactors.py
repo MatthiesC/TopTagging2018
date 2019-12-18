@@ -2,7 +2,7 @@
 import os
 import sys
 
-def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR):
+def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR, year):
     outfile = open(PathPlots+"SFLatex.tex","w")
     outfile.write("\\documentclass[aspectratio=169]{beamer}\n")
     outfile.write("\\usepackage[english]{babel}\n")
@@ -11,6 +11,11 @@ def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR):
     outfile.write("\\usetheme{Copenhagen}\n")
     outfile.write("\\usecolortheme{beaver}\n")
     outfile.write("\\begin{document}\n")
+    yearstring = "2018"
+    if year == "2016":
+        yearstring = "2016v3"
+    if year == "2017":
+        yearstring = "2017v2"
     for jet in jets:
         if "HOTVR" in jet:
             wps = wps_HOTVR
@@ -27,8 +32,7 @@ def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR):
             outfile.write("\\begin{columns}\n")
             #----1st column
             #TTbar merged
-            filename = "SF_"+jet+"_"+wp+"_TTbar_mergedTop_2018"
-            # filename = "SF_"+jet+"_"+wp+"_mergedTop_2018"
+            filename = "SF_"+jet+"_"+wp+"_TTbar_mergedTop_"+yearstring
             outfile.write("\\begin{column}{.33\\textwidth}\n")
             outfile.write("\\centering\n")
             outfile.write("\\tiny TTbar merged\n")
@@ -38,7 +42,7 @@ def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR):
             outfile.write("} \n")
             outfile.write("\\end{figure}\n")
             # SingleTop merged
-            filename = "SF_"+jet+"_"+wp+"_SingleTop_mergedTop_2018"
+            filename = "SF_"+jet+"_"+wp+"_SingleTop_mergedTop_"+yearstring
             outfile.write("\\centering\n")
             outfile.write("\\tiny Single Top merged\n")
             outfile.write("\\begin{figure}\n")
@@ -49,8 +53,8 @@ def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR):
             outfile.write("\\end{column}\n")
             #----2nd column
             #TTbar semimerged
-            filename = "SF_"+jet+"_"+wp+"_TTbar_semimerged_2018"
-            # filename = "SF_"+jet+"_"+wp+"_semimergedTop_2018"
+            filename = "SF_"+jet+"_"+wp+"_TTbar_semimerged_"+yearstring
+            # filename = "SF_"+jet+"_"+wp+"_semimergedTop_"+yearstring
             outfile.write("\\begin{column}{.33\\textwidth}\n")
             outfile.write("\\centering\n")
             outfile.write("\\tiny TTbar semimerged\n")
@@ -60,7 +64,7 @@ def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR):
             outfile.write("} \n")
             outfile.write("\\end{figure}\n")
             # SingleTop semimerged
-            filename = "SF_"+jet+"_"+wp+"_SingleTop_semimerged_2018"
+            filename = "SF_"+jet+"_"+wp+"_SingleTop_semimerged_"+yearstring
             outfile.write("\\centering\n")
             outfile.write("\\tiny Single Top semimerged\n")
             outfile.write("\\begin{figure}\n")
@@ -71,8 +75,8 @@ def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR):
             outfile.write("\\end{column}\n")
             #----3rd column
             #TTbar not merged
-            filename = "SF_"+jet+"_"+wp+"_TTbar_notmerged_2018"
-            # filename = "SF_"+jet+"_"+wp+"_notmergedTop_2018"
+            filename = "SF_"+jet+"_"+wp+"_TTbar_notmerged_"+yearstring
+            # filename = "SF_"+jet+"_"+wp+"_notmergedTop_"+yearstring
             outfile.write("\\begin{column}{.33\\textwidth}\n")
             outfile.write("\\centering\n")
             outfile.write("\\tiny TTbar not merged\n")
@@ -82,7 +86,7 @@ def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR):
             outfile.write("} \n")
             outfile.write("\\end{figure}\n")
             # SingleTop semimerged
-            filename = "SF_"+jet+"_"+wp+"_SingleTop_notmerged_2018"
+            filename = "SF_"+jet+"_"+wp+"_SingleTop_notmerged_"+yearstring
             outfile.write("\\centering\n")
             outfile.write("\\tiny Single Top not merged\n")
             outfile.write("\\begin{figure}\n")
@@ -118,5 +122,5 @@ print "create Effi plots..."
 os.system("./PlotEffi "+year)
 print "creating latex document..."
 os.chdir(PathPlots)
-write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR)
+write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR, year)
 os.system("pdflatex SFLatex.tex")

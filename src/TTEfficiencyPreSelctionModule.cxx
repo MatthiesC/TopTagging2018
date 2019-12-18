@@ -17,8 +17,10 @@
 #include <UHH2/common/include/ElectronIds.h>
 #include <UHH2/common/include/JetIds.h>
 #include "UHH2/common/include/NSelections.h"
-#include "UHH2/TopTagging/include/TopTaggingSelections.h"
+#include "UHH2/common/include/TTbarGen.h"
+#include <UHH2/common/include/AdditionalSelections.h>
 #include <UHH2/common/include/Utils.h>
+#include "UHH2/TopTagging/include/TopTaggingSelections.h"
 
 
 using namespace std;
@@ -40,6 +42,7 @@ private:
   std::unique_ptr<JetCleaner> jet_cleaner;
 
   //selections
+  std::unique_ptr<uhh2::Selection> genmttbar_sel;
   //std::unique_ptr<uhh2::Selection> htlep_sel, met_sel;
   std::unique_ptr<uhh2::Selection> met_sel, ptW_sel;
   std::unique_ptr<uhh2::Selection> trigger_sel;
@@ -55,6 +58,9 @@ TTEfficiencyPreSelectionModule::TTEfficiencyPreSelectionModule(Context & ctx){
 
   MuonId muid = AndId<Muon>(MuonID(Muon::CutBasedIdTight), PtEtaCut(55., 2.4));
   ElectronId eleid = AndId<Electron>(ElectronID_Fall17_medium_noIso, PtEtaCut(55., 2.4));
+
+
+  TString version = (TString) ctx.get("dataset_version", "");
 
   bool isMC = (ctx.get("dataset_type") == "MC");
 
@@ -83,6 +89,9 @@ TTEfficiencyPreSelectionModule::TTEfficiencyPreSelectionModule(Context & ctx){
   met_sel.reset(new METCut(30., std::numeric_limits<double>::infinity()));
   ptW_sel.reset(new PtWSelection(120.));
   trigger_sel = uhh2::make_unique<TriggerSelection>("HLT_Mu50_v*");
+
+  if(version.Contains("Mtt0000to0700")) genmttbar_sel.reset(new MttbarGenSelection(0., 700.));
+  else                                  genmttbar_sel.reset(new uhh2::AndSelection(ctx));
 
   //htlep_sel.reset(new HTlepCut(70., std::numeric_limits<double>::infinity()));
 
@@ -113,6 +122,11 @@ TTEfficiencyPreSelectionModule::TTEfficiencyPreSelectionModule(Context & ctx){
 bool TTEfficiencyPreSelectionModule::process(Event & event) {
 
   //cout << "TTEfficiencyPreSelectionModule: Starting to process event (runid, eventid) = (" << event.run << ", " << event.event << "); weight = " << event.weight << endl;
+
+
+  if(!event.isRealData){
+    if(!genmttbar_sel->passes(event)) return false;
+  }
 
   //fill histograms before preselection
   for(auto & h : hists_before_presel){

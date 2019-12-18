@@ -183,7 +183,7 @@ bool MergedSelection::passes_probe(const uhh2::Event &event, const TopJet &probe
     double Rmin = 0.1;
     double Rmax = 1.5;
     double rho = 600.;
-    double reff = rho/probe_jet.pt();
+    double reff = rho/(probe_jet.pt()*probe_jet.JEC_factor_raw());
     if( reff <  Rmin ) radius = Rmin;
     else if( reff >  Rmax ) radius = Rmax;
     else radius = reff;

@@ -4,7 +4,11 @@
 <!-- <!ENTITY TTbar_semilep SYSTEM "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8.xml">
 <!ENTITY TTbar_had SYSTEM "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_TTToHadronic_TuneCP5_13TeV-powheg-pythia8.xml">
 <!ENTITY TTbar_dilep SYSTEM "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8.xml"> -->
-<!ENTITY TTbar_incl SYSTEM "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_TT_TuneCUETP8M2T4.xml">
+<!ENTITY TTbar_Mtt0000to0700 SYSTEM "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_TT_TuneCUETP8M2T4.xml">
+<!ENTITY TTbar_Mtt0700to1000 SYSTEM "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_TT_Mtt-700to1000.xml">
+<!ENTITY TTbar_Mtt1000toInft SYSTEM "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_TT_Mtt-1000toInf.xml">
+<!ENTITY TTbar_FSRup SYSTEM "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_TT_fsrup.xml">
+<!ENTITY TTbar_FSRdown SYSTEM "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_TT_fsrdown.xml">
 
 <!ENTITY ST_tch_top SYSTEM "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_ST_t-channel_top_inclusiveDecays.xml">
 <!ENTITY ST_tch_antitop SYSTEM "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_ST_t-channel_antitop_inclusiveDecays.xml">
@@ -74,7 +78,7 @@
     ██████  ██   ██    ██    ██   ██
 -->
 
-    <InputData Version="SingleMu_B_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
+    <!-- <InputData Version="SingleMu_B_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
       &SingleMu_B;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -114,7 +118,7 @@
       &SingleMu_H;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData>
+    </InputData> -->
 
 <!--
   ████████ ████████
@@ -125,12 +129,35 @@
 -->
 
 
-<InputData Version="TTbar_incl_2016v3" Lumi="92260.16399" Type="MC" NEventsMax="-1" Cacheable="False">
-  &TTbar_incl;
+<InputData Version="TTbar_Mtt0000to0700_2016v3" Lumi="92260.16399" Type="MC" NEventsMax="-1" Cacheable="False">
+  &TTbar_Mtt0000to0700;
   <InputTree Name="AnalysisTree"/>
   <OutputTree Name="AnalysisTree"/>
 </InputData>
 
+<InputData Version="TTbar_Mtt0700to1000_2016v3" Lumi="501742.7061" Type="MC" NEventsMax="-1" Cacheable="False">
+  &TTbar_Mtt0700to1000;
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="TTbar_Mtt1000toInft_2016v3" Lumi="1193967.198" Type="MC" NEventsMax="-1" Cacheable="False">
+  &TTbar_Mtt1000toInft;
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<!-- <InputData Version="TTbar_FSRup_2016v3" Lumi="71094.35053" Type="MC" NEventsMax="-1" Cacheable="False">
+  &TTbar_FSRup;
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData>
+
+<InputData Version="TTbar_FSRdown_2016v3" Lumi="71114.47533" Type="MC" NEventsMax="-1" Cacheable="False">
+  &TTbar_FSRdown;
+  <InputTree Name="AnalysisTree"/>
+  <OutputTree Name="AnalysisTree"/>
+</InputData> -->
 
 <!--
     ███████ ██ ███    ██  ██████  ██      ███████     ████████
@@ -140,7 +167,7 @@
     ███████ ██ ██   ████  ██████  ███████ ███████        ██
 -->
 
-    <InputData Version="ST_tch_top_2016v3" Lumi="477843.6995" Type="MC" NEventsMax="-1" Cacheable="False">
+    <!-- <InputData Version="ST_tch_top_2016v3" Lumi="477843.6995" Type="MC" NEventsMax="-1" Cacheable="False">
       &ST_tch_top;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -168,7 +195,7 @@
       &ST_sch;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData>
+    </InputData> -->
 
 
 <!--
@@ -180,7 +207,7 @@
     ▀▀
 -->
 
-    <InputData Version="QCD_PT20to30_2016v3" Lumi="10.76912277" Type="MC" NEventsMax="-1" Cacheable="False">
+    <!-- <InputData Version="QCD_PT20to30_2016v3" Lumi="10.76912277" Type="MC" NEventsMax="-1" Cacheable="False">
       &QCD_PT20to30;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -244,7 +271,7 @@
       &QCD_PT1000toInf;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData>
+    </InputData> -->
 
 <!--
     ██████  ██    ██
@@ -254,7 +281,7 @@
     ██████     ██
 -->
 
-    <InputData Version="DYJets_HT100to200_2016v3" Lumi="60547.18646" Type="MC" NEventsMax="-1" Cacheable="False">
+    <!-- <InputData Version="DYJets_HT100to200_2016v3" Lumi="60547.18646" Type="MC" NEventsMax="-1" Cacheable="False">
       &DYJets_HT100to200;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -296,7 +323,7 @@
       &DYJets_HT2500toInf;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData>
+    </InputData> -->
 
 <!--
     ██     ██      ██ ███████ ████████ ███████
@@ -306,7 +333,7 @@
      ███ ███   █████  ███████    ██    ███████
 -->
 
-    <InputData Version="WJets_HT100to200_2016v3" Lumi="24239.87096" Type="MC" NEventsMax="-1" Cacheable="False">
+    <!-- <InputData Version="WJets_HT100to200_2016v3" Lumi="24239.87096" Type="MC" NEventsMax="-1" Cacheable="False">
       &WJets_HT100to200;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -346,7 +373,7 @@
       &WJets_HT2500toInf;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData>
+    </InputData> -->
 
   <UserConfig>
     <!-- define which collections to read from the input. Only specify what you need to save I/O time -->

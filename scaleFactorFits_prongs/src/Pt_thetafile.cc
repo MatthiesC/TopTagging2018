@@ -28,7 +28,7 @@ int main(int argc, char* argv[]){
 
 
   std::vector<TString> Jets {"PUPPI", "HOTVR"};
-  // std::vector<TString> Jets {"HOTVR"};
+  // std::vector<TString> Jets {"PUPPI"};
 
   for(auto jet: Jets){
 

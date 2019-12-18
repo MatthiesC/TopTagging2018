@@ -1,0 +1,5 @@
+scaleFactorFits/PlotSF/*
+scaleFactorFits/*.pyc
+scaleFactorFits/*.steer
+scaleFactorFits/ThetaScaleFactorFits_*/*
+

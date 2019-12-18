@@ -4,7 +4,12 @@ import sys
 
 def replace_steer(PathRootFile, PlotName, year):
     PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PostFit_prongs/"+year+"/"
-    filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs"
+    if year == "2018":
+        filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs"
+    if year == "2017":
+        filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs_2017"
+    if year == "2016":
+        filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs_2016"
     oldfile = open(filename+".steer",'r')       # open file for read
     newfile = open("toptagging_prongs_temp.steer", 'w') # create new file to write
 

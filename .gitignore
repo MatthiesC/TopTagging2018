@@ -1,0 +1,10 @@
+*.pyc
+*.steer
+scaleFactorFits_prongs/ThetaScaleFactorFits_2016/*
+scaleFactorFits_prongs/ThetaScaleFactorFits_2017/*
+scaleFactorFits_prongs/ThetaScaleFactorFits_Nov18/*
+scaleFactorFits_prongs/thetaFiles_NoFSRnotmerged/*
+scaleFactorFits/thetaFiles_NoFSRnotmerged/*
+scaleFactorFits/ThetaScaleFactorFits_Nov18/*
+config/workdir*/*
+obj/*

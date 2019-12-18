@@ -238,7 +238,7 @@ int main(int argc, char* argv[]){
     CMSLabel(true, 0.19, 0.87);
 
     gPad->RedrawAxis();
-    TString pdfname = "2018_TopTaggingSF_AK8_PUPPI";
+    TString pdfname = year+"_TopTaggingSF_AK8_PUPPI";
     if(jet=="PUPPI_btag") pdfname += "_subjet_btag";
     c->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_prongs/"+year+"/"+pdfname+".pdf");
     delete c;

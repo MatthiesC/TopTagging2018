@@ -21,16 +21,23 @@ void write_theta_files_FSR(){
 
   TString PDF_dir = "fill_PDF_TRUE";
 
-  TString year = "2018";
+  TString year = "2016";
 
   std::vector<TString> MCNames {"TTbar_mergedTop_2018", "TTbar_semimerged_2018", "TTbar_notmerged_2018", "SingleTop_mergedTop_2018", "SingleTop_semimerged_2018", "SingleTop_notmerged_2018", "QCD_2018", "DYJets_2018", "WJets_2018"};
   // std::vector<TString> MCNames {"mergedTop_2018", "semimergedTop_2018", "notmergedTop_2018", "QCD_2018", "DYJets_2018", "WJets_2018"};
   // std::vector<TString> MCNames {"mergedTop_2018", "semimergedTop_2018", "Backgrounds_2018"};
+  TString dataname = "SingleMu_2018";
 
   if(year != "2018"){
-    for(auto mcname: MCNames){
-      if(year == "2016")      mcname.ReplaceAll("2018", "2016v3");
-      else if(year == "2017") mcname.ReplaceAll("2018", "2017v2");
+    for(unsigned int i=0; i<MCNames.size(); i++){
+      if(year == "2016"){
+        MCNames[i] = MCNames[i].ReplaceAll("2018", "2016v3");
+        dataname = dataname.ReplaceAll("2018", "2016v3");
+      }
+      else if(year == "2017"){
+        MCNames[i] = MCNames[i].ReplaceAll("2018", "2017v2");
+        dataname = dataname.ReplaceAll("2018", "2017v2");
+      }
     }
   }
 
@@ -91,6 +98,7 @@ void write_theta_files_FSR(){
     //std::vector<bool> ttbarscaling  = { false};
 
     std::vector<TString> JetCollections = {"PUPPI", "HOTVR"};
+    // std::vector<TString> JetCollections = {"PUPPI"};
     // std::vector<TString> JetCollections = {"HOTVR"};
     // std::vector<TString> JetCollections = {"PUPPI","CHS"};
 
@@ -138,7 +146,7 @@ void write_theta_files_FSR(){
       //=======================
       //load input files
       //=======================
-      TFile* dataFile = new TFile(Path+"uhh2.AnalysisModuleRunner.DATA.SingleMu_2018.root","READ");
+      TFile* dataFile = new TFile(Path+"uhh2.AnalysisModuleRunner.DATA."+dataname+".root","READ");
 
       std::vector<std::vector<TFile*>> MCFiles;
       std::vector<std::vector<TFile*>> modelFiles;

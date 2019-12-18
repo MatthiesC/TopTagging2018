@@ -87,7 +87,10 @@ void PlotEffi(TString dir, TString jet, TString wp){
     leg->AddEntry(post_stat[i], "post fit", "pl");
     leg->Draw();
     gPad->RedrawAxis();
-    c->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_prongs/"+year+"/Effi_"+jet+"_"+wp+"_"+procnames[i]+".pdf");
+    TString procname = procnames[i];
+    if(year == "2016")      procname.ReplaceAll("2018", "2016v3");
+    else if(year == "2017") procname.ReplaceAll("2018", "2017v2");
+    c->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_prongs/"+year+"/Effi_"+jet+"_"+wp+"_"+procname+".pdf");
     delete c;
   }
 

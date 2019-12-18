@@ -46,7 +46,7 @@
 
 <!--
 <ConfigParse NEventsBreak="80000" LastBreak="0" FileSplit="0" />
-<ConfigSGE RAM ="4" DISK ="2" Mail="dennis.schwarz@desy.de" Notification="as" Workdir="workdir_PostSel_HOTVR2016"/>
+<ConfigSGE RAM ="4" DISK ="2" Mail="dennis.schwarz@desy.de" Notification="as" Workdir="workdir_PostSel_HOTVR_JERup2016"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->

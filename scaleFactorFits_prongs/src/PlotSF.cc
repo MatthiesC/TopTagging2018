@@ -12,7 +12,7 @@ int main(int argc, char* argv[]){
   if(argc > 1) year = argv[1];
 
   TString plotdir="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_FSR_f_prongs/"+year+"/";
-  // vector<TString> jetcols = {"PUPPI"};
+  // vector<TString> jetcols = {"HOTVR"};
   vector<TString> jetcols = {"PUPPI", "HOTVR"};
   vector<TString> wps_PUPPI = {"wp1", "wp2", "wp3", "wp4", "wp5", "wp1_btag", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"};
   vector<TString> wps_HOTVR = {""};
@@ -71,7 +71,10 @@ void PlotSF(TString dir, TString jet, TString wp){
     leg->AddEntry(SFs_tot[i], "total uncertainty", "f");
     leg->Draw();
     gPad->RedrawAxis();
-    c->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_prongs/"+year+"/SF_"+jet+"_"+wp+"_"+procnames[i]+".pdf");
+    TString procname = procnames[i];
+    if(year == "2016")      procname.ReplaceAll("2018", "2016v3");
+    else if(year == "2017") procname.ReplaceAll("2018", "2017v2");
+    c->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_prongs/"+year+"/SF_"+jet+"_"+wp+"_"+procname+".pdf");
     delete c;
   }
 

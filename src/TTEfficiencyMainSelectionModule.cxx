@@ -190,7 +190,6 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
   else topjet_cleaner.reset(new TopJetCleaner(ctx, TopJetId(PtEtaCut(170., 2.4))));
   topjet_cleaner_400.reset(new TopJetCleaner(ctx, TopJetId(PtEtaCut(400., 2.4))));
 
-
   //=============================
   //reweighting and scale factors
   //=============================
@@ -283,7 +282,6 @@ bool TTEfficiencyMainSelectionModule::process(Event & event) {
   //  if (version == "TTbar_Incl" ) {
   //  if(!mttgen_sel->passes(event)) return false;
   //}
-
 
   //=============================
   //run corrections

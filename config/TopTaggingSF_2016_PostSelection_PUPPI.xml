@@ -9,6 +9,8 @@
 <!ENTITY TTbar_dilep   "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_dilep_2018.root"> -->
 
 <!ENTITY TTbar_incl   "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_incl_2016v3.root">
+<!ENTITY TTbar_FSRup   "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_FSRup_2016v3.root">
+<!ENTITY TTbar_FSRdown   "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_FSRdown_2016v3.root">
 
 <!ENTITY ST_tch_antitop  "&INdir;/uhh2.AnalysisModuleRunner.MC.ST_tch_antitop_2016v3.root">
 <!ENTITY ST_tch_top      "&INdir;/uhh2.AnalysisModuleRunner.MC.ST_tch_top_2016v3.root">
@@ -77,7 +79,7 @@
           ██████  ██   ██    ██    ██   ██
       -->
 
-          <InputData Version="SingleMu_B_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
+          <!-- <InputData Version="SingleMu_B_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
             <In FileName="&SingleMu_B;" Lumi="0.0"/>
             <InputTree Name="AnalysisTree"/>
             <OutputTree Name="AnalysisTree"/>
@@ -117,7 +119,7 @@
             <In FileName="&SingleMu_H;" Lumi="0.0"/>
             <InputTree Name="AnalysisTree"/>
             <OutputTree Name="AnalysisTree"/>
-          </InputData>
+          </InputData> -->
       <!--
         ████████ ████████
            ██       ██
@@ -126,7 +128,7 @@
            ██       ██
       -->
 
-  <InputData Version="TTbar_incl_2016v3" Lumi="92260.16399" Type="MC" NEventsMax="-1" Cacheable="False">
+  <!-- <InputData Version="TTbar_incl_2016v3" Lumi="92260.16399" Type="MC" NEventsMax="-1" Cacheable="False">
     <In FileName="&TTbar_incl;" Lumi="0.0"/>
     <InputTree Name="AnalysisTree"/>
     <OutputTree Name="AnalysisTree"/>
@@ -148,6 +150,54 @@
     <In FileName="&TTbar_incl;" Lumi="0.0"/>
     <InputTree Name="AnalysisTree"/>
     <OutputTree Name="AnalysisTree"/>
+  </InputData> -->
+
+  <InputData Version="TTbar_FSRup_2016v3" Lumi="71094.35053" Type="MC" NEventsMax="-1" Cacheable="False">
+    <In FileName="&TTbar_FSRup;" Lumi="0.0"/>
+    <InputTree Name="AnalysisTree"/>
+    <OutputTree Name="AnalysisTree"/>
+  </InputData>
+
+  <InputData Version="TTbar_FSRup_mergedTop_2016v3" Lumi="71094.35053" Type="MC" NEventsMax="-1" Cacheable="False">
+    <In FileName="&TTbar_FSRup;" Lumi="0.0"/>
+    <InputTree Name="AnalysisTree"/>
+    <OutputTree Name="AnalysisTree"/>
+  </InputData>
+
+  <InputData Version="TTbar_FSRup_semimerged_2016v3" Lumi="71094.35053" Type="MC" NEventsMax="-1" Cacheable="False">
+    <In FileName="&TTbar_FSRup;" Lumi="0.0"/>
+    <InputTree Name="AnalysisTree"/>
+    <OutputTree Name="AnalysisTree"/>
+  </InputData>
+
+  <InputData Version="TTbar_FSRup_notmerged_2016v3" Lumi="71094.35053" Type="MC" NEventsMax="-1" Cacheable="False">
+    <In FileName="&TTbar_FSRup;" Lumi="0.0"/>
+    <InputTree Name="AnalysisTree"/>
+    <OutputTree Name="AnalysisTree"/>
+  </InputData>
+
+  <InputData Version="TTbar_FSRdown_2016v3" Lumi="71114.47533" Type="MC" NEventsMax="-1" Cacheable="False">
+    <In FileName="&TTbar_FSRdown;" Lumi="0.0"/>
+    <InputTree Name="AnalysisTree"/>
+    <OutputTree Name="AnalysisTree"/>
+  </InputData>
+
+  <InputData Version="TTbar_FSRdown_mergedTop_2016v3" Lumi="71114.47533" Type="MC" NEventsMax="-1" Cacheable="False">
+    <In FileName="&TTbar_FSRdown;" Lumi="0.0"/>
+    <InputTree Name="AnalysisTree"/>
+    <OutputTree Name="AnalysisTree"/>
+  </InputData>
+
+  <InputData Version="TTbar_FSRdown_semimerged_2016v3" Lumi="71114.47533" Type="MC" NEventsMax="-1" Cacheable="False">
+    <In FileName="&TTbar_FSRdown;" Lumi="0.0"/>
+    <InputTree Name="AnalysisTree"/>
+    <OutputTree Name="AnalysisTree"/>
+  </InputData>
+
+  <InputData Version="TTbar_FSRdown_notmerged_2016v3" Lumi="71114.47533" Type="MC" NEventsMax="-1" Cacheable="False">
+    <In FileName="&TTbar_FSRdown;" Lumi="0.0"/>
+    <InputTree Name="AnalysisTree"/>
+    <OutputTree Name="AnalysisTree"/>
   </InputData>
 
     <!--
@@ -158,7 +208,7 @@
         ███████ ██ ██   ████  ██████  ███████ ███████        ██
     -->
 
-  <InputData Version="ST_tch_top_2016v3" Lumi="477843.6995" Type="MC" NEventsMax="-1" Cacheable="False">
+  <!-- <InputData Version="ST_tch_top_2016v3" Lumi="477843.6995" Type="MC" NEventsMax="-1" Cacheable="False">
     <In FileName="&ST_tch_top;" Lumi="0.0"/>
     <InputTree Name="AnalysisTree"/>
     <OutputTree Name="AnalysisTree"/>
@@ -276,7 +326,7 @@
     <In FileName="&ST_sch;" Lumi="0.0"/>
     <InputTree Name="AnalysisTree"/>
     <OutputTree Name="AnalysisTree"/>
-  </InputData>
+  </InputData> -->
 
 
 
@@ -289,7 +339,7 @@
         ▀▀
     -->
 
-    <InputData Version="QCD_PT50to80_2016v3" Lumi="44.94169312" Type="MC" NEventsMax="-1" Cacheable="False">
+    <!-- <InputData Version="QCD_PT50to80_2016v3" Lumi="44.94169312" Type="MC" NEventsMax="-1" Cacheable="False">
       <In FileName="&QCD_PT50to80;" Lumi="0.0"/>
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -341,7 +391,7 @@
       <In FileName="&QCD_PT1000toInf;" Lumi="0.0"/>
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData>
+    </InputData> -->
 
     <!--
         ██████  ██    ██
@@ -351,7 +401,7 @@
         ██████     ██
     -->
 
-    <InputData Version="DYJets_HT100to200_2016v3" Lumi="60547.18646" Type="MC" NEventsMax="-1" Cacheable="False">
+    <!-- <InputData Version="DYJets_HT100to200_2016v3" Lumi="60547.18646" Type="MC" NEventsMax="-1" Cacheable="False">
       <In FileName="&DYJets_HT100to200;" Lumi="0.0"/>
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -393,7 +443,7 @@
       <In FileName="&DYJets_HT2500toInf;" Lumi="0.0"/>
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData>
+    </InputData> -->
 
     <!--
     ██     ██      ██ ███████ ████████ ███████
@@ -403,7 +453,7 @@
      ███ ███   █████  ███████    ██    ███████
     -->
 
-    <InputData Version="WJets_HT100to200_2016v3" Lumi="24239.87096" Type="MC" NEventsMax="-1" Cacheable="False">
+    <!-- <InputData Version="WJets_HT100to200_2016v3" Lumi="24239.87096" Type="MC" NEventsMax="-1" Cacheable="False">
       <In FileName="&WJets_HT100to200;" Lumi="0.0"/>
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -443,7 +493,7 @@
       <In FileName="&WJets_HT2500toInf;" Lumi="0.0"/>
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData>
+    </InputData> -->
 
 
    <UserConfig>

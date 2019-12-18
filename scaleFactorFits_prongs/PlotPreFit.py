@@ -5,7 +5,12 @@ import sys
 
 def replace_steer(PathRootFile, PlotName, year):
     PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PreFit_prongs/"+year+"/"
-    filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs"
+    if year == "2018":
+        filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs"
+    if year == "2017":
+        filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs_2017"
+    if year == "2016":
+        filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs_2016"
     oldfile = open(filename+".steer",'r')       # open file for read
     newfile = open("toptagging_prongs_temp.steer", 'w') # create new file to write
 
@@ -93,8 +98,8 @@ PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PreFit_prongs/"+year+"/
 PathRootFile= "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/TopTagging/scaleFactorFits_prongs/thetaFiles_NoFSRnotmerged/"+year+"/mass_sub/"
 ptbins_PUPPI = ["300to400", "400to480", "480to600", "600"]
 ptbins_HOTVR = ["200to250", "250to300", "300to400", "400to480", "480to600", "600"]
-# jets = ["PUPPI"]
-jets = ["HOTVR", "PUPPI"]
+jets = ["PUPPI"]
+# jets = ["HOTVR", "PUPPI"]
 # uncerts = ["stat"]
 uncerts = ["stat", "sys"]
 wps_PUPPI = ["wp1", "wp2", "wp3", "wp4", "wp5", "wp1_btag", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"]

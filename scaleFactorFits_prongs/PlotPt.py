@@ -5,7 +5,12 @@ import sys
 
 def replace_steer(PathRootFile, PlotName, year):
     PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PreFit_prongs/"+year+"/"
-    filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs"
+    if year == "2018":
+        filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs"
+    if year == "2017":
+        filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs_2017"
+    if year == "2016":
+        filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs_2016"                
     oldfile = open(filename+".steer",'r')       # open file for read
     newfile = open("toptagging_prongs_temp.steer", 'w') # create new file to write
 
@@ -35,7 +40,8 @@ if len(sys.argv) > 1:
 
 PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PreFit_prongs/"+year+"/"
 PathRootFile= "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/TopTagging/scaleFactorFits_prongs/"
-jets = ["PUPPI", "HOTVR"]
+# jets = ["PUPPI", "HOTVR"]
+jets = ["PUPPI"]
 
 for jet in jets:
     rootname=PathRootFile+"thetaFile_pt_"+year+"_"+jet+".root"

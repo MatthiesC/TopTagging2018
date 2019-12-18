@@ -332,8 +332,8 @@ calculate_scaleFactors = True
 
 #run("thetaFile_400_PUPPI_sys_.root", "Hists_400_PUPPI_sys.root")
 
-# wps = ["_wp1", "_wp2", "_wp3", "_wp4", "_wp5", "_wp1_btag", "_wp2_btag", "_wp3_btag", "_wp4_btag", "_wp5_btag"]
-wps = ["_wp5_btag"]
+wps = ["_wp1", "_wp2", "_wp3", "_wp4", "_wp5", "_wp1_btag", "_wp2_btag", "_wp3_btag", "_wp4_btag", "_wp5_btag"]
+# wps = ["_wp5_btag"]
 # wps = []
 for wp in wps:
     print 'run PUPPI, ',wp
@@ -349,11 +349,11 @@ for wp in wps:
     if calculate_scaleFactors:
         dicts_stat = [d_300to400[0], d_400to480[0], d_480to600[0], d_600[0]]
         dicts_sys = [d_300to400[1], d_400to480[1], d_480to600[1], d_600[1]]
-        WriteEffGraphs_separate(outdir+"ScaleFactors_FSR_f_prongs/eff_hists_PUPPI"+wp+".root", dicts_stat, dicts_sys, bins)
+        WriteEffGraphs_separate(outdir+"ScaleFactors_FSR_f_prongs/2018/eff_hists_PUPPI"+wp+".root", dicts_stat, dicts_sys, bins)
 
 
-# wpsHOTVR = ["_"]
-wpsHOTVR = []
+wpsHOTVR = ["_"]
+# wpsHOTVR = []
 bins = array('d', [200, 250, 300, 400, 480, 600, 1100])
 for wp in wpsHOTVR:
     print 'run HOTVR, ',wp
@@ -373,7 +373,7 @@ for wp in wpsHOTVR:
     if calculate_scaleFactors:
         dicts_stat_HOTVR = [d_200to250_HOTVR[0], d_250to300_HOTVR[0], d_300to400_HOTVR[0], d_400to480_HOTVR[0], d_480to600_HOTVR[0], d_600_HOTVR[0]]
         dicts_sys_HOTVR = [d_200to250_HOTVR[1], d_250to300_HOTVR[1], d_300to400_HOTVR[1], d_400to480_HOTVR[1], d_480to600_HOTVR[1], d_600_HOTVR[1]]
-        WriteEffGraphs_separate(outdir+"ScaleFactors_FSR_f_prongs/eff_hists_HOTVR"+wp+".root", dicts_stat_HOTVR, dicts_sys_HOTVR, bins)
+        WriteEffGraphs_separate(outdir+"ScaleFactors_FSR_f_prongs/2018/eff_hists_HOTVR"+wp+".root", dicts_stat_HOTVR, dicts_sys_HOTVR, bins)
 
 
 #wpsCHS = ["_wp2", "_wp3", "_wp4", "_wp5", "_wp2_btag", "_wp3_btag", "_wp4_btag", "_wp5_btag"]
@@ -389,4 +389,4 @@ for wp in wpsCHS:
     if calculate_scaleFactors:
         dicts_stat_CHS = [d_300to400_CHS[0], d_400to480_CHS[0], d_480to600_CHS[0], d_600_CHS[0]]
         dicts_sys_CHS = [d_300to400_CHS[1], d_400to480_CHS[1], d_480to600_CHS[1], d_600_CHS[1]]
-        WriteEffGraphs_separate(outdir+"ScaleFactors_FSR_f_prongs/eff_hists_CHS"+wp+".root", dicts_stat_CHS, dicts_sys_CHS, bins)
+        WriteEffGraphs_separate(outdir+"ScaleFactors_FSR_f_prongs/2018/eff_hists_CHS"+wp+".root", dicts_stat_CHS, dicts_sys_CHS, bins)
