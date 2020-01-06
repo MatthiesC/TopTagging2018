@@ -318,9 +318,6 @@
     <!-- <Item Name="TopJetCollection" Value="jetAk8CHSSubstructure_SoftDropCHS" /> -->
     <!-- <Item Name="TopJetCollection" Value="hotvrPuppi" /> -->
     <Item Name="GenParticleCollection" Value="GenParticles" />
-    <Item Name="additionalBranches" Value="hotvrGen hotvrPuppi" />
-
-
 
     <!-- tell AnalysisModuleRunner NOT to use the MC event weight from SFrame; rather let
     MCLumiWeight (called via CommonModules) calculate the MC event weight. The MC

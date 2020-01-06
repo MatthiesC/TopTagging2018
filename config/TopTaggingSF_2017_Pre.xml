@@ -72,7 +72,7 @@
     ██████  ██   ██    ██    ██   ██
 -->
 
-    <!-- <InputData Version="SingleMu_B_2017v2" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
+    <InputData Version="SingleMu_B_2017v2" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
       &SingleMu_B;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -100,7 +100,7 @@
       &SingleMu_F;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
 <!--
   ████████ ████████
@@ -110,7 +110,7 @@
      ██       ██
 -->
 
-    <!-- <InputData Version="TTbar_semilep_2017v2" Lumi="35279949.78" Type="MC" NEventsMax="-1" Cacheable="False">
+    <InputData Version="TTbar_semilep_2017v2" Lumi="35279949.78" Type="MC" NEventsMax="-1" Cacheable="False">
       &TTbar_semilep;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -126,7 +126,7 @@
       &TTbar_had;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
 <!--
     ███████ ██ ███    ██  ██████  ██      ███████     ████████
@@ -138,7 +138,7 @@
 
 
 
-    <!-- <InputData Version="ST_tch_top_2017v2" Lumi="5192499.578" Type="MC" NEventsMax="-1" Cacheable="False">
+    <InputData Version="ST_tch_top_2017v2" Lumi="5192499.578" Type="MC" NEventsMax="-1" Cacheable="False">
       &ST_tch_top;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -166,7 +166,7 @@
       &ST_sch;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
 
 <!--
@@ -178,7 +178,7 @@
     ▀▀
 -->
 
-    <!-- <InputData Version="QCD_PT20to30_2017v2" Lumi="10.95535913" Type="MC" NEventsMax="-1" Cacheable="False">
+    <InputData Version="QCD_PT20to30_2017v2" Lumi="10.95535913" Type="MC" NEventsMax="-1" Cacheable="False">
       &QCD_PT20to30;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -242,7 +242,7 @@
       &QCD_PT1000toInf;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
 <!--
     ██████  ██    ██
@@ -252,7 +252,7 @@
     ██████     ██
 -->
 
-    <!-- <InputData Version="DYJets_HT100to200_2017v2" Lumi="69226.78638" Type="MC" NEventsMax="-1" Cacheable="False">
+    <InputData Version="DYJets_HT100to200_2017v2" Lumi="69226.78638" Type="MC" NEventsMax="-1" Cacheable="False">
       &DYJets_HT100to200;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -292,7 +292,7 @@
       &DYJets_HT2500toInf;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
 <!--
     ██     ██      ██ ███████ ████████ ███████
@@ -304,7 +304,7 @@
 
 
 
-    <!-- <InputData Version="WJets_HT100to200_2017v2" Lumi="24497.36654" Type="MC" NEventsMax="-1" Cacheable="False">
+    <InputData Version="WJets_HT100to200_2017v2" Lumi="24497.36654" Type="MC" NEventsMax="-1" Cacheable="False">
       &WJets_HT100to200;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -332,7 +332,7 @@
       &WJets_HT800to1200;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
     <InputData Version="WJets_HT1200to2500_2017v2" Lumi="39031433.57" Type="MC" NEventsMax="-1" Cacheable="False">
       &WJets_HT1200to2500;
@@ -340,11 +340,11 @@
       <OutputTree Name="AnalysisTree"/>
     </InputData>
 
-    <!-- <InputData Version="WJets_HT2500toInf_2017v2" Lumi="2656452174" Type="MC" NEventsMax="-1" Cacheable="False">
+    <InputData Version="WJets_HT2500toInf_2017v2" Lumi="2656452174" Type="MC" NEventsMax="-1" Cacheable="False">
       &WJets_HT2500toInf;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
   <UserConfig>
     <!-- define which collections to read from the input. Only specify what you need to save I/O time -->
@@ -360,7 +360,7 @@
     <!-- <Item Name="TopJetCollection" Value="jetAk8CHSSubstructure_SoftDropCHS" /> -->
     <!-- <Item Name="TopJetCollection" Value="hotvrPuppi" /> -->
     <Item Name="GenParticleCollection" Value="GenParticles" />
-    <Item Name="additionalBranches" Value="hotvrGen hotvrPuppi jetAk8CHSSubstructure_SoftDropCHS" />
+    <Item Name="additionalBranches" Value="hotvrGen hotvrPuppi jetsAk8CHSSubstructure_SoftDropCHS" />
 
 
     <!-- the class name of the AnalysisModule subclasses to run: -->

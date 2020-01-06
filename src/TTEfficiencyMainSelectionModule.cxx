@@ -212,7 +212,8 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
   twoDcut.reset(new TwoDCut(.4, 25.));
   met_sel.reset(new METCut(50., std::numeric_limits<double>::infinity()));
   ptW_sel.reset(new PtWSelection(150.));
-  bjetCloseToLepton_sel.reset(new NMuonBTagSelection(1, 999, DeepCSVBTag(DeepCSVBTag::WP_MEDIUM) ));
+  // bjetCloseToLepton_sel.reset(new NMuonBTagSelection(1, 999, DeepCSVBTag(DeepCSVBTag::WP_MEDIUM) ));
+  bjetCloseToLepton_sel.reset(new NMuonBTagSelection(1, 999, DeepJetBTag(DeepJetBTag::WP_MEDIUM) ));
 
   first_selection.reset(new AndSelection(ctx,"first selection"));
   first_selection->add<NMuonSelection>("Number of muons == 1",1,1);
@@ -243,8 +244,11 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
   //=============================
   //histograms
   //=============================
-  JetId id_btag_loose = BTag(BTag::DEEPCSV, BTag::WP_LOOSE);
-  JetId id_btag_medium = BTag(BTag::DEEPCSV, BTag::WP_MEDIUM);
+  // JetId id_btag_loose = BTag(BTag::DEEPCSV, BTag::WP_LOOSE);
+  // JetId id_btag_medium = BTag(BTag::DEEPCSV, BTag::WP_MEDIUM);
+  JetId id_btag_loose = BTag(BTag::DEEPJET, BTag::WP_LOOSE);
+  JetId id_btag_medium = BTag(BTag::DEEPJET, BTag::WP_MEDIUM);
+
 
   hists_btag_loose_eff.reset(new BTagMCEfficiencyHists(ctx,"BTagLoose", id_btag_loose));
   hists_btag_medium_eff.reset(new BTagMCEfficiencyHists(ctx,"BTagMedium", id_btag_medium));

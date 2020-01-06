@@ -379,7 +379,7 @@
     <!-- <Item Name="TopJetCollection" Value="jetAk8CHSSubstructure_SoftDropCHS" /> -->
     <!-- <Item Name="TopJetCollection" Value="hotvrPuppi" /> -->
     <Item Name="GenParticleCollection" Value="GenParticles" />
-    <Item Name="additionalBranches" Value="hotvrGen hotvrPuppi jetAk8CHSSubstructure_SoftDropCHS" />
+    <Item Name="additionalBranches" Value="hotvrGen hotvrPuppi jetsAk8CHSSubstructure_SoftDropCHS" />
 
 
     <!-- the class name of the AnalysisModule subclasses to run: -->

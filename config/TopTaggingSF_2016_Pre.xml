@@ -78,7 +78,7 @@
     ██████  ██   ██    ██    ██   ██
 -->
 
-    <!-- <InputData Version="SingleMu_B_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
+    <InputData Version="SingleMu_B_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
       &SingleMu_B;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -118,7 +118,7 @@
       &SingleMu_H;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
 <!--
   ████████ ████████
@@ -147,7 +147,7 @@
   <OutputTree Name="AnalysisTree"/>
 </InputData>
 
-<!-- <InputData Version="TTbar_FSRup_2016v3" Lumi="71094.35053" Type="MC" NEventsMax="-1" Cacheable="False">
+<InputData Version="TTbar_FSRup_2016v3" Lumi="71094.35053" Type="MC" NEventsMax="-1" Cacheable="False">
   &TTbar_FSRup;
   <InputTree Name="AnalysisTree"/>
   <OutputTree Name="AnalysisTree"/>
@@ -157,7 +157,7 @@
   &TTbar_FSRdown;
   <InputTree Name="AnalysisTree"/>
   <OutputTree Name="AnalysisTree"/>
-</InputData> -->
+</InputData>
 
 <!--
     ███████ ██ ███    ██  ██████  ██      ███████     ████████
@@ -167,7 +167,7 @@
     ███████ ██ ██   ████  ██████  ███████ ███████        ██
 -->
 
-    <!-- <InputData Version="ST_tch_top_2016v3" Lumi="477843.6995" Type="MC" NEventsMax="-1" Cacheable="False">
+    <InputData Version="ST_tch_top_2016v3" Lumi="477843.6995" Type="MC" NEventsMax="-1" Cacheable="False">
       &ST_tch_top;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -195,7 +195,7 @@
       &ST_sch;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
 
 <!--
@@ -207,7 +207,7 @@
     ▀▀
 -->
 
-    <!-- <InputData Version="QCD_PT20to30_2016v3" Lumi="10.76912277" Type="MC" NEventsMax="-1" Cacheable="False">
+    <InputData Version="QCD_PT20to30_2016v3" Lumi="10.76912277" Type="MC" NEventsMax="-1" Cacheable="False">
       &QCD_PT20to30;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -271,7 +271,7 @@
       &QCD_PT1000toInf;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
 <!--
     ██████  ██    ██
@@ -281,7 +281,7 @@
     ██████     ██
 -->
 
-    <!-- <InputData Version="DYJets_HT100to200_2016v3" Lumi="60547.18646" Type="MC" NEventsMax="-1" Cacheable="False">
+    <InputData Version="DYJets_HT100to200_2016v3" Lumi="60547.18646" Type="MC" NEventsMax="-1" Cacheable="False">
       &DYJets_HT100to200;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -323,7 +323,7 @@
       &DYJets_HT2500toInf;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
 <!--
     ██     ██      ██ ███████ ████████ ███████
@@ -333,7 +333,7 @@
      ███ ███   █████  ███████    ██    ███████
 -->
 
-    <!-- <InputData Version="WJets_HT100to200_2016v3" Lumi="24239.87096" Type="MC" NEventsMax="-1" Cacheable="False">
+    <InputData Version="WJets_HT100to200_2016v3" Lumi="24239.87096" Type="MC" NEventsMax="-1" Cacheable="False">
       &WJets_HT100to200;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -373,7 +373,7 @@
       &WJets_HT2500toInf;
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
   <UserConfig>
     <!-- define which collections to read from the input. Only specify what you need to save I/O time -->
@@ -389,8 +389,7 @@
     <!-- <Item Name="TopJetCollection" Value="jetAk8CHSSubstructure_SoftDropCHS" /> -->
     <!-- <Item Name="TopJetCollection" Value="hotvrPuppi" /> -->
     <Item Name="GenParticleCollection" Value="GenParticles" />
-    <Item Name="additionalBranches" Value="hotvrGen hotvrPuppi jetAk8CHSSubstructure_SoftDropCHS" />
-
+    <Item Name="additionalBranches" Value="hotvrGen hotvrPuppi jetsAk8CHSSubstructure_SoftDropCHS" />
 
     <!-- the class name of the AnalysisModule subclasses to run: -->
     <Item Name="AnalysisModule" Value="TTEfficiencyPreSelectionModule" />

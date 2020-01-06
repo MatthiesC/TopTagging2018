@@ -62,6 +62,9 @@ ProbeJetHists::ProbeJetHists(Context & ctx, const string & dirname, const TStrin
   book<TH1F>("subDeepCSV", "subjets DeepCSV discriminator", 100, 0., 1.);
   book<TH1F>("subDeepCSV_highest", "highest subjet DeepCSV discriminator", 100, 0., 1.);
 
+  book<TH1F>("subDeepJet", "subjets DeepJet discriminator", 100, 0., 1.);
+  book<TH1F>("subDeepJet_highest", "highest subjet DeepJet discriminator", 100, 0., 1.);
+
   book<TH1F>("subjetPT", "PT of subjet with highest CSV", 100, 0., 1500.);
   book<TH1F>("subjethadronFlavor", "hadronFlavour of subjet with highest CSV", 100, 0., 1.);
 
@@ -253,12 +256,15 @@ void ProbeJetHists::fill(const Event & event){
   double highestDeepCSV = 0;
   // double pt_highestDeepCSV = 0;
 
+  double highestDeepJet = 0;
+
   double highestSubjetMass = 0.;
   double lowestSubjetMass = 1000.;
 
   for (const auto subjet : subjets) {
     hist("subCSV")->Fill(subjet.btag_combinedSecondaryVertex(), weight);
     hist("subDeepCSV")->Fill(subjet.btag_DeepCSV(), weight);
+    hist("subDeepJet")->Fill(subjet.btag_DeepJet(), weight);
     // hist("subCSV_minus", "CSV discriminator", 100, -12., 12.);
     if(subjet.btag_combinedSecondaryVertex() > highestCSV){
       highestCSV = subjet.btag_combinedSecondaryVertex();
@@ -268,12 +274,17 @@ void ProbeJetHists::fill(const Event & event){
       highestDeepCSV = subjet.btag_DeepCSV();
       // pt_highestDeepCSV = subjet.pt();
     }
+    if(subjet.btag_DeepJet() > highestDeepJet){
+      highestDeepJet = subjet.btag_DeepJet();
+      // pt_highestDeepCSV = subjet.pt();
+    }
 
     if(subjet.v4().M() > highestSubjetMass) highestSubjetMass = subjet.v4().M();
     if(subjet.v4().M() < lowestSubjetMass) lowestSubjetMass = subjet.v4().M();
   }
   hist("subCSV_highest")->Fill(highestCSV, weight);
   hist("subDeepCSV_highest")->Fill(highestDeepCSV, weight);
+  hist("subDeepJet_highest")->Fill(highestDeepJet, weight);
   hist("subjetPT")->Fill(pt_highestCSV, weight);
 
 

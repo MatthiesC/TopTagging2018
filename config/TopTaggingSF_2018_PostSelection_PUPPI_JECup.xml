@@ -459,7 +459,6 @@
       <!-- <Item Name="TopJetCollection" Value="jetAk8CHSSubstructure_SoftDropCHS" /> -->
       <!-- <Item Name="TopJetCollection" Value="hotvrPuppi" /> -->
       <Item Name="GenParticleCollection" Value="GenParticles" />
-      <Item Name="additionalBranches" Value="hotvrGen hotvrPuppi" />
 
 	    <Item Name="lumihists_lumi_per_bin" Value="1"/>
 

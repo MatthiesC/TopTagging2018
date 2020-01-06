@@ -444,7 +444,7 @@
      <Item Name="JetCollection" Value="jetsAk4CHS" />
      <Item Name="METName" Value="slimmedMETs" />
      <Item Name="GenJetCollection" Value="slimmedGenJets" />
-     <Item Name="TopJetCollection" Value="jetAk8CHSSubstructure_SoftDropCHS" />
+     <Item Name="TopJetCollection" Value="jetsAk8CHSSubstructure_SoftDropCHS" />
      <Item Name="GenTopJetCollection" Value="genjetsAk8SubstructureSoftDrop" />
      <Item Name="GenParticleCollection" Value="GenParticles" />
 

@@ -9,6 +9,9 @@
 <!ENTITY TTbar_dilep   "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_dilep_2016v3.root"> -->
 
 <!ENTITY TTbar_incl   "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_incl_2016v3.root">
+<!ENTITY TTbar_Mtt0000to0700 SYSTEM "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_Mtt0000to0700_2016v3.root">
+<!ENTITY TTbar_Mtt0700to1000 SYSTEM "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_Mtt0700to1000_2016v3.root.xml">
+<!ENTITY TTbar_Mtt1000toInft SYSTEM "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_Mtt1000toInft_2016v3.root.xml">
 
 <!ENTITY ST_tch_antitop  "&INdir;/uhh2.AnalysisModuleRunner.MC.ST_tch_antitop_2016v3.root">
 <!ENTITY ST_tch_top      "&INdir;/uhh2.AnalysisModuleRunner.MC.ST_tch_top_2016v3.root">
@@ -75,6 +78,23 @@
       <OutputTree Name="AnalysisTree"/>
     </InputData>
 
+    <InputData Version="TTbar_Mtt0000to0700_2016v3" Lumi="92260.16399" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_Mtt0000to0700;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="TTbar_Mtt0700to1000_2016v3" Lumi="501742.7061" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_Mtt0700to1000;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
+
+    <InputData Version="TTbar_Mtt1000toInft_2016v3" Lumi="1193967.198" Type="MC" NEventsMax="-1" Cacheable="False">
+      <In FileName="&TTbar_Mtt1000toInft;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
 <!--
     ███████ ██ ███    ██  ██████  ██      ███████     ████████
     ██      ██ ████   ██ ██       ██      ██             ██
@@ -304,7 +324,7 @@
     <Item Name="JetCollection" Value="jetsAk4CHS" />
     <Item Name="METName" Value="slimmedMETs" />
     <Item Name="GenJetCollection" Value="slimmedGenJets" />
-    <Item Name="TopJetCollection" Value="jetAk8CHSSubstructure_SoftDropCHS" />
+    <Item Name="TopJetCollection" Value="jetsAk8CHSSubstructure_SoftDropCHS" />
     <Item Name="GenTopJetCollection" Value="genjetsAk8SubstructureSoftDrop" />
     <Item Name="GenParticleCollection" Value="GenParticles" />
 

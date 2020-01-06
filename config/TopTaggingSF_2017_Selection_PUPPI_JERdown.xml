@@ -317,9 +317,6 @@
     <!-- <Item Name="TopJetCollection" Value="jetAk8CHSSubstructure_SoftDropCHS" /> -->
     <!-- <Item Name="TopJetCollection" Value="hotvrPuppi" /> -->
     <Item Name="GenParticleCollection" Value="GenParticles" />
-    <Item Name="additionalBranches" Value="hotvrGen hotvrPuppi" />
-
-
 
     <!-- tell AnalysisModuleRunner NOT to use the MC event weight from SFrame; rather let
     MCLumiWeight (called via CommonModules) calculate the MC event weight. The MC
@@ -343,7 +340,7 @@
 
     <Item Name="jecsmear_direction" Value="nominal" />       <!-- has to be: nominal, up or down! -->
     <Item Name="jersmear_direction" Value="down" />            <!-- has to be: nominal, up or down! -->
-    
+
     <!-- the class name of the AnalysisModule subclasses to run: -->
     <Item Name="AnalysisModule" Value="TTEfficiencyMainSelectionModule" />
   </UserConfig>
