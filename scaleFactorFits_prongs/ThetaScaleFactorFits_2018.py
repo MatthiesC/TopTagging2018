@@ -20,6 +20,7 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
 
     year = '2018'
     inputpath = "thetaFiles_NoFSRnotmerged/"+year+"/mass_sub/"
+
     print 'use files in', inputpath
 
     model_stat = build_model_from_rootfile(inputpath+fname_stat, include_mc_uncertainties=True)
@@ -68,159 +69,151 @@ def run(fname_stat, fname_sys, outname_stat, outname_sys, calc_sfs = True, write
     TagEffi_1prong_unc = 0.5
 
     # parameter tweaks PUPPI
+    ############################################################################
+    ############################################################################
+    ############################################################################
     # wp1
     if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp1" in fname_sys:
-        TagEffi_3prong_unc = 0.8
-        TagEffi_2prong_unc = 0.7
-        TagEffi_1prong_unc = 0.7
-        rate_unc_QCD = math.log(1.6)
-        rate_unc_SingleTop = math.log(1.1)
-        rate_unc_WJets = math.log(1.1)
-        rate_unc_DY = math.log(1.1)
-    if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp1" in fname_sys:
         TagEffi_3prong_unc = 0.5
-        rate_unc_QCD = math.log(1.8)
+        rate_unc_QCD = math.log(1.3)
+        rate_unc_TTbar = math.log(1.1)
+        rate_unc_WJets = math.log(1.3)
+        rate_unc_SingleTop = math.log(1.2)
+    if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp1" in fname_sys:
+        TagEffi_3prong_unc = 0.8
+        TagEffi_2prong_unc = 0.5
+        TagEffi_1prong_unc = 0.5
+        rate_unc_QCD = math.log(2.1)
+        rate_unc_WJets = math.log(1.3)
+    if '480to600' in fname_sys and 'PUPPI' in fname_sys and "wp1" in fname_sys:
+        TagEffi_3prong_unc = 0.6
+        rate_unc_QCD = math.log(1.9)
+        rate_unc_WJets = math.log(1.2)
+        if "btag" in fname_sys:
+            TagEffi_3prong_unc = 0.5
+            TagEffi_2prong_unc = 0.3
+            TagEffi_1prong_unc = 0.3
+
+    ############################################################################
     #wp2
     if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp2" in fname_sys:
-        TagEffi_3prong_unc = 0.5
+        TagEffi_3prong_unc = 0.6
         TagEffi_2prong_unc = 0.5
         TagEffi_1prong_unc = 0.5
         rate_unc_QCD = math.log(1.6)
         rate_unc_WJets = math.log(1.4)
+        if "btag" in fname_sys:
+            rate_unc_QCD = math.log(1.6)
+            rate_unc_WJets = math.log(1.3)
     if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp2" in fname_sys:
         TagEffi_3prong_unc = 0.5
-        rate_unc_QCD = math.log(1.8)
+        rate_unc_QCD = math.log(1.5)
+        rate_unc_WJets = math.log(1.4)
     if '480to600' in fname_sys and 'PUPPI' in fname_sys and "wp2" in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        rate_unc_QCD = math.log(1.8)
+        TagEffi_3prong_unc = 0.8
+        rate_unc_QCD = math.log(2.0)
+    ############################################################################
     #wp3
     if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp3" in fname_sys:
         TagEffi_3prong_unc = 0.3
         TagEffi_2prong_unc = 0.5
         TagEffi_1prong_unc = 0.5
-        rate_unc_QCD = math.log(1.8)
-        # rate_unc_WJets = math.log(1.5)
-        rate_unc_BKG = math.log(1.4)
+        rate_unc_QCD = math.log(1.7)
+        rate_unc_WJets = math.log(1.4)
     if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp3" in fname_sys:
         TagEffi_3prong_unc = 0.5
         TagEffi_2prong_unc = 0.3
         TagEffi_1prong_unc = 0.3
         rate_unc_QCD = math.log(1.8)
+    if '480to600' in fname_sys and 'PUPPI' in fname_sys and "wp3" in fname_sys:
+        TagEffi_3prong_unc = 0.8
+        rate_unc_QCD = math.log(1.6)
+    ############################################################################
     #wp4
     if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp4" in fname_sys:
         TagEffi_3prong_unc = 0.5
-        rate_unc_QCD = math.log(1.5)
+        rate_unc_QCD = math.log(1.4)
+        rate_unc_WJets = math.log(1.1)
+        if "btag" in fname_sys:
+            TagEffi_2prong_unc = 0.3
+            TagEffi_1prong_unc = 0.3
+            rate_unc_QCD = math.log(1.8)
     if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp4" in fname_sys:
         TagEffi_3prong_unc = 0.5
         rate_unc_QCD = math.log(1.6)
         rate_unc_WJets = math.log(1.4)
+        if "btag" in fname_sys:
+            rate_unc_WJets = math.log(1.3)
+    if '480to600' in fname_sys and 'PUPPI' in fname_sys and "wp4_btag" in fname_sys:
+        if "btag" in fname_sys:
+            TagEffi_3prong_unc = 0.5
+            TagEffi_2prong_unc = 0.3
+            TagEffi_1prong_unc = 0.3
+    ############################################################################
     #wp5
     if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp5" in fname_sys:
         TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.3
-        TagEffi_1prong_unc = 0.3
-        rate_unc_QCD = math.log(1.8)
+        rate_unc_QCD = math.log(2.2)
+        if "btag" in fname_sys:
+            rate_unc_QCD = math.log(1.5)
     if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp5" in fname_sys:
         TagEffi_3prong_unc = 0.5
         rate_unc_QCD = math.log(1.6)
         rate_unc_WJets = math.log(1.4)
-    #wp1 btag
-    if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp1_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.7
-        TagEffi_2prong_unc = 0.5
-        TagEffi_1prong_unc = 0.5
-        rate_unc_QCD = math.log(1.7)
-        rate_unc_WJets = math.log(1.2)
-        rate_unc_SingleTop = math.log(1.2)
-        rate_unc_WJets = math.log(1.2)
-        rate_unc_DY = math.log(1.2)
-    if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp1_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.6
-        TagEffi_2prong_unc = 0.5
-        TagEffi_1prong_unc = 0.5
-        rate_unc_QCD = math.log(1.9)
+    if '_600' in fname_sys and 'PUPPI' in fname_sys and "wp5" in fname_sys:
+        TagEffi_3prong_unc = 0.5
+        TagEffi_2prong_unc = 0.3
+        TagEffi_1prong_unc = 0.3
+        rate_unc_QCD = math.log(1.5)
         rate_unc_WJets = math.log(1.4)
-    if '480to600' in fname_sys and 'PUPPI' in fname_sys and "wp1_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.3
-        TagEffi_1prong_unc = 0.3
-    #wp2 btag
-    if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp2_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.5
-        TagEffi_1prong_unc = 0.5
-        rate_unc_QCD = math.log(1.8)
-        rate_unc_BKG = math.log(2.0)
-    if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp2_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.6
-        TagEffi_2prong_unc = 0.5
-        TagEffi_1prong_unc = 0.5
-        rate_unc_QCD = math.log(1.9)
-        rate_unc_WJets = math.log(1.4)
-    if '480to600' in fname_sys and 'PUPPI' in fname_sys and "wp2_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.3
-        TagEffi_1prong_unc = 0.3
-        rate_unc_QCD = math.log(1.6)
-    #wp3 btag
-    if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp3_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.3
-        TagEffi_1prong_unc = 0.3
-        rate_unc_QCD = math.log(1.8)
-    #wp4 btag
-    if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp4_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.3
-        TagEffi_1prong_unc = 0.3
-        rate_unc_QCD = math.log(1.8)
-    if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp4_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.3
-        TagEffi_1prong_unc = 0.3
-        rate_unc_QCD = math.log(1.8)
-        rate_unc_WJets = math.log(1.2)
-    if '480to600' in fname_sys and 'PUPPI' in fname_sys and "wp4_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.3
-        TagEffi_1prong_unc = 0.3
-    #wp5 btag
-    if '300to400' in fname_sys and 'PUPPI' in fname_sys and "wp5_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.3
-        TagEffi_1prong_unc = 0.3
-        rate_unc_QCD = math.log(1.6)
-        rate_unc_WJets = math.log(1.5)
-    if '400to480' in fname_sys and 'PUPPI' in fname_sys and "wp5_btag" in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.3
-        TagEffi_1prong_unc = 0.3
-    if '480to600' in fname_sys and 'PUPPI' in fname_sys and "wp5_btag" in fname_sys:
-        rate_unc_QCD = math.log(1.8)
+    ############################################################################
+    ############################################################################
+    ############################################################################
     #HOTVR
     if '200to250' in fname_sys and 'HOTVR' in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.5
-        TagEffi_1prong_unc = 0.5
-        rate_unc_QCD = math.log(1.4)
+        rate_unc_QCD = math.log(1.6)
+        rate_unc_WJets = math.log(1.3)
     if '250to300' in fname_sys and 'HOTVR' in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.5
-        TagEffi_1prong_unc = 0.5
         rate_unc_QCD = math.log(1.8)
         rate_unc_WJets = math.log(1.4)
     if '300to400' in fname_sys and 'HOTVR' in fname_sys:
-        TagEffi_3prong_unc = 0.6
-        TagEffi_2prong_unc = 0.4
-        TagEffi_1prong_unc = 0.4
-        rate_unc_QCD = math.log(1.6)
+        rate_unc_QCD = math.log(1.5)
         rate_unc_WJets = math.log(1.4)
     if '400to480' in fname_sys and 'HOTVR' in fname_sys:
-        TagEffi_3prong_unc = 0.5
-        TagEffi_2prong_unc = 0.3
-        TagEffi_1prong_unc = 0.3
+        rate_unc_QCD = math.log(1.6)
+        rate_unc_WJets = math.log(1.4)
+    ############################################################################
+    ############################################################################
+    ############################################################################
+    # CHS
+    # WP2
+    if '300to400' in fname_sys and 'CHS' in fname_sys and "wp2" in fname_sys:
+        if "btag" in fname_sys:
+            rate_unc_QCD = math.log(1.5)
+            rate_unc_WJets = math.log(1.4)
+    if '400to480' in fname_sys and 'CHS' in fname_sys and "wp2" in fname_sys:
+        if "btag" in fname_sys:
+            rate_unc_QCD = math.log(1.5)
+            rate_unc_WJets = math.log(1.4)
+    if '480to600' in fname_sys and 'CHS' in fname_sys and "wp2" in fname_sys:
+        if "btag" in fname_sys:
+            rate_unc_QCD = math.log(1.5)
+            rate_unc_WJets = math.log(1.4)
+    # WP4
+    if '400to480' in fname_sys and 'CHS' in fname_sys and "wp4" in fname_sys:
+        if "btag" in fname_sys:
+            rate_unc_QCD = math.log(1.5)
+            rate_unc_WJets = math.log(1.4)
+    # WP5
+    if '300to400' in fname_sys and 'CHS' in fname_sys and "wp5" in fname_sys:
         rate_unc_QCD = math.log(1.8)
-
+    if '400to480' in fname_sys and 'CHS' in fname_sys and "wp5" in fname_sys:
+        if "btag" in fname_sys:
+            rate_unc_QCD = math.log(1.5)
+            rate_unc_WJets = math.log(1.4)
+    ############################################################################
+    ############################################################################
+    ############################################################################
 
     print "  - 3prong", TagEffi_3prong_unc
     print "  - 2prong", TagEffi_2prong_unc
@@ -332,19 +325,14 @@ calculate_scaleFactors = True
 
 #run("thetaFile_400_PUPPI_sys_.root", "Hists_400_PUPPI_sys.root")
 
-wps = ["_wp1", "_wp2", "_wp3", "_wp4", "_wp5", "_wp1_btag", "_wp2_btag", "_wp3_btag", "_wp4_btag", "_wp5_btag"]
-# wps = ["_wp5_btag"]
-# wps = []
+# wps = ["_wp1", "_wp2", "_wp3", "_wp4", "_wp5", "_wp1_btag", "_wp2_btag", "_wp3_btag", "_wp4_btag", "_wp5_btag"]
+wps = []
 for wp in wps:
     print 'run PUPPI, ',wp
     d_300to400 = run("thetaFile_300to400_PUPPI_stat"+wp+".root", "thetaFile_300to400_PUPPI_sys"+wp+".root", "Hists_300to400_PUPPI_stat"+wp+".root", "Hists_300to400_PUPPI_sys"+wp+".root", calculate_scaleFactors)
     d_400to480 = run("thetaFile_400to480_PUPPI_stat"+wp+".root", "thetaFile_400to480_PUPPI_sys"+wp+".root", "Hists_400to480_PUPPI_stat"+wp+".root", "Hists_400to480_PUPPI_sys"+wp+".root", calculate_scaleFactors)
     d_480to600 = run("thetaFile_480to600_PUPPI_stat"+wp+".root", "thetaFile_480to600_PUPPI_sys"+wp+".root", "Hists_480to600_PUPPI_stat"+wp+".root", "Hists_480to600_PUPPI_sys"+wp+".root", calculate_scaleFactors)
     d_600 = run("thetaFile_600_PUPPI_stat"+wp+".root", "thetaFile_600_PUPPI_sys"+wp+".root", "Hists_600_PUPPI_stat"+wp+".root", "Hists_600_PUPPI_sys"+wp+".root", calculate_scaleFactors)
-    # d_300to400 = run("thetaFile_300to400_PUPPI_stat"+wp+".root", "thetaFile_300to400_PUPPI_stat"+wp+".root", "Hists_300to400_PUPPI_stat"+wp+".root", "Hists_300to400_PUPPI_stat"+wp+".root", calculate_scaleFactors)
-    # d_400to480 = run("thetaFile_400to480_PUPPI_stat"+wp+".root", "thetaFile_400to480_PUPPI_stat"+wp+".root", "Hists_400to480_PUPPI_stat"+wp+".root", "Hists_400to480_PUPPI_stat"+wp+".root", calculate_scaleFactors)
-    # d_480to600 = run("thetaFile_480to600_PUPPI_stat"+wp+".root", "thetaFile_480to600_PUPPI_stat"+wp+".root", "Hists_480to600_PUPPI_stat"+wp+".root", "Hists_480to600_PUPPI_stat"+wp+".root", calculate_scaleFactors)
-    # d_600 = run("thetaFile_600_PUPPI_stat"+wp+".root", "thetaFile_600_PUPPI_stat"+wp+".root", "Hists_600_PUPPI_stat"+wp+".root", "Hists_600_PUPPI_stat"+wp+".root", calculate_scaleFactors)
 
     if calculate_scaleFactors:
         dicts_stat = [d_300to400[0], d_400to480[0], d_480to600[0], d_600[0]]
@@ -363,12 +351,6 @@ for wp in wpsHOTVR:
     d_400to480_HOTVR = run("thetaFile_400to480_HOTVR_stat"+wp+".root", "thetaFile_400to480_HOTVR_sys"+wp+".root", "Hists_400to480_HOTVR_stat"+wp+".root", "Hists_400to480_HOTVR_sys"+wp+".root", calculate_scaleFactors)
     d_480to600_HOTVR = run("thetaFile_480to600_HOTVR_stat"+wp+".root", "thetaFile_480to600_HOTVR_sys"+wp+".root", "Hists_480to600_HOTVR_stat"+wp+".root", "Hists_480to600_HOTVR_sys"+wp+".root", calculate_scaleFactors)
     d_600_HOTVR = run("thetaFile_600_HOTVR_stat"+wp+".root", "thetaFile_600_HOTVR_sys"+wp+".root", "Hists_600_HOTVR_stat"+wp+".root", "Hists_600_HOTVR_sys"+wp+".root", calculate_scaleFactors)
-    # d_200to250_HOTVR = run("thetaFile_200to250_HOTVR_stat"+wp+".root", "thetaFile_200to250_HOTVR_stat"+wp+".root", "Hists_200to250_HOTVR_stat"+wp+".root", "Hists_200to250_HOTVR_stat"+wp+".root", calculate_scaleFactors)
-    # d_250to300_HOTVR = run("thetaFile_250to300_HOTVR_stat"+wp+".root", "thetaFile_250to300_HOTVR_stat"+wp+".root", "Hists_250to300_HOTVR_stat"+wp+".root", "Hists_250to300_HOTVR_stat"+wp+".root", calculate_scaleFactors)
-    # d_300to400_HOTVR = run("thetaFile_300to400_HOTVR_stat"+wp+".root", "thetaFile_300to400_HOTVR_stat"+wp+".root", "Hists_300to400_HOTVR_stat"+wp+".root", "Hists_300to400_HOTVR_stat"+wp+".root", calculate_scaleFactors)
-    # d_400to480_HOTVR = run("thetaFile_400to480_HOTVR_stat"+wp+".root", "thetaFile_400to480_HOTVR_stat"+wp+".root", "Hists_400to480_HOTVR_stat"+wp+".root", "Hists_400to480_HOTVR_stat"+wp+".root", calculate_scaleFactors)
-    # d_480to600_HOTVR = run("thetaFile_480to600_HOTVR_stat"+wp+".root", "thetaFile_480to600_HOTVR_stat"+wp+".root", "Hists_480to600_HOTVR_stat"+wp+".root", "Hists_480to600_HOTVR_stat"+wp+".root", calculate_scaleFactors)
-    # d_600_HOTVR = run("thetaFile_600_HOTVR_stat"+wp+".root", "thetaFile_600_HOTVR_stat"+wp+".root", "Hists_600_HOTVR_stat"+wp+".root", "Hists_600_HOTVR_stat"+wp+".root", calculate_scaleFactors)
 
     if calculate_scaleFactors:
         dicts_stat_HOTVR = [d_200to250_HOTVR[0], d_250to300_HOTVR[0], d_300to400_HOTVR[0], d_400to480_HOTVR[0], d_480to600_HOTVR[0], d_600_HOTVR[0]]
@@ -376,9 +358,9 @@ for wp in wpsHOTVR:
         WriteEffGraphs_separate(outdir+"ScaleFactors_FSR_f_prongs/2018/eff_hists_HOTVR"+wp+".root", dicts_stat_HOTVR, dicts_sys_HOTVR, bins)
 
 
-#wpsCHS = ["_wp2", "_wp3", "_wp4", "_wp5", "_wp2_btag", "_wp3_btag", "_wp4_btag", "_wp5_btag"]
+# wpsCHS = ["_wp2", "_wp3", "_wp4", "_wp5", "_wp2_btag", "_wp3_btag", "_wp4_btag", "_wp5_btag"]
 wpsCHS = []
-
+bins = array('d', [300, 400, 480, 600, 1100])
 for wp in wpsCHS:
     print 'run CHS, ',wp
     d_300to400_CHS = run("thetaFile_300to400_CHS_stat"+wp+".root", "thetaFile_300to400_CHS_sys"+wp+".root", "Hists_300to400_CHS_stat"+wp+".root", "Hists_300to400_CHS_sys"+wp+".root", calculate_scaleFactors)

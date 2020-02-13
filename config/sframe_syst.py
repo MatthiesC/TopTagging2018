@@ -60,6 +60,13 @@ def set_uncert_func(uncert_name):
 
     return do_set_uncert
 
+def DirName(prefix, xmlname):
+    newname = xmlname.replace('TopTaggingSF', '')
+    newname = newname.replace('PostSelection', '')
+    newname = newname.replace('SYS', '')
+    newname = newname.replace('.xml', '')
+    newname = newname.replace('_', '')
+    return prefix+'_'+newname
 
 from varial.extensions.sframe import SFrame
 from varial import tools
@@ -87,7 +94,8 @@ class MySFrameBatch(SFrame):
 
 
 sframe_tools = ToolChain(
-    'SFrameUncertsSR',
+    #'SFrameUncertsSR',
+    DirName('SFrameUncerts',sys.argv[1]),
     list(
         SFrame(
             cfg_filename=sys.argv[1],
@@ -98,7 +106,6 @@ sframe_tools = ToolChain(
         for uncert in sys_uncerts
     )
 )
-
 
 if __name__ == '__main__':
     varial.tools.Runner(sframe_tools)

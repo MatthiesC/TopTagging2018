@@ -2,7 +2,7 @@
 import os
 import sys
 
-def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR, year):
+def write_latex(PathPlots, jets, wps_PUPPI, wps_CHS, wps_HOTVR, year):
     outfile = open(PathPlots+"SFLatex.tex","w")
     outfile.write("\\documentclass[aspectratio=169]{beamer}\n")
     outfile.write("\\usepackage[english]{babel}\n")
@@ -21,6 +21,8 @@ def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR, year):
             wps = wps_HOTVR
         if "PUPPI" in jet:
             wps = wps_PUPPI
+        if "CHS" in jet:
+            wps = wps_CHS
         for wp in wps:
             # begin new frame
             outfile.write("%--------------------------------------------\n")
@@ -85,7 +87,7 @@ def write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR, year):
             outfile.write(filename+".pdf")
             outfile.write("} \n")
             outfile.write("\\end{figure}\n")
-            # SingleTop semimerged
+            # SingleTop not merged
             filename = "SF_"+jet+"_"+wp+"_SingleTop_notmerged_"+yearstring
             outfile.write("\\centering\n")
             outfile.write("\\tiny Single Top not merged\n")
@@ -110,10 +112,11 @@ if len(sys.argv) > 1:
     year = sys.argv[1]
 
 PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_prongs/"+year+"/"
-jets = ["PUPPI", "HOTVR"]
+jets = ["PUPPI", "HOTVR", "CHS"]
 # jets = ["PUPPI"]
 # jets = ["HOTVR"]
 wps_PUPPI = ["wp1", "wp2", "wp3", "wp4", "wp5", "wp1_btag", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"]
+wps_CHS = ["wp2", "wp3", "wp4", "wp5", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"]
 wps_HOTVR = [""]
 
 print "create SF plots..."
@@ -122,5 +125,5 @@ print "create Effi plots..."
 os.system("./PlotEffi "+year)
 print "creating latex document..."
 os.chdir(PathPlots)
-write_latex(PathPlots, jets, wps_PUPPI, wps_HOTVR, year)
+write_latex(PathPlots, jets, wps_PUPPI, wps_CHS, wps_HOTVR, year)
 os.system("pdflatex SFLatex.tex")

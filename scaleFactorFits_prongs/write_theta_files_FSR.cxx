@@ -15,7 +15,7 @@ void write_theta_files_FSR(){
 
 
   TString InputPathPUPPI = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel/";
-  TString InputPathCHS =   "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel/";
+  TString InputPathCHS =   "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel_CHS/";
   TString InputPathHOTVR = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel_HOTVR/";
   TString OutputPath = "./";
 
@@ -66,14 +66,18 @@ void write_theta_files_FSR(){
   };
 
   std::vector< vector<TString> > observables_PUPPI {
-    //  {"ProbeJet_pt400_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "400_PASSFAIL"}};
+    {"ProbeJet_pt300to400_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "300to400_PASSFAIL"},
+    {"ProbeJet_pt400to480_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "400to480_PASSFAIL"},
+    {"ProbeJet_pt480to600_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "480to600_PASSFAIL"},
+    {"ProbeJet_pt600_WPXXX_PASSFAIL", "Mass_PASSFAIL__",  "600_PASSFAIL"}};
+
+  std::vector< vector<TString> > observables_CHS {
     {"ProbeJet_pt300to400_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "300to400_PASSFAIL"},
     {"ProbeJet_pt400to480_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "400to480_PASSFAIL"},
     {"ProbeJet_pt480to600_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "480to600_PASSFAIL"},
     {"ProbeJet_pt600_WPXXX_PASSFAIL", "Mass_PASSFAIL__",  "600_PASSFAIL"}};
 
   std::vector< vector<TString> > observables_HOTVR {
-    //  {"ProbeJet_pt400_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "400_PASSFAIL"}};
     {"ProbeJet_pt200to250_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "200to250_PASSFAIL"},
     {"ProbeJet_pt250to300_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "250to300_PASSFAIL"},
     {"ProbeJet_pt300to400_WPXXX_PASSFAIL", "Mass_PASSFAIL__", "300to400_PASSFAIL"},
@@ -82,6 +86,7 @@ void write_theta_files_FSR(){
     {"ProbeJet_pt600_WPXXX_PASSFAIL", "Mass_PASSFAIL__",  "600_PASSFAIL"}};
 
     std::vector<TString> wps_PUPPI {"", "wp1","wp2", "wp3", "wp4", "wp5", "wp1_btag","wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"};
+    std::vector<TString> wps_CHS {"","wp2", "wp3", "wp4", "wp5", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"};
     std::vector<TString> wps_HOTVR {""};
 
     //std::vector<TString> variables = { "pt", "tau32"};
@@ -97,10 +102,10 @@ void write_theta_files_FSR(){
     std::vector<bool> ttbarscaling  = {true, false};
     //std::vector<bool> ttbarscaling  = { false};
 
-    std::vector<TString> JetCollections = {"PUPPI", "HOTVR"};
+    // std::vector<TString> JetCollections = {"PUPPI", "HOTVR"};
     // std::vector<TString> JetCollections = {"PUPPI"};
     // std::vector<TString> JetCollections = {"HOTVR"};
-    // std::vector<TString> JetCollections = {"PUPPI","CHS"};
+    std::vector<TString> JetCollections = {"CHS", "PUPPI", "HOTVR"};
 
     std::vector<TString> vPassFail = {"pass", "fail"};
 
@@ -133,15 +138,17 @@ void write_theta_files_FSR(){
 
       TString Path = "";
       if(JetCollection == "PUPPI") Path = InputPathPUPPI;
-      if(JetCollection == "CHS") Path = InputPathCHS;
+      if(JetCollection == "CHS")   Path = InputPathCHS;
       if(JetCollection == "HOTVR") Path = InputPathHOTVR;
 
       std::vector<TString> wps;
       if(JetCollection == "PUPPI") wps = wps_PUPPI;
+      if(JetCollection == "CHS")   wps = wps_CHS;
       if(JetCollection == "HOTVR") wps = wps_HOTVR;
 
       std::vector< vector<TString> > observables;
       if(JetCollection == "PUPPI") observables = observables_PUPPI;
+      if(JetCollection == "CHS")   observables = observables_CHS;
       if(JetCollection == "HOTVR") observables = observables_HOTVR;
       //=======================
       //load input files

@@ -2,7 +2,7 @@
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd" [
 
 <!ENTITY INdir    "/nfs/dust/cms/user/schwarzd/TopTagging/PreSel/">
-<!ENTITY OUTdir   "/nfs/dust/cms/user/schwarzd/TopTagging/Selection_CHS/">
+<!ENTITY OUTdir   "/nfs/dust/cms/user/schwarzd/TopTagging/Selection_CHS/JECdown/">
 
 <!ENTITY TTbar_semilep "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_semilep_2018.root">
 <!ENTITY TTbar_had     "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_had_2018.root">

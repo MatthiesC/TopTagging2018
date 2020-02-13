@@ -28,28 +28,29 @@ int main(int argc, char* argv[]){
   };
 
 
-  std::vector<TString> Jets {"PUPPI", "HOTVR", "CHS"};
-  // std::vector<TString> Jets {"CHS"};
+  std::vector<TString> Jets {"PUPPI"};
 
   for(auto jet: Jets){
 
-    TString histname = "ProbeJet_All_Pt400/tau32";
+    vector<TString> histnames = {
+      "ProbeJet_pt300to400_all_pass/mass_sub",
+      "ProbeJet_pt400to480_all_pass/mass_sub",
+      "ProbeJet_pt480to600_all_pass/mass_sub",
+      "ProbeJet_pt600_all_pass/mass_sub"
+    };
+
+
     TString InputPath = InputPath_PUPPI;
-    if(jet == "HOTVR"){
-      histname += "_groomed";
-      InputPath = InputPath_HOTVR;
-    }
-    if(jet == "CHS"){
-      InputPath = InputPath_CHS;
-    }
-    TFile *outputFile = new TFile("thetaFile_tau32_"+year+"_"+jet+".root","RECREATE");
+
+    TFile *outputFile = new TFile("DPnote_thetaFile_tau32_"+year+"_"+jet+".root","RECREATE");
     // first get and write data
     cout << "write data..." << endl;
     TString dataname = "uhh2.AnalysisModuleRunner.DATA.SingleMu_2018.root";
     if(year == "2016")      dataname.ReplaceAll("2018", "2016v3");
     else if(year == "2017") dataname.ReplaceAll("2018", "2017v2");
     TFile* f_data = new TFile(InputPath+dataname);
-    TH1F* h_data = (TH1F*) f_data->Get(histname);
+    TH1F* h_data = (TH1F*) f_data->Get(histnames[0]);
+    for(unsigned int i=1; i<histnames.size(); i++) h_data->Add( (TH1F*) f_data->Get(histnames[i]) );
     outputFile->cd();
     h_data->Write("tau32__DATA");
     for(auto mcname: MCNames){
@@ -58,14 +59,16 @@ int main(int argc, char* argv[]){
       // then write nominal hist
       cout << "write " << mcname << "..." << endl;
       TFile* f_nom = new TFile(InputPath+"uhh2.AnalysisModuleRunner.MC."+mcname+".root");
-      TH1F* h_nom = (TH1F*) f_nom->Get(histname);
+      TH1F* h_nom = (TH1F*) f_nom->Get(histnames[0]);
+      for(unsigned int i=1; i<histnames.size(); i++) h_nom->Add( (TH1F*) f_data->Get(histnames[i]) );
       outputFile->cd();
       h_nom->Write("tau32__" + mcname);
       for(auto sys: systematics){
         // now do all systematics
         cout << "write " << mcname << "(" << sys[0] << ")" <<"..." << endl;
         TFile * f_sys = new TFile(InputPath+sys[1]+"/"+"uhh2.AnalysisModuleRunner.MC."+mcname+".root");
-        TH1F* h_sys = (TH1F*) f_sys->Get(histname);
+        TH1F* h_sys = (TH1F*) f_sys->Get(histnames[0]);
+        for(unsigned int i=1; i<histnames.size(); i++) h_sys->Add( (TH1F*) f_data->Get(histnames[i]) );
         outputFile->cd();
         h_sys->Write("tau32__" + mcname + "__" + sys[0]);
       }

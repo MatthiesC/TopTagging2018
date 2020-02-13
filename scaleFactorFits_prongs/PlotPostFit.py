@@ -33,7 +33,7 @@ def replace_steer(PathRootFile, PlotName, year):
     # os.rename(filename+"_temp.steer", filename+".steer")
 
 
-def write_latex(PathPlots,ptbins_PUPPI, ptbins_HOTVR, jets, uncerts, wps_PUPPI, wps_HOTVR):
+def write_latex(PathPlots,ptbins_PUPPI, ptbins_HOTVR, ptbins_CHS, jets, uncerts, wps_PUPPI, wps_HOTVR, wps_CHS):
     outfile = open(PathPlots+"PostFitLatex.tex","w")
     outfile.write("\\documentclass[aspectratio=169]{beamer}\n")
     outfile.write("\\usepackage[english]{babel}\n")
@@ -49,6 +49,9 @@ def write_latex(PathPlots,ptbins_PUPPI, ptbins_HOTVR, jets, uncerts, wps_PUPPI, 
         if "PUPPI" in jet:
             wps = wps_PUPPI
             ptbins = ptbins_PUPPI
+        if "CHS" in jet:
+            wps = wps_CHS
+            ptbins = ptbins_CHS
         for wp in wps:
             for unc in uncerts:
                 # begin new frame
@@ -98,12 +101,14 @@ if len(sys.argv) > 1:
 PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PostFit_prongs/"+year+"/"
 PathRootFile= "/afs/desy.de/user/s/schwarzd/Plots/TopTagging/fitResults_FSR_f_prongs/"+year+"/mass_sub/"
 ptbins_PUPPI = ["300to400", "400to480", "480to600", "600"]
+ptbins_CHS   = ["300to400", "400to480", "480to600", "600"]
 ptbins_HOTVR = ["200to250", "250to300", "300to400", "400to480", "480to600", "600"]
-jets = ["PUPPI", "HOTVR"]
+jets = ["PUPPI", "HOTVR", "CHS"]
 # jets = ["HOTVR"]
 # uncerts = ["stat"]
-uncerts = ["stat", "sys"]
+uncerts = ["sys"]
 wps_PUPPI = ["wp1", "wp2", "wp3", "wp4", "wp5", "wp1_btag", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"]
+wps_CHS   = ["wp2", "wp3", "wp4", "wp5", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"]
 wps_HOTVR = [""]
 
 for jet in jets:
@@ -113,6 +118,9 @@ for jet in jets:
     if "PUPPI" in jet:
         wps = wps_PUPPI
         ptbins = ptbins_PUPPI
+    if "CHS" in jet:
+        wps = wps_CHS
+        ptbins = ptbins_CHS
     for pt in ptbins:
         for unc in uncerts:
             for wp in wps:
@@ -123,5 +131,5 @@ for jet in jets:
 
 print "creating latex document..."
 os.chdir(PathPlots)
-write_latex(PathPlots, ptbins_PUPPI, ptbins_HOTVR, jets, uncerts, wps_PUPPI, wps_HOTVR)
+write_latex(PathPlots, ptbins_PUPPI, ptbins_HOTVR, ptbins_CHS, jets, uncerts, wps_PUPPI, wps_HOTVR, wps_CHS)
 os.system("pdflatex PostFitLatex.tex")

@@ -163,8 +163,9 @@ TTEfficiencyMainSelectionModule::TTEfficiencyMainSelectionModule(Context & ctx){
   common->init(ctx, PU_variation);
   cout << "common init" <<endl;
 
-  if(usePUPPI){
-    cout << "TopJet Corrections = PUPPI" << endl;
+  if(!useHOTVR){
+    if(usePUPPI) cout << "TopJet Corrections = PUPPI" << endl;
+    else         cout << "TopJet Corrections = CHS" << endl;
     topjetCorr.reset(new TopJetCorrections());
     topjetCorr->init(ctx);
   }

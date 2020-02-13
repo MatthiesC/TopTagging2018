@@ -46,7 +46,7 @@
 ]>
 
 <!--
-<ConfigParse NEventsBreak="100000" LastBreak="0" FileSplit="0" />
+<ConfigParse NEventsBreak="400000" LastBreak="0" FileSplit="0" />
 <ConfigSGE RAM ="4" DISK ="2" Mail="dennis.schwarz@desy.de" Notification="as" Workdir="workdir_Sel_CHS_JECdown2017"/>
 -->
 

@@ -6,7 +6,7 @@ from array import array
 
 
 def GetCorrelations(model, dictIn):
-  
+
     par_names = []
 
     for o in model.get_observables():
@@ -23,15 +23,15 @@ def GetCorrelations(model, dictIn):
             for c in coeffs.factors:
                 if c not in par_names:
                     par_names.append(c)
-    
+
     best_fit = 0
     if '__chi2' in dictIn:
-        best_chi2 =9999999999999 
+        best_chi2 =9999999999999
         for i, chi2_val in enumerate(dictIn['__chi2']):
             if chi2_val < best_chi2:
                 best_chi2 = chi2_val
                 best_fit = i
- 
+
     Nbins = len(par_names);
     h_corr = ROOT.TH2D("","", Nbins, 0, Nbins, Nbins, 0, Nbins)
 
@@ -57,7 +57,7 @@ def GetCorrelations(model, dictIn):
 
 
 def PlotPostFitCorrelations(model, dictIn, outputName):
-  
+
     par_names = []
 
     for o in model.get_observables():
@@ -74,15 +74,15 @@ def PlotPostFitCorrelations(model, dictIn, outputName):
             for c in coeffs.factors:
                 if c not in par_names:
                     par_names.append(c)
-    
+
     best_fit = 0
     if '__chi2' in dictIn:
-        best_chi2 =9999999999999 
+        best_chi2 =9999999999999
         for i, chi2_val in enumerate(dictIn['__chi2']):
             if chi2_val < best_chi2:
                 best_chi2 = chi2_val
                 best_fit = i
- 
+
     Nbins = len(par_names);
     h_corr = ROOT.TH2D("","", Nbins, 0, Nbins, Nbins, 0, Nbins)
 
@@ -127,10 +127,8 @@ def PlotPostFitCorrelations(model, dictIn, outputName):
     #can.SetRightMargin(0.2)
     can.SetLeftMargin(0.2)
 
-    
-    h_corr.Draw("COLZ")                          
-    h_corr.Draw("TEXT SAME") 
-   
+
+    h_corr.Draw("COLZ")
+    h_corr.Draw("TEXT SAME")
+
     can.SaveAs(outputName+".eps")
-
-

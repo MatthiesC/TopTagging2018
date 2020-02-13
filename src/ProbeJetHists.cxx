@@ -362,10 +362,10 @@ void ProbeJetHists::fill(const Event & event){
   hist("dPhi_mu_b")->Fill(deltaPhi(bjet, mu), weight);
   hist("dPhi_mu_probe")->Fill(deltaPhi(jet, mu), weight);
 
-  if(!b_candidate_found) cout << "No Bjet candidate found in event:  " << event.event << endl;
-  if(!bjet_found) cout << "No Bjet found in event: " << event.event << endl;
-  if(!bjet_max_CSV_found) cout << "No leading Bjet found in event: " << event.event << endl;
-  if(!bjet_max_pt_found) cout << "No Bjet with highest CSV found in event: " << event.event << endl;
+  // if(!b_candidate_found) cout << "No Bjet candidate found in event:  " << event.event << endl;
+  // if(!bjet_found) cout << "No Bjet found in event: " << event.event << endl;
+  // if(!bjet_max_CSV_found) cout << "No leading Bjet found in event: " << event.event << endl;
+  // if(!bjet_max_pt_found) cout << "No Bjet with highest CSV found in event: " << event.event << endl;
 
 
   if(bjet_found){

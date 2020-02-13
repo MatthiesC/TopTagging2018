@@ -2,9 +2,8 @@
 import os
 import sys
 
-
 def replace_steer(PathRootFile, PlotName, year):
-    PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PreFit_prongs/"+year+"/"
+    PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PostFit_prongs/"+year+"/"
     if year == "2018":
         filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs"
     if year == "2017":
@@ -33,20 +32,18 @@ def replace_steer(PathRootFile, PlotName, year):
     # now rename file to replace original
     # os.rename(filename+"_temp.steer", filename+".steer")
 
-#######
+####### MAIN
 year = "2018"
 if len(sys.argv) > 1:
     year = sys.argv[1]
 
-PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PreFit_prongs/"+year+"/"
-PathRootFile= "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/TopTagging/scaleFactorFits_prongs/"
-jets = ["PUPPI", "HOTVR", "CHS"]
-# jets = ["PUPPI"]
+PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PostFit_prongs/"+year+"/"
+PathRootFile= "/afs/desy.de/user/s/schwarzd/Plots/TopTagging/fitResults_FSR_f_prongs/"+year+"/mass_sub/"
+rootname=PathRootFile+"Hists_incl_PUPPI_sys_wp2.root"
+plotname="PostFit_incl_PUPPI_sys_wp2"
+replace_steer(rootname, plotname, year)
+os.system("/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/bin/Plots -f toptagging_prongs_temp.steer")
 
-for jet in jets:
-    rootname=PathRootFile+"thetaFile_pt_"+year+"_"+jet+".root"
-    plotname="PreFit_pt_"+jet
-    replace_steer(rootname, plotname, year)
-    os.system("/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/bin/Plots -f toptagging_prongs_temp.steer")
-    os.chdir(PathPlots)
-    os.system("epstopdf PreFit_pt_"+jet+"_Main_pt.eps")
+os.chdir(PathPlots)
+os.system("epstopdf PostFit_incl_PUPPI_sys_wp2_Main_Mass_pass.eps")
+os.system("epstopdf PostFit_incl_PUPPI_sys_wp2_Main_Mass_fail.eps")

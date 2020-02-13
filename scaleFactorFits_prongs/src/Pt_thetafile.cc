@@ -9,6 +9,7 @@ int main(int argc, char* argv[]){
   if(argc > 1) year = argv[1];
 
   TString InputPath_PUPPI = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel/";
+  TString InputPath_CHS = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel_CHS/";
   TString InputPath_HOTVR = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel_HOTVR/";
 
   std::vector<TString> MCNames {"TTbar_mergedTop_2018", "TTbar_semimerged_2018", "TTbar_notmerged_2018", "SingleTop_mergedTop_2018", "SingleTop_semimerged_2018", "SingleTop_notmerged_2018", "QCD_2018", "DYJets_2018", "WJets_2018"};
@@ -27,7 +28,7 @@ int main(int argc, char* argv[]){
   };
 
 
-  std::vector<TString> Jets {"PUPPI", "HOTVR"};
+  std::vector<TString> Jets {"PUPPI", "HOTVR", "CHS"};
   // std::vector<TString> Jets {"PUPPI"};
 
   for(auto jet: Jets){
@@ -36,6 +37,9 @@ int main(int argc, char* argv[]){
     TString InputPath = InputPath_PUPPI;
     if(jet == "HOTVR"){
       InputPath = InputPath_HOTVR;
+    }
+    if(jet == "CHS"){
+      InputPath = InputPath_CHS;
     }
     TFile *outputFile = new TFile("thetaFile_pt_"+year+"_"+jet+".root","RECREATE");
     // first get and write data
@@ -74,6 +78,6 @@ int main(int argc, char* argv[]){
 }
 
 void HistCosmetics(TH1F* hist){
-  hist->Rebin(5);
+  hist->Rebin(2);
   hist->GetXaxis()->SetRangeUser(400, 1000);
 }

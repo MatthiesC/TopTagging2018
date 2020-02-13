@@ -39,7 +39,7 @@ if len(sys.argv) > 1:
 
 PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PreFit_prongs/"+year+"/"
 PathRootFile= "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/TopTagging/scaleFactorFits_prongs/"
-jets = ["PUPPI", "HOTVR"]
+jets = ["PUPPI", "HOTVR", "CHS"]
 
 for jet in jets:
     rootname=PathRootFile+"thetaFile_tau32_"+year+"_"+jet+".root"

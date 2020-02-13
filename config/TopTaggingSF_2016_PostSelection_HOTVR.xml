@@ -4,14 +4,9 @@
 <!ENTITY INdir    "/nfs/dust/cms/user/schwarzd/TopTagging/Selection_HOTVR/">
 <!ENTITY OUTdir   "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel_HOTVR/">
 
-<!-- <!ENTITY TTbar_semilep "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_semilep_2018.root">
-<!ENTITY TTbar_had     "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_had_2018.root">
-<!ENTITY TTbar_dilep   "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_dilep_2018.root"> -->
-
-<!ENTITY TTbar_incl   "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_incl_2016v3.root">
-<!ENTITY TTbar_Mtt0000to0700 SYSTEM "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_Mtt0000to0700_2016v3.root">
-<!ENTITY TTbar_Mtt0700to1000 SYSTEM "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_Mtt0700to1000_2016v3.root.xml">
-<!ENTITY TTbar_Mtt1000toInft SYSTEM "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_Mtt1000toInft_2016v3.root.xml">
+<!ENTITY TTbar_Mtt0000to0700 "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_Mtt0000to0700_2016v3.root">
+<!ENTITY TTbar_Mtt0700to1000 "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_Mtt0700to1000_2016v3.root">
+<!ENTITY TTbar_Mtt1000toInft "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_Mtt1000toInft_2016v3.root">
 
 <!ENTITY TTbar_FSRup   "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_FSRup_2016v3.root">
 <!ENTITY TTbar_FSRdown   "&INdir;/uhh2.AnalysisModuleRunner.MC.TTbar_FSRdown_2016v3.root">
@@ -60,7 +55,7 @@
 ]>
 
 <!--
-<ConfigParse NEventsBreak="80000" LastBreak="0" FileSplit="0" />
+<ConfigParse NEventsBreak="2000000" LastBreak="0" FileSplit="0" />
 <ConfigSGE RAM ="4" DISK ="2" Mail="dennis.schwarz@desy.de" Notification="as" Workdir="workdir_PostSel_HOTVR2016"/>
 -->
 
@@ -83,47 +78,47 @@
           ██████  ██   ██    ██    ██   ██
       -->
 
-          <!-- <InputData Version="SingleMu_B_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
-            <In FileName="&SingleMu_B;" Lumi="0.0"/>
-            <InputTree Name="AnalysisTree"/>
-            <OutputTree Name="AnalysisTree"/>
-          </InputData>
+    <InputData Version="SingleMu_B_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
+      <In FileName="&SingleMu_B;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
 
-          <InputData Version="SingleMu_C_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
-            <In FileName="&SingleMu_C;" Lumi="0.0"/>
-            <InputTree Name="AnalysisTree"/>
-            <OutputTree Name="AnalysisTree"/>
-          </InputData>
+    <InputData Version="SingleMu_C_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
+      <In FileName="&SingleMu_C;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
 
-          <InputData Version="SingleMu_D_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
-            <In FileName="&SingleMu_D;" Lumi="0.0"/>
-            <InputTree Name="AnalysisTree"/>
-            <OutputTree Name="AnalysisTree"/>
-          </InputData>
+    <InputData Version="SingleMu_D_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
+      <In FileName="&SingleMu_D;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
 
-          <InputData Version="SingleMu_E_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
-            <In FileName="&SingleMu_E;" Lumi="0.0"/>
-            <InputTree Name="AnalysisTree"/>
-            <OutputTree Name="AnalysisTree"/>
-          </InputData>
+    <InputData Version="SingleMu_E_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
+      <In FileName="&SingleMu_E;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
 
-          <InputData Version="SingleMu_F_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
-            <In FileName="&SingleMu_F;" Lumi="0.0"/>
-            <InputTree Name="AnalysisTree"/>
-            <OutputTree Name="AnalysisTree"/>
-          </InputData>
+    <InputData Version="SingleMu_F_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
+      <In FileName="&SingleMu_F;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
 
-          <InputData Version="SingleMu_G_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
-            <In FileName="&SingleMu_G;" Lumi="0.0"/>
-            <InputTree Name="AnalysisTree"/>
-            <OutputTree Name="AnalysisTree"/>
-          </InputData>
+    <InputData Version="SingleMu_G_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
+      <In FileName="&SingleMu_G;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
 
-          <InputData Version="SingleMu_H_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
-            <In FileName="&SingleMu_H;" Lumi="0.0"/>
-            <InputTree Name="AnalysisTree"/>
-            <OutputTree Name="AnalysisTree"/>
-          </InputData> -->
+    <InputData Version="SingleMu_H_2016v3" Lumi="1" Type="DATA" NEventsMax="-1" Cacheable="False">
+      <In FileName="&SingleMu_H;" Lumi="0.0"/>
+      <InputTree Name="AnalysisTree"/>
+      <OutputTree Name="AnalysisTree"/>
+    </InputData>
       <!--
         ████████ ████████
            ██       ██
@@ -131,30 +126,6 @@
            ██       ██
            ██       ██
       -->
-
-      <!-- <InputData Version="TTbar_incl_2016v3" Lumi="92260.16399" Type="MC" NEventsMax="-1" Cacheable="False">
-        <In FileName="&TTbar_incl;" Lumi="0.0"/>
-        <InputTree Name="AnalysisTree"/>
-        <OutputTree Name="AnalysisTree"/>
-      </InputData>
-
-      <InputData Version="TTbar_incl_mergedTop_2016v3" Lumi="92260.16399" Type="MC" NEventsMax="-1" Cacheable="False">
-        <In FileName="&TTbar_incl;" Lumi="0.0"/>
-        <InputTree Name="AnalysisTree"/>
-        <OutputTree Name="AnalysisTree"/>
-      </InputData>
-
-      <InputData Version="TTbar_incl_semimerged_2016v3" Lumi="92260.16399" Type="MC" NEventsMax="-1" Cacheable="False">
-        <In FileName="&TTbar_incl;" Lumi="0.0"/>
-        <InputTree Name="AnalysisTree"/>
-        <OutputTree Name="AnalysisTree"/>
-      </InputData>
-
-      <InputData Version="TTbar_incl_notmerged_2016v3" Lumi="92260.16399" Type="MC" NEventsMax="-1" Cacheable="False">
-        <In FileName="&TTbar_incl;" Lumi="0.0"/>
-        <InputTree Name="AnalysisTree"/>
-        <OutputTree Name="AnalysisTree"/>
-      </InputData> -->
 
       <InputData Version="TTbar_Mtt0000to0700_2016v3" Lumi="92260.16399" Type="MC" NEventsMax="-1" Cacheable="False">
         <In FileName="&TTbar_Mtt0000to0700;" Lumi="0.0"/>
@@ -285,7 +256,7 @@
         ███████ ██ ██   ████  ██████  ███████ ███████        ██
     -->
 
-  <!-- <InputData Version="ST_tch_top_2016v3" Lumi="477843.6995" Type="MC" NEventsMax="-1" Cacheable="False">
+  <InputData Version="ST_tch_top_2016v3" Lumi="477843.6995" Type="MC" NEventsMax="-1" Cacheable="False">
     <In FileName="&ST_tch_top;" Lumi="0.0"/>
     <InputTree Name="AnalysisTree"/>
     <OutputTree Name="AnalysisTree"/>
@@ -403,7 +374,7 @@
     <In FileName="&ST_sch;" Lumi="0.0"/>
     <InputTree Name="AnalysisTree"/>
     <OutputTree Name="AnalysisTree"/>
-  </InputData> -->
+  </InputData>
 
 
 
@@ -416,7 +387,7 @@
         ▀▀
     -->
 
-    <!-- <InputData Version="QCD_PT50to80_2016v3" Lumi="44.94169312" Type="MC" NEventsMax="-1" Cacheable="False">
+    <InputData Version="QCD_PT50to80_2016v3" Lumi="44.94169312" Type="MC" NEventsMax="-1" Cacheable="False">
       <In FileName="&QCD_PT50to80;" Lumi="0.0"/>
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -468,7 +439,7 @@
       <In FileName="&QCD_PT1000toInf;" Lumi="0.0"/>
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
     <!--
         ██████  ██    ██
@@ -478,7 +449,7 @@
         ██████     ██
     -->
 
-    <!-- <InputData Version="DYJets_HT100to200_2016v3" Lumi="60547.18646" Type="MC" NEventsMax="-1" Cacheable="False">
+    <InputData Version="DYJets_HT100to200_2016v3" Lumi="60547.18646" Type="MC" NEventsMax="-1" Cacheable="False">
       <In FileName="&DYJets_HT100to200;" Lumi="0.0"/>
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -520,7 +491,7 @@
       <In FileName="&DYJets_HT2500toInf;" Lumi="0.0"/>
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
     <!--
     ██     ██      ██ ███████ ████████ ███████
@@ -530,7 +501,7 @@
      ███ ███   █████  ███████    ██    ███████
     -->
 
-    <!-- <InputData Version="WJets_HT100to200_2016v3" Lumi="24239.87096" Type="MC" NEventsMax="-1" Cacheable="False">
+    <InputData Version="WJets_HT100to200_2016v3" Lumi="24239.87096" Type="MC" NEventsMax="-1" Cacheable="False">
       <In FileName="&WJets_HT100to200;" Lumi="0.0"/>
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
@@ -570,7 +541,7 @@
       <In FileName="&WJets_HT2500toInf;" Lumi="0.0"/>
       <InputTree Name="AnalysisTree"/>
       <OutputTree Name="AnalysisTree"/>
-    </InputData> -->
+    </InputData>
 
 
    <UserConfig>
@@ -602,7 +573,7 @@
       <Item Name="pileup_directory_data_up" Value="/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2016/MyDataPileupHistogram_72383.root"/>
       <Item Name="pileup_directory_data_down" Value="/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2016/MyDataPileupHistogram_66017.root"/>
 
-      <Item Name="BTagCalibration" Value="/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2016/DeepCSV_2016LegacySF_WP_V1.csv"/>
+      <Item Name="BTagCalibration" Value="/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/common/data/2016/DeepJet_2016LegacySF_WP_V1.csv"/>
       <Item Name="MCBtagEfficiencies" Value="/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/TopTagging/BTagEffiHist/BTagMCEfficiencyHists_2016.root" />
 
 	    <!-- <Item Name="SubjetBTagCalibration" Value="/nfs/dust/cms/user/dreyert/CMSSW_8_0_24_patch1/src/UHH2/common/data/subjet_CSVv2_Moriond17_B_H.csv"/> -->

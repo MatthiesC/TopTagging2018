@@ -2,9 +2,8 @@
 import os
 import sys
 
-
 def replace_steer(PathRootFile, PlotName, year):
-    PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PreFit_prongs/"+year+"/"
+    PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/"
     if year == "2018":
         filename="/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/toptagging_prongs"
     if year == "2017":
@@ -38,15 +37,14 @@ year = "2018"
 if len(sys.argv) > 1:
     year = sys.argv[1]
 
-PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PreFit_prongs/"+year+"/"
+PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/"
 PathRootFile= "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/TopTagging/scaleFactorFits_prongs/"
-jets = ["PUPPI", "HOTVR", "CHS"]
-# jets = ["PUPPI"]
+jets = ["PUPPI"]
 
 for jet in jets:
-    rootname=PathRootFile+"thetaFile_pt_"+year+"_"+jet+".root"
-    plotname="PreFit_pt_"+jet
+    rootname=PathRootFile+"thetaFile_tau32_incl_"+year+"_"+jet+".root"
+    plotname="tau32_incl_"+jet
     replace_steer(rootname, plotname, year)
     os.system("/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/bin/Plots -f toptagging_prongs_temp.steer")
     os.chdir(PathPlots)
-    os.system("epstopdf PreFit_pt_"+jet+"_Main_pt.eps")
+    os.system("epstopdf tau32_incl_"+jet+"_Main_tau32.eps")

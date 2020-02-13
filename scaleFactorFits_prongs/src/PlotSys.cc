@@ -9,6 +9,7 @@ int main(int argc, char* argv[]){
   if(argc > 1) year = argv[1];
 
   TString InputPath_PUPPI = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel/";
+  TString InputPath_CHS = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel_HOTVR/";
   TString InputPath_HOTVR = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel_HOTVR/";
 
   std::vector<TString> MCNames {"TTbar_2018"};
@@ -26,7 +27,7 @@ int main(int argc, char* argv[]){
   };
 
 
-  // std::vector<TString> Jets {"PUPPI", "HOTVR"};
+  // std::vector<TString> Jets {"PUPPI", "HOTVR", "CHS"};
   std::vector<TString> Jets {"PUPPI"};
   // std::vector<TString> Jets {"HOTVR"};
 
@@ -40,6 +41,9 @@ int main(int argc, char* argv[]){
         TString InputPath = InputPath_PUPPI;
         if(jet == "HOTVR"){
           InputPath = InputPath_HOTVR;
+        }
+        if(jet == "CHS"){
+          InputPath = InputPath_CHS;
         }
         // draw nominal hist
         TFile* f_nom = new TFile(InputPath+"uhh2.AnalysisModuleRunner.MC."+mcname+".root");

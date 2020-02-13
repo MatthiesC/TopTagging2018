@@ -12,10 +12,12 @@ int main(int argc, char* argv[]){
   TFile* outfile_nomass = new TFile(year+"TopTaggingScaleFactors_NoMassCut.root", "RECREATE");
 
   TString dir="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_FSR_f_prongs/"+year+"/";
-  vector<TString> jetcols = {"PUPPI", "PUPPI_btag", "HOTVR"};
+  vector<TString> jetcols = {"PUPPI", "PUPPI_btag", "CHS", "CHS_btag", "HOTVR"};
   vector<TString> wps_HOTVR = {""};
   vector<TString> wps_PUPPI = {"wp1", "wp2", "wp3", "wp4", "wp5"};
   vector<TString> wps_PUPPI_btag = {"wp1_btag", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"};
+  vector<TString> wps_CHS = {"wp2", "wp3", "wp4", "wp5"};
+  vector<TString> wps_CHS_btag = {"wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"};
   vector<TString> procnames = {"TTbar_mergedTop_2018", "TTbar_semimerged_2018", "TTbar_notmerged_2018"};
 
   for(auto jet: jetcols){
@@ -24,6 +26,14 @@ int main(int argc, char* argv[]){
     else if(jet == "PUPPI_btag"){
       wps = wps_PUPPI_btag;
       jet = "PUPPI";
+    }
+    else if(jet == "CHS"){
+      wps = wps_CHS;
+      jet = "CHS";
+    }
+    else if(jet == "CHS_btag"){
+      wps = wps_CHS_btag;
+      jet = "CHS";
     }
     else if(jet == "HOTVR") wps = wps_HOTVR;
     for(auto wp: wps){
@@ -86,8 +96,8 @@ int main(int argc, char* argv[]){
 
 vector<TH1F*> ConvertToHist(TGraphAsymmErrors* sf, TString jet){
   vector<double> ptbins;
-  vector<double> ptbins_PUPPI = {300, 400, 480, 600, 5000};
-  vector<double> ptbins_HOTVR = {200, 250, 300, 400, 480, 600, 5000};
+  vector<double> ptbins_PUPPI = {300, 400, 480, 600, 1100, 5000};
+  vector<double> ptbins_HOTVR = {200, 250, 300, 400, 480, 600, 1100, 5000};
   if(jet.Contains("HOTVR")) ptbins = ptbins_HOTVR;
   else ptbins = ptbins_PUPPI;
 
@@ -98,7 +108,7 @@ vector<TH1F*> ConvertToHist(TGraphAsymmErrors* sf, TString jet){
   Double_t* values = sf->GetY();
   const int Npoints = sf->GetN();
 
-  if(Npoints != ptbins.size()-1){
+  if(Npoints+1 != ptbins.size()-1){
     throw std::invalid_argument( "unexpected number of pt bins!" );
   }
 
@@ -111,6 +121,15 @@ vector<TH1F*> ConvertToHist(TGraphAsymmErrors* sf, TString jet){
     up->SetBinContent(bin, u);
     down->SetBinContent(bin, d);
   }
+  // now set double uncert in last bin
+  double c = values[Npoints-1];
+  double u = c + 2*sf->GetErrorYhigh(Npoints-1);
+  double d = c - 2*sf->GetErrorYlow(Npoints-1);
+  nominal->SetBinContent(ptbins.size()-1, c);
+  up->SetBinContent(ptbins.size()-1, u);
+  down->SetBinContent(ptbins.size()-1, d);
+  //
+
   vector<TH1F*> hists = {nominal, up, down};
   for(auto h: hists){
     h->SetTitle("");

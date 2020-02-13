@@ -13,8 +13,9 @@ int main(int argc, char* argv[]){
 
   TString plotdir="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_FSR_f_prongs/"+year+"/";
   // vector<TString> jetcols = {"HOTVR"};
-  vector<TString> jetcols = {"PUPPI", "HOTVR"};
+  vector<TString> jetcols = {"PUPPI", "HOTVR", "CHS"};
   vector<TString> wps_PUPPI = {"wp1", "wp2", "wp3", "wp4", "wp5", "wp1_btag", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"};
+  vector<TString> wps_CHS = {"wp2", "wp3", "wp4", "wp5", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"};
   vector<TString> wps_HOTVR = {""};
 
 
@@ -22,6 +23,7 @@ int main(int argc, char* argv[]){
     vector<TString> wps;
     if(jet == "PUPPI")      wps = wps_PUPPI;
     else if(jet == "HOTVR") wps = wps_HOTVR;
+    else if(jet == "CHS")   wps = wps_CHS;
     for(auto wp: wps){
       PlotSF(plotdir, jet, wp);
     }

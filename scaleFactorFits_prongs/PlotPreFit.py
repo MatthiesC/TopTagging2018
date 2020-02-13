@@ -50,6 +50,9 @@ def write_latex(PathPlots,ptbins_PUPPI, ptbins_HOTVR, jets, uncerts, wps_PUPPI, 
         if "PUPPI" in jet:
             wps = wps_PUPPI
             ptbins = ptbins_PUPPI
+        if "CHS" in jet:
+            wps = wps_CHS
+            ptbins = ptbins_CHS
         for wp in wps:
             for unc in uncerts:
                 # begin new frame
@@ -97,12 +100,14 @@ if len(sys.argv) > 1:
 PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PreFit_prongs/"+year+"/"
 PathRootFile= "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/TopTagging/scaleFactorFits_prongs/thetaFiles_NoFSRnotmerged/"+year+"/mass_sub/"
 ptbins_PUPPI = ["300to400", "400to480", "480to600", "600"]
+ptbins_CHS = ["300to400", "400to480", "480to600", "600"]
 ptbins_HOTVR = ["200to250", "250to300", "300to400", "400to480", "480to600", "600"]
-jets = ["PUPPI"]
-# jets = ["HOTVR", "PUPPI"]
-# uncerts = ["stat"]
-uncerts = ["stat", "sys"]
+# jets = ["HOTVR"]
+jets = ["HOTVR", "PUPPI", "CHS"]
+uncerts = ["sys"]
+# uncerts = ["stat", "sys"]
 wps_PUPPI = ["wp1", "wp2", "wp3", "wp4", "wp5", "wp1_btag", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"]
+wps_CHS   = ["wp2", "wp3", "wp4", "wp5", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"]
 wps_HOTVR = [""]
 
 for jet in jets:
@@ -112,6 +117,9 @@ for jet in jets:
     if "PUPPI" in jet:
         wps = wps_PUPPI
         ptbins = ptbins_PUPPI
+    if "CHS" in jet:
+        wps = wps_CHS
+        ptbins = ptbins_CHS
     for pt in ptbins:
         for unc in uncerts:
             for wp in wps:

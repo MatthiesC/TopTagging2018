@@ -27,7 +27,6 @@
 #include "UHH2/TopTagging/include/TopTaggingUtils.h"
 #include "UHH2/HOTVR/include/HOTVRIds.h"
 
-
 using namespace std;
 using namespace uhh2;
 using namespace uhh2examples;
@@ -201,10 +200,9 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
 
   ps_weights.reset(new PartonShowerWeight(ctx, PS_variation));
 
-  BTag::algo btag_algo = BTag::DEEPCSV;
+  BTag::algo btag_algo = BTag::DEEPJET;
   BTag::wp btag_wp = BTag::WP_MEDIUM;
   cout << "before btag sf module" << endl;
-  // sf_btag.reset(new MCBTagScaleFactor(ctx, btag_algo, btag_wp, "jets", BTag_variation, "mujets", "incl", "MCBtagEfficiencies"));
   sf_btag.reset(new MCBTagScaleFactor(ctx, btag_algo, btag_wp, "jets", BTag_variation, "mujets", "incl", "MCBtagEfficiencies"));
   cout << "after btag sf module" << endl;
 
@@ -450,6 +448,7 @@ bool TTEfficiencyPostSelectionModule::process(Event & event) {
 
   for(const auto & subjet : probe_jet.subjets()){
     JetId btag = DeepCSVBTag(DeepCSVBTag::WP_LOOSE);
+    // JetId btag = DeepJetBTag(DeepJetBTag::WP_LOOSE);
     if( btag(subjet, event) ) subjet_btag = true;
   }
 
@@ -526,18 +525,48 @@ bool TTEfficiencyPostSelectionModule::process(Event & event) {
 
     bool tau_cut = get_tau32_cut(wp, probejet_tau32, tau32_wps_new);
 
-    if(usePUPPI && tau_cut) toptag.push_back(true);
-    else if(useHOTVR && pass_hotvr) toptag.push_back(true);
-    else toptag.push_back(false);
+    // PUPPI
+    if(usePUPPI){
+      // tau cut
+      if(tau_cut) toptag.push_back(true);
+      else toptag.push_back(false);
+      // tau + mass
+      if(tau_cut && mass_cut) toptag_mass.push_back(true);
+      else toptag_mass.push_back(false);
+      // tau + subjet btag
+      if(tau_cut && subjet_btag) toptag_btag.push_back(true);
+      else toptag_btag.push_back(false);
+      // tau + subjet btag + mass
+      if(tau_cut && mass_cut && subjet_btag) toptag_mass_btag.push_back(true);
+      else toptag_mass_btag.push_back(false);
+    }
 
-    if(usePUPPI && tau_cut && mass_cut) toptag_mass.push_back(true);
-    else toptag_mass.push_back(false);
+    // CHS
+    if(!usePUPPI && !useHOTVR){
+      // tau cut
+      if(tau_cut) toptag.push_back(true);
+      else toptag.push_back(false);
+      // tau + mass
+      if(tau_cut && mass_cut) toptag_mass.push_back(true);
+      else toptag_mass.push_back(false);
+      // tau + subjet btag
+      if(tau_cut && subjet_btag) toptag_btag.push_back(true);
+      else toptag_btag.push_back(false);
+      // tau + subjet btag + mass
+      if(tau_cut && mass_cut && subjet_btag) toptag_mass_btag.push_back(true);
+      else toptag_mass_btag.push_back(false);
+    }
 
-    if(usePUPPI && tau_cut && subjet_btag) toptag_btag.push_back(true);
-    else toptag_btag.push_back(false);
-
-    if(usePUPPI && tau_cut && mass_cut && subjet_btag) toptag_mass_btag.push_back(true);
-    else toptag_mass_btag.push_back(false);
+    // HOTVR
+    if(useHOTVR){
+      // top tag
+      if(pass_hotvr) toptag.push_back(true);
+      else toptag.push_back(false);
+      // return false for additional requirements
+      toptag_mass.push_back(false);
+      toptag_btag.push_back(false);
+      toptag_mass_btag.push_back(false);
+    }
   }
 
 
