@@ -14,8 +14,12 @@ def replace_steer(PathRootFile, PlotName, year):
     oldfile = open(filename+".steer",'r')       # open file for read
     newfile = open("toptagging_prongs_temp.steer", 'w') # create new file to write
 
+    drawcms = False
+
     pattern1 = "fCycleName"
     pattern2 = "fOutputPsFile"
+    pattern3 = "bForPrelim"
+
     for line in oldfile:
         line = line.strip('\r\n')  # it's always a good behave to strip what you read from files
 
@@ -24,6 +28,8 @@ def replace_steer(PathRootFile, PlotName, year):
             line = 'fCycleName = "' + PathRootFile+'";'
         if pattern2 in line:
             line = 'fOutputPsFile = "'+PathPlots+PlotName+'.ps";'
+        if pattern3 in line and not drawcms:
+            line = 'bForPrelim = false;'
         newfile.write(line + '\n')
 
     # close both files
@@ -40,13 +46,13 @@ if len(sys.argv) > 1:
 
 PathPlots="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/PreFit_prongs/"+year+"/"
 PathRootFile= "/nfs/dust/cms/user/schwarzd/CMSSW10/CMSSW_10_2_10/src/UHH2/TopTagging/scaleFactorFits_prongs/"
-jets = ["PUPPI", "HOTVR", "CHS"]
-# jets = ["PUPPI"]
+# jets = ["PUPPI", "HOTVR", "CHS"]
+jets = ["PUPPI", "HOTVR"]
 
 for jet in jets:
     rootname=PathRootFile+"thetaFile_pt_"+year+"_"+jet+".root"
-    plotname="PreFit_pt_"+jet
+    plotname="PreFit_pt_"+year+"_"+jet
     replace_steer(rootname, plotname, year)
     os.system("/nfs/dust/cms/user/schwarzd/SFramePlotter_TopTagging/bin/Plots -f toptagging_prongs_temp.steer")
     os.chdir(PathPlots)
-    os.system("epstopdf PreFit_pt_"+jet+"_Main_pt.eps")
+    os.system("epstopdf PreFit_pt_"+year+"_"+jet+"_Main_pt.eps")

@@ -22,7 +22,7 @@ ProbeJetHists::ProbeJetHists(Context & ctx, const string & dirname, const TStrin
 
   book<TH1F>("npv", "N_{primary vertices}",  56, -0.5, 55.5);
 
- //probe jet properties
+  //probe jet properties
   book<TH1F>("pt", "Probe jet p_{T} [GeV]", 200, 0., 2000);
   book<TH1F>("eta", "Probe jet #eta", 32, -3.2, 3.2);
 
@@ -52,6 +52,7 @@ ProbeJetHists::ProbeJetHists(Context & ctx, const string & dirname, const TStrin
   book<TH1F>("m12", "m12", 20, 0., 100.);
   book<TH1F>("m13", "m13", 20, 0., 100.);
   book<TH1F>("m23", "m23", 20, 0., 100.);
+  book<TH1F>("min_pairmass", "min #it{m}_{ij} [GeV]", 100, 0, 500);
 
   book<TH1F>("Nsub", "Number of subjets", 6, -0.5, 5.5);
 
@@ -96,7 +97,7 @@ ProbeJetHists::ProbeJetHists(Context & ctx, const string & dirname, const TStrin
   book<TH1F>("mSub_ratio", "m_{subjet1}/m_{subjet2} (mass sorted)", 40, 0,40);
   book<TH1F>("rel_mSub_ratio", "#frac{m_{subjet1}}{m_{subjet1}+m_{subjet2}}(mass sorted)", 50, 0, 1);
   book<TH1F>("ptSub_ratio", "p_{T, subjet1}/p_{T, subjet2}", 40, 0, 10);
-  book<TH1F>("rel_ptSub_ratio", "#frac{p_{T, subjet1}}{p_{T, subjet1}+p_{T, subjet2}}", 30, 0.4, 1);
+  book<TH1F>("rel_ptSub_ratio", "#frac{p_{T, subjet1}}{p_{T, subjet1}+p_{T, subjet2}}", 50, 0.0, 1);
 
   //scatter plots
   h_ratio_mLB_vs_mB = book<TH2D>("ratio_mLB_vs_mB", ";m_{probe jet}/m_{b-jet+#mu};m_{probe jet}/m_{b-jet}",  100, 0., 10., 1000, 0., 100.);
@@ -153,7 +154,7 @@ ProbeJetHists::ProbeJetHists(Context & ctx, const string & dirname, const TStrin
 void ProbeJetHists::fill(const Event & event){
 }
 
- void ProbeJetHists::fill_probe(const Event & event, const TopJet & jet){
+void ProbeJetHists::fill_probe(const Event & event, const TopJet & jet){
   // fill the histograms. Please note the comments in the header file:
   // 'hist' is used here a lot for simplicity, but it will be rather
   // slow when you have many histograms; therefore, better
@@ -203,6 +204,20 @@ void ProbeJetHists::fill(const Event & event){
     hist("m23")->Fill(m23, weight);
   }
 
+  double min_mass = 10000;
+  if(subjets.size() >= 3){
+    for(unsigned int i=0; i<subjets.size(); i++){
+      for(unsigned int j=0; j<subjets.size(); j++){
+        if(i != j){
+          double mass = (subjets.at(i).v4() + subjets.at(j).v4()).M();
+          if(mass < min_mass) min_mass = mass;
+        }
+      }
+    }
+    hist("min_pairmass")->Fill(min_mass, weight);
+  }
+
+
   LorentzVector subjet_sum(0,0,0,0);
   for (const auto s : subjets) {
     hist("pt_subjets")->Fill(s.pt(), weight);
@@ -230,7 +245,7 @@ void ProbeJetHists::fill(const Event & event){
     }
   }
 
-    // else  hist("mass_sub")->Fill(-1, weight);
+  // else  hist("mass_sub")->Fill(-1, weight);
   hist("mass_SD")->Fill(jet.softdropmass(), weight);
   hist("mass_SD_Corr")->Fill(subjet_sum.M()/jet.JEC_factor_raw(), weight);
   // hist("mass_pruned")->Fill(jet.prunedmass(), weight); // jet.prunedmass not available in CMSSW_10!
@@ -341,19 +356,19 @@ void ProbeJetHists::fill(const Event & event){
     }
     if(b_candidate_found){
       if(deltaPhi(b_candidate,mu) < min_dphi ){
-	bjet = b_candidate;
-	min_dphi = deltaPhi(b_candidate,mu);
-	bjet_found = true;
+        bjet = b_candidate;
+        min_dphi = deltaPhi(b_candidate,mu);
+        bjet_found = true;
       }
       if( b_candidate.pt() > max_pt){
-	bjet_max_pt = b_candidate;
-	max_pt = b_candidate.pt();
-	bjet_max_pt_found = true;
+        bjet_max_pt = b_candidate;
+        max_pt = b_candidate.pt();
+        bjet_max_pt_found = true;
       }
       if( b_candidate.btag_combinedSecondaryVertex() > max_CSV){
-	bjet_max_CSV = b_candidate;
-	max_CSV = b_candidate.btag_combinedSecondaryVertex();
-	bjet_max_CSV_found = true;
+        bjet_max_CSV = b_candidate;
+        max_CSV = b_candidate.btag_combinedSecondaryVertex();
+        bjet_max_CSV_found = true;
       }
     }
   }
@@ -364,8 +379,8 @@ void ProbeJetHists::fill(const Event & event){
 
   // if(!b_candidate_found) cout << "No Bjet candidate found in event:  " << event.event << endl;
   // if(!bjet_found) cout << "No Bjet found in event: " << event.event << endl;
-  // if(!bjet_max_CSV_found) cout << "No leading Bjet found in event: " << event.event << endl;
-  // if(!bjet_max_pt_found) cout << "No Bjet with highest CSV found in event: " << event.event << endl;
+  if(!bjet_max_CSV_found) cout << "No leading Bjet found in event: " << event.event << endl;
+  if(!bjet_max_pt_found) cout << "No Bjet with highest CSV found in event: " << event.event << endl;
 
 
   if(bjet_found){
@@ -379,10 +394,10 @@ void ProbeJetHists::fill(const Event & event){
 
     for( const auto & ak4jet : *ak4jets){
       if(deltaR(ak4jet, jet) > 0.8 && deltaR(ak4jet, bjet) > 0.1 && ak4jet.pt() > add_jet_maxpt ) {
-	add_jet_maxpt = ak4jet.pt();
+        add_jet_maxpt = ak4jet.pt();
       }
       if((deltaPhi(ak4jet, mu) < (2*pi/3)) && deltaR(ak4jet, bjet) > 0.1 && ak4jet.pt() > add_jet_lept_maxpt)
-	add_jet_lept_maxpt = ak4jet.pt();
+      add_jet_lept_maxpt = ak4jet.pt();
     }
 
     //get additional b-jets and non bjets
@@ -390,8 +405,8 @@ void ProbeJetHists::fill(const Event & event){
     std::vector<Jet> add_non_bjets;
     for ( const auto & ak4jet : *ak4jets ) {
       if (deltaR(ak4jet, jet) > 0.8 && deltaR(ak4jet, bjet) > 0.1){
-	if (btag(ak4jet, event)) add_bjets.emplace_back(ak4jet);
-     	else add_non_bjets.emplace_back(ak4jet);
+        if (btag(ak4jet, event)) add_bjets.emplace_back(ak4jet);
+        else add_non_bjets.emplace_back(ak4jet);
       }
     }
     sort_by_pt(add_bjets);

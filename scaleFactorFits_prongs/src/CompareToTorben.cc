@@ -10,7 +10,7 @@ TGraphAsymmErrors* ConvertToGraph(vector<TH1F*> hists);
 
 int main(int argc, char* argv[]){
 
-  vector<TString> jetcols = {"PUPPI", "HOTVR", "CHS"};
+  vector<TString> jetcols = {"PUPPI", "HOTVR"};
   vector<TString> years = {"2016", "2017"};
   vector<TString> wps_PUPPI = {"wp1", "wp2", "wp3", "wp4", "wp5", "wp1_btag", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"};
   vector<TString> wps_CHS = {"wp2", "wp3", "wp4", "wp5", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"};
@@ -66,8 +66,8 @@ void PlotComparison(vector<TH1F*> h_new, vector<TH1F*> h_old, TString plotname){
   gPad->SetLeftMargin(0.15);
   SF_new->Draw("AP");
   SF_new->SetTitle(" ");
-  SF_new->GetXaxis()->SetTitle("probe jet p_{T} [GeV]");
-  SF_new->GetYaxis()->SetTitle("scale factor");
+  SF_new->GetXaxis()->SetTitle("Probe jet #if{p}_{T} [GeV]");
+  SF_new->GetYaxis()->SetTitle("Scale factor");
   SF_new->GetXaxis()->SetTitleOffset(1.1);
   SF_new->GetYaxis()->SetTitleOffset(1.2);
   double xmin;
@@ -90,8 +90,25 @@ void PlotComparison(vector<TH1F*> h_new, vector<TH1F*> h_old, TString plotname){
   TLegend *leg = new TLegend(0.2, 0.65, 0.55, 0.85);
   leg->AddEntry(SF_new, "new scale factor", "pe");
   leg->AddEntry(SF_old, "old scale factor", "pf");
+  TString leglabel = "";
+  if(plotname.Contains("mergedTop")) leglabel = "t#bar{t} merged top";
+  if(plotname.Contains("semimerged")) leglabel = "t#bar{t} semimerged top";
+  if(plotname.Contains("notmerged")) leglabel = "t#bar{t} unmerged top";
+  leg->AddEntry((TObject*)0, leglabel, "");
   leg->Draw();
   gPad->RedrawAxis();
+
+  TString jettext = "AK8 PUPPI";
+  if(plotname.Contains("HOTVR")) jettext = "HOTVR PUPPI";
+  TLatex* jet_label = new TLatex(3.5, 24, jettext);
+  jet_label->SetX(0.15);
+  jet_label->SetY(0.915);
+  jet_label->SetNDC();
+  jet_label->SetTextAlign(11);
+  jet_label->SetTextFont(42);
+  jet_label->SetTextSize(0.045);
+  jet_label->Draw();
+
   c->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/CompareToTorben/"+plotname+".pdf");
   delete c;
 

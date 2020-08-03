@@ -14,8 +14,13 @@ def replace_steer(PathRootFile, PlotName, year):
     oldfile = open(filename+".steer",'r')       # open file for read
     newfile = open("toptagging_prongs_temp.steer", 'w') # create new file to write
 
+    drawcms = False
+
+
     pattern1 = "fCycleName"
     pattern2 = "fOutputPsFile"
+    pattern3 = "bForPrelim"
+    pattern4 = "bIsHOTVR"
     for line in oldfile:
         line = line.strip('\r\n')  # it's always a good behave to strip what you read from files
 
@@ -24,6 +29,10 @@ def replace_steer(PathRootFile, PlotName, year):
             line = 'fCycleName = "' + PathRootFile+'";'
         if pattern2 in line:
             line = 'fOutputPsFile = "'+PathPlots+PlotName+'.ps";'
+        if pattern3 in line and not drawcms:
+            line = 'bForPrelim = false;'
+        if pattern4 in line and "HOTVR" in PlotName:
+            line = 'bIsHOTVR = true;'
         newfile.write(line + '\n')
 
     # close both files

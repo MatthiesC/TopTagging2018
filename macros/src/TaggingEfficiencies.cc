@@ -4,28 +4,56 @@
 using namespace std;
 
 TH1F* GetEfficiency(vector<TH1F*> h_pass, vector<TH1F*> h_fail, vector<int> pt_bins);
+void WriteTable(vector<double> effis, vector<double> mistags, vector<TString> wps);
 
 int main(int argc, char* argv[]){
 
   TString dir_PUPPI = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel/";
   TString dir_HOTVR = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel_HOTVR/";
 
-  TFile* tt_PUPPI = new TFile(dir_PUPPI+"uhh2.AnalysisModuleRunner.MC.TTbar_mergedTop_2018.root");
-  TFile* tt_HOTVR = new TFile(dir_HOTVR+"uhh2.AnalysisModuleRunner.MC.TTbar_mergedTop_2018.root");
+  TFile* tt_PUPPI = new TFile(dir_PUPPI+"uhh2.AnalysisModuleRunner.MC.TTbar_2016v3.root");
+  TFile* tt_HOTVR = new TFile(dir_HOTVR+"uhh2.AnalysisModuleRunner.MC.TTbar_2016v3.root");
 
-  TFile* qcd_PUPPI = new TFile(dir_PUPPI+"uhh2.AnalysisModuleRunner.MC.QCD_2018.root");
-  TFile* qcd_HOTVR = new TFile(dir_HOTVR+"uhh2.AnalysisModuleRunner.MC.QCD_2018.root");
+  TFile* qcd_PUPPI = new TFile(dir_PUPPI+"uhh2.AnalysisModuleRunner.MC.QCD_2016v3.root");
+  TFile* qcd_HOTVR = new TFile(dir_HOTVR+"uhh2.AnalysisModuleRunner.MC.QCD_2016v3.root");
 
   vector<TString> wps_PUPPI = {"wp1","wp2", "wp3", "wp4", "wp5", "wp1_btag","wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"};
-  vector<TString> wps_HOTVR = {"HOTVR"};
+  vector<TString> wps_HOTVR = {" "};
 
-  vector<int> pt_bins = {200, 250, 300, 400, 480, 600};
+  vector<int> pt_bins;
+  TString ptstring;
+  if((TString)argv[1] == "300"){
+    pt_bins = {300, 500};
+    ptstring = "300to500";
+  }
+  else if((TString)argv[1] == "400"){
+    pt_bins = {400, 800};
+    ptstring = "400to800";
+  }
+  else if((TString)argv[1] == "480"){
+    pt_bins = {480, 600};
+    ptstring = "480to600";
+  }
+  else if((TString)argv[1] == "1000"){
+    pt_bins = {1000, 2000};
+    ptstring = "1000to2000";
+  }
+  else{
+    cout << "argument not valid, try '300', '480' or '1000'" << endl;
+    return 1;
+  }
 
-  vector<TString> jetcols = {"PUPPI", "HOTVR"};
+  vector<TString> jetcols = {"PUPPI"};
+  // vector<TString> jetcols = {"PUPPI", "HOTVR"};
+
   //// ---------------------------------------------------------------------------------------------------------------------
   //// ---------------------------------------------------------------------------------------------------------------------
 
   for(auto jet: jetcols){
+    vector<double> efficiencies, mistags;
+    cout << "-------------------------"<< endl;
+    cout << jet << endl;
+
     TFile *file, *file_mis;
     vector<TString> wps;
     if(jet == "PUPPI"){
@@ -40,19 +68,20 @@ int main(int argc, char* argv[]){
     }
     for(auto wp: wps){
       vector<TH1F*> h_pass, h_fail, h_pass_mis, h_fail_mis;
-      for(unsigned int i=0; i<pt_bins.size(); i++){
-        TString histname = "ProbeJet_pt";
-        if(i < pt_bins.size()-1) histname += to_string(pt_bins[i])+"to"+to_string(pt_bins[i+1]);
-        else histname += to_string(pt_bins[i]);
-        if(wp != "HOTVR") histname += "_"+wp;
-        if(!wp.Contains("btag")) histname += "_all";
-        h_pass.push_back((TH1F*) file->Get(histname+"_pass/mass_sub"));
-        h_fail.push_back((TH1F*) file->Get(histname+"_fail/mass_sub"));
-        h_pass_mis.push_back((TH1F*) file_mis->Get(histname+"_pass/mass_sub"));
-        h_fail_mis.push_back((TH1F*) file_mis->Get(histname+"_fail/mass_sub"));
-      }
+      TString histname = "EfficiencyHists_"+ptstring+"_"+wp;
+      if(jet == "HOTVR") histname = "EfficiencyHists_"+ptstring;
+
+      h_pass.push_back((TH1F*) file->Get(histname+"_pass/mass"));
+      h_fail.push_back((TH1F*) file->Get(histname+"_fail/mass"));
+      h_pass_mis.push_back((TH1F*) file_mis->Get(histname+"_pass/mass"));
+      h_fail_mis.push_back((TH1F*) file_mis->Get(histname+"_fail/mass"));
+
       TH1F* effi = GetEfficiency(h_pass, h_fail, pt_bins);
       TH1F* mist = GetEfficiency(h_pass_mis, h_fail_mis, pt_bins);
+
+      efficiencies.push_back(effi->GetBinContent(1));
+      mistags.push_back(mist->GetBinContent(1));
+
       gStyle->SetOptStat(kFALSE);
       gStyle->SetPadTickY(1);
       gStyle->SetPadTickX(1);
@@ -61,7 +90,7 @@ int main(int argc, char* argv[]){
       gPad->SetLeftMargin(0.15);
       gPad->SetBottomMargin(0.1);
       effi->SetTitle(" ");
-      effi->GetXaxis()->SetRangeUser(0, 800);
+      effi->GetXaxis()->SetRangeUser(300, 500);
       effi->GetYaxis()->SetRangeUser(0, 1);
       effi->GetYaxis()->SetTitleSize(0.06);
       effi->GetXaxis()->SetTitleSize(0.05);
@@ -71,8 +100,8 @@ int main(int argc, char* argv[]){
       effi->GetZaxis()->SetTitleOffset(0.9);
       effi->GetXaxis()->SetNdivisions(505);
       effi->GetYaxis()->SetNdivisions(505);
-      effi->GetXaxis()->SetTitle("probe-jet p_{T}");
-      effi->GetYaxis()->SetTitle("tag efficiency");
+      effi->GetXaxis()->SetTitle("Probe jet #it{p}_{T}");
+      effi->GetYaxis()->SetTitle("Efficiency");
       effi->Draw("E1");
       TString t = jet;
       if(jet == "PUPPI") t = "#splitline{"+jet+"}{"+wp+"}";
@@ -84,14 +113,15 @@ int main(int argc, char* argv[]){
       text->SetTextFont(42);
       text->SetTextSize(0.04);
       text->Draw();
-      a->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/Efficiency/effi_"+jet+"_"+wp+".pdf");
+      if(jet=="HOTVR") a->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/Efficiency/2018/effi_"+jet+".pdf");
+      else a->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/Efficiency/2018/effi_"+jet+"_"+wp+".pdf");
       delete a;
       delete effi;
       TCanvas *b = new TCanvas("b", " ", 600, 600);
       gPad->SetLeftMargin(0.15);
       gPad->SetBottomMargin(0.1);
       mist->SetTitle(" ");
-      mist->GetXaxis()->SetRangeUser(0, 800);
+      mist->GetXaxis()->SetRangeUser(300, 500);
       mist->GetYaxis()->SetRangeUser(0, 0.1);
       mist->GetYaxis()->SetTitleSize(0.06);
       mist->GetXaxis()->SetTitleSize(0.05);
@@ -101,14 +131,19 @@ int main(int argc, char* argv[]){
       mist->GetZaxis()->SetTitleOffset(0.9);
       mist->GetXaxis()->SetNdivisions(505);
       mist->GetYaxis()->SetNdivisions(505);
-      mist->GetXaxis()->SetTitle("probe-jet p_{T}");
-      mist->GetYaxis()->SetTitle("mistag rate");
+      mist->GetXaxis()->SetTitle("Probe jet #it{p}_{T}");
+      mist->GetYaxis()->SetTitle("Mistag rate");
       mist->Draw("E1");
       text->Draw();
-      b->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/Efficiency/mistag_"+jet+"_"+wp+".pdf");
+      if(jet=="HOTVR") b->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/Efficiency/2018/mistag_"+jet+".pdf");
+      else b->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/Efficiency/2018/mistag_"+jet+"_"+wp+".pdf");
       delete b;
       delete mist;
     }
+
+
+
+    WriteTable(efficiencies, mistags, wps);
   }
 
 
@@ -122,7 +157,6 @@ TH1F* GetEfficiency(vector<TH1F*> h_pass, vector<TH1F*> h_fail, vector<int> pt_b
   // convert to double
   vector<double> bins;
   for(auto p: pt_bins) bins.push_back(p);
-  bins.push_back(800); // to get some upper boundary of last bin
   TH1F* effi = new TH1F("effi", "jet p_{T}", bins.size()-1, &bins[0]);
   for(unsigned int i=0; i<bins.size()-1; i++){
     int lower = 1;
@@ -131,9 +165,25 @@ TH1F* GetEfficiency(vector<TH1F*> h_pass, vector<TH1F*> h_fail, vector<int> pt_b
     double n_fail = h_fail[i]->Integral();
     double n_sum = n_pass + n_fail;
     double efficiency = n_pass/n_sum;
+    // cout << "pass = " << n_pass << endl;
+    // cout << "fail = " << n_fail << endl;
+    // cout << "effi = " << efficiency << endl;
     double error = sqrt(efficiency*(1-efficiency)/n_sum);
     effi->SetBinContent(i+1, efficiency);
     effi->SetBinError(i+1, error);
   }
   return effi;
+}
+
+void WriteTable(vector<double> effis, vector<double> mistags, vector<TString> wps){
+  vector<TString> taucut = {"0.40", "0.46", "0.54", "0.65", "0.80"};
+  cout << "\\begin{tabular}{l | r | r}" << endl;
+  cout << "& Efficiency signal & Efficiency background \\\\" << endl;
+  cout << "\\hline" << endl;
+  for(int i=0; i<effis.size(); i++){
+    if(!wps[i].Contains("btag")) cout << "$\\tau_{32} < " << std::setprecision(4) << taucut[i] << "$ + mass & " << effis[i] << " & "  << mistags[i] << "\\\\" << endl;
+    else cout << "$\\tau_{32} < " << taucut[i-5] << "$ + mass + subjet b tag & " << std::setprecision(4) << effis[i] << " & "  << mistags[i] << "\\\\" << endl;
+  }
+  cout << "\\end{tabular}" << endl;
+
 }

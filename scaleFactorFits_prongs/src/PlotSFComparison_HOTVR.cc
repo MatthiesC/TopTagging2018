@@ -99,7 +99,7 @@ int main(int argc, char* argv[]){
   AdjustYValues(SFnotmerged_tot_2016, -4, ptbins);
 
   // now plot here for every jet collection
-  double x[] = {0, 22};
+  double x[] = {-1, 22};
   double y[] = {-2.9, 2.5};
   if(jet=="HOTVR") x[1] = 33;
 
@@ -109,7 +109,7 @@ int main(int argc, char* argv[]){
   if(jet == "HOTVR") width = 1350;
   TCanvas *c = new TCanvas("c", "c", 900, 600);
   gPad->SetLeftMargin(0.15);
-  gPad->SetBottomMargin(0.15);
+  gPad->SetBottomMargin(0.19);
   dummy->Draw("AP");
   dummy->SetTitle(" ");
   dummy->GetXaxis()->SetTickLength(0.0);
@@ -147,9 +147,9 @@ int main(int argc, char* argv[]){
   vector<TLine*> lines;
   int xmax = 24;
   if(jet == "HOTVR") xmax = 36;
-  lines.push_back(new TLine(0, 1, xmax, 1));
-  lines.push_back(new TLine(0, -1, xmax, -1));
-  lines.push_back(new TLine(0, -3, xmax, -3));
+  lines.push_back(new TLine(-3, 1, xmax, 1));
+  lines.push_back(new TLine(-3, -1, xmax, -1));
+  lines.push_back(new TLine(-3, -3, xmax, -3));
   for(auto line: lines){
     line->SetLineStyle(7);
     line->SetLineColor(13);
@@ -246,7 +246,7 @@ int main(int argc, char* argv[]){
   }
 
   // Legend
-  TLegend* leg = new TLegend(0.35, 0.73, 0.85, 0.88);
+  TLegend* leg = new TLegend(0.35, 0.73, 0.88, 0.88);
   leg->SetNColumns(3);
   leg->AddEntry(SFmerged_stat_2018[0], "#tau_{32}<0.56 (2018)", "f");
   leg->AddEntry(SFmerged_stat_2017[0], "#tau_{32}<0.56 (2017)", "f");
@@ -261,22 +261,22 @@ int main(int argc, char* argv[]){
   TString jettext = "HOTVR PUPPI";
   TLatex* jet_label = new TLatex(3.5, 24, jettext);
   jet_label->SetX(0.15);
-  jet_label->SetY(0.907);
+  jet_label->SetY(0.915);
   jet_label->SetNDC();
   jet_label->SetTextAlign(11);
   jet_label->SetTextFont(42);
-  jet_label->SetTextSize(0.035);
+  jet_label->SetTextSize(0.045);
   jet_label->Draw();
 
   // lumi label
   TString lumitext = "(35.9 + 41.5 + 59.7) fb^{-1} (13 TeV)";
   TLatex* lumi_label = new TLatex(3.5, 24, lumitext);
   lumi_label->SetX(0.902);
-  lumi_label->SetY(0.907);
+  lumi_label->SetY(0.915);
   lumi_label->SetNDC();
   lumi_label->SetTextAlign(31);
   lumi_label->SetTextFont(42);
-  lumi_label->SetTextSize(0.035);
+  lumi_label->SetTextSize(0.045);
   lumi_label->Draw();
 
   // custom X axis labels
@@ -284,8 +284,8 @@ int main(int argc, char* argv[]){
   vector<double> yLabel = {0.148, 0.148, 0.148, 0.148};
   vector<TString> pttext;
   if(jet == "HOTVR"){
-    xLabel = {0.21, 0.335, 0.46, 0.585, 0.71, 0.84};
-    yLabel = {0.148, 0.148, 0.148, 0.148, 0.148, 0.148};
+    xLabel = {0.25, 0.39, 0.50, 0.61, 0.72, 0.84};
+    yLabel = {0.168, 0.168, 0.168, 0.168, 0.168, 0.168};
     pttext.push_back("200 < p_{T} < 250 GeV");
     pttext.push_back("250 < p_{T} < 300 GeV");
   }
@@ -303,7 +303,7 @@ int main(int argc, char* argv[]){
     ptlabels[i]->SetNDC();
     ptlabels[i]->SetTextAlign(13);
     ptlabels[i]->SetTextFont(42);
-    ptlabels[i]->SetTextSize(0.032);
+    ptlabels[i]->SetTextSize(0.038);
     // if(jet == "HOTVR") ptlabels[i]->SetTextSize(0.022);
     ptlabels[i]->SetTextAngle(-25);
     ptlabels[i]->Draw();
@@ -311,7 +311,7 @@ int main(int argc, char* argv[]){
 
   // custom y axis labels
   double xsfLabel = 0.108;
-  double ysfLabel = 0.166;
+  double ysfLabel = 0.2;
 
   vector<TString> sftext;
   sftext.push_back("0.5");
@@ -329,29 +329,35 @@ int main(int argc, char* argv[]){
       sflabels[i]->SetTextFont(42);
       sflabels[i]->SetTextSize(0.035);
       sflabels[i]->Draw();
-      ysfLabel += 0.053;
+      ysfLabel += 0.051;
     }
-    ysfLabel += 0.072;
+    ysfLabel += 0.067;
   }
 
   // labels for merged, semi merged, not merged
-  vector<TString> toplabels = {"t#bar{t} merged Top", "t#bar{t} semimerged Top", "t#bar{t} not merged Top"};
-  double ypos=0.72;
+  vector<TString> toplabels = {
+  "#splitline{          t#bar{t}}{merged top}",
+  "#splitline{            t#bar{t}}{semimerged top}",
+  "#splitline{            t#bar{t}}{unmerged top}"};
+  double ypos=0.78;
+  int k = 0;
   for(auto label: toplabels){
     TLatex* text = new TLatex(3.5, 24, label);
-    text->SetX(0.18);
+    text->SetX(0.181);
     text->SetY(ypos);
     text->SetNDC();
     text->SetTextAlign(13);
     text->SetTextFont(42);
-    text->SetTextSize(0.03);
+    text->SetTextSize(0.035);
     if(jet == "HOTVR"){
-      text->SetX(0.165);
-      text->SetTextSize(0.02);
+      text->SetX(0.175);
+      if(k==0) text->SetX(0.185);
+      text->SetTextSize(0.034);
       text->SetY(ypos-0.01);
     }
     text->Draw();
-    ypos-=0.23;
+    ypos-=0.215;
+    k++;
   }
 
   // CMS label

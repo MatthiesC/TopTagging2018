@@ -23,6 +23,7 @@
 #include "UHH2/common/include/TopPtReweight.h"
 #include "UHH2/TopTagging/include/TopTaggingSelections.h"
 #include "UHH2/TopTagging/include/ProbeJetHists.h"
+#include "UHH2/TopTagging/include/EfficiencyHists.h"
 #include <UHH2/common/include/Utils.h>
 #include "UHH2/TopTagging/include/TopTaggingUtils.h"
 #include "UHH2/HOTVR/include/HOTVRIds.h"
@@ -75,6 +76,11 @@ private:
   std::unique_ptr<ProbeJetHists>  hists_dilepton, hists_lepton_jets, hists_taujets, hists_hadronic, hists_dilepton_400, hists_lepton_jets_400, hists_taujets_400, hists_hadronic_400;
   std::vector<std::vector<std::unique_ptr<ProbeJetHists>>> h_probe_all_pass, h_probe_mass_pass, h_probe_btag_pass, h_probe_mass_btag_pass;
   std::vector<std::vector<std::unique_ptr<ProbeJetHists>>> h_probe_all_fail, h_probe_mass_fail, h_probe_btag_fail, h_probe_mass_btag_fail;
+
+  std::vector<std::unique_ptr<EfficiencyHists>> h_effi_300to500_all, h_effi_300to500_pass, h_effi_300to500_fail, h_effi_300to500_btag_pass, h_effi_300to500_btag_fail;
+  std::vector<std::unique_ptr<EfficiencyHists>> h_effi_400to800_all, h_effi_400to800_pass, h_effi_400to800_fail, h_effi_400to800_btag_pass, h_effi_400to800_btag_fail;
+  std::vector<std::unique_ptr<EfficiencyHists>> h_effi_480to600_all, h_effi_480to600_pass, h_effi_480to600_fail, h_effi_480to600_btag_pass, h_effi_480to600_btag_fail;
+  std::vector<std::unique_ptr<EfficiencyHists>> h_effi_1000to2000_all, h_effi_1000to2000_pass, h_effi_1000to2000_fail, h_effi_1000to2000_btag_pass, h_effi_1000to2000_btag_fail;
 
   //variables and functions
   string mass_scale;
@@ -336,6 +342,30 @@ TTEfficiencyPostSelectionModule::TTEfficiencyPostSelectionModule(Context & ctx){
       h_probe_all_fail.at(bin).emplace_back(new ProbeJetHists(ctx, (name+"_"+ptString+wps.at(b)+"_all_fail").Data(), TagEffi_variation));
       h_probe_btag_fail.at(bin).emplace_back(new ProbeJetHists(ctx,  (name+"_"+ptString+wps.at(b)+"_btag_fail").Data(), TagEffi_variation));
 
+      h_effi_300to500_all.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_300to500"+wps.at(b)+"_all").Data()));
+      h_effi_300to500_pass.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_300to500"+wps.at(b)+"_pass").Data()));
+      h_effi_300to500_fail.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_300to500"+wps.at(b)+"_fail").Data()));
+      h_effi_300to500_btag_pass.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_300to500"+wps.at(b)+"_btag_pass").Data()));
+      h_effi_300to500_btag_fail.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_300to500"+wps.at(b)+"_btag_fail").Data()));
+
+      h_effi_400to800_all.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_400to800"+wps.at(b)+"_all").Data()));
+      h_effi_400to800_pass.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_400to800"+wps.at(b)+"_pass").Data()));
+      h_effi_400to800_fail.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_400to800"+wps.at(b)+"_fail").Data()));
+      h_effi_400to800_btag_pass.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_400to800"+wps.at(b)+"_btag_pass").Data()));
+      h_effi_400to800_btag_fail.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_400to800"+wps.at(b)+"_btag_fail").Data()));
+
+      h_effi_480to600_all.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_480to600"+wps.at(b)+"_all").Data()));
+      h_effi_480to600_pass.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_480to600"+wps.at(b)+"_pass").Data()));
+      h_effi_480to600_fail.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_480to600"+wps.at(b)+"_fail").Data()));
+      h_effi_480to600_btag_pass.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_480to600"+wps.at(b)+"_btag_pass").Data()));
+      h_effi_480to600_btag_fail.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_480to600"+wps.at(b)+"_btag_fail").Data()));
+
+      h_effi_1000to2000_all.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_1000to2000"+wps.at(b)+"_all").Data()));
+      h_effi_1000to2000_pass.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_1000to2000"+wps.at(b)+"_pass").Data()));
+      h_effi_1000to2000_fail.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_1000to2000"+wps.at(b)+"_fail").Data()));
+      h_effi_1000to2000_btag_pass.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_1000to2000"+wps.at(b)+"_btag_pass").Data()));
+      h_effi_1000to2000_btag_fail.emplace_back(new EfficiencyHists(ctx, ("EfficiencyHists_1000to2000"+wps.at(b)+"_btag_fail").Data()));
+
     }
   }
 
@@ -462,7 +492,8 @@ bool TTEfficiencyPostSelectionModule::process(Event & event) {
 
   bool mass_cut = false;
   if(usePUPPI && probejet_mass > 105 && probejet_mass < 210) mass_cut = true;
-  else if(!usePUPPI && probejet_mass > 105 && probejet_mass < 220) mass_cut = true;
+  else if(!usePUPPI && useHOTVR && probejet_mass > 140 && probejet_mass < 220) mass_cut = true;
+  else if(!usePUPPI && !useHOTVR && probejet_mass > 105 && probejet_mass < 220) mass_cut = true;
 
   if(probejet_mass < 10) return false; //mild mass cut on the denominator
 
@@ -562,8 +593,9 @@ bool TTEfficiencyPostSelectionModule::process(Event & event) {
       // top tag
       if(pass_hotvr) toptag.push_back(true);
       else toptag.push_back(false);
+      if(pass_hotvr && mass_cut) toptag_mass.push_back(true);
+      else toptag_mass.push_back(false);
       // return false for additional requirements
-      toptag_mass.push_back(false);
       toptag_btag.push_back(false);
       toptag_mass_btag.push_back(false);
     }
@@ -586,6 +618,65 @@ bool TTEfficiencyPostSelectionModule::process(Event & event) {
         //	else h_probe_mass_fail.at(bin).at(wp)->fill_probe(event, probe_jet);
       }
 
+    }
+  }
+
+  // fill hists to calculate efficiencies
+  for(unsigned int wp = 0; wp < tau32_wps_new.size(); ++wp){
+    if(probejet_pt > 300 && probejet_pt < 500){
+      h_effi_300to500_all.at(wp)->fill_probe(event, probe_jet);
+      // is tagged?
+      if(toptag_mass.at(wp)){
+        h_effi_300to500_pass.at(wp)->fill_probe(event, probe_jet);
+      }
+      else h_effi_300to500_fail.at(wp)->fill_probe(event, probe_jet);
+      // tagged with subjet btag?
+      if(toptag_mass_btag.at(wp)){
+        h_effi_300to500_btag_pass.at(wp)->fill_probe(event, probe_jet);
+      }
+      else h_effi_300to500_btag_fail.at(wp)->fill_probe(event, probe_jet);
+    }
+
+    if(probejet_pt > 400 && probejet_pt < 800){
+      h_effi_400to800_all.at(wp)->fill_probe(event, probe_jet);
+      // is tagged?
+      if(toptag_mass.at(wp)){
+        h_effi_400to800_pass.at(wp)->fill_probe(event, probe_jet);
+      }
+      else h_effi_400to800_fail.at(wp)->fill_probe(event, probe_jet);
+      // tagged with subjet btag?
+      if(toptag_mass_btag.at(wp)){
+        h_effi_400to800_btag_pass.at(wp)->fill_probe(event, probe_jet);
+      }
+      else h_effi_400to800_btag_fail.at(wp)->fill_probe(event, probe_jet);
+    }
+
+    if(probejet_pt > 480 && probejet_pt < 600){
+      h_effi_480to600_all.at(wp)->fill_probe(event, probe_jet);
+      // is tagged?
+      if(toptag_mass.at(wp)){
+        h_effi_480to600_pass.at(wp)->fill_probe(event, probe_jet);
+      }
+      else h_effi_480to600_fail.at(wp)->fill_probe(event, probe_jet);
+      // tagged with subjet btag?
+      if(toptag_mass_btag.at(wp)){
+        h_effi_480to600_btag_pass.at(wp)->fill_probe(event, probe_jet);
+      }
+      else h_effi_480to600_btag_fail.at(wp)->fill_probe(event, probe_jet);
+    }
+
+    if(probejet_pt > 1000 && probejet_pt < 2000){
+      h_effi_1000to2000_all.at(wp)->fill_probe(event, probe_jet);
+      // is tagged?
+      if(toptag_mass.at(wp)){
+        h_effi_1000to2000_pass.at(wp)->fill_probe(event, probe_jet);
+      }
+      else h_effi_1000to2000_fail.at(wp)->fill_probe(event, probe_jet);
+      // tagged with subjet btag?
+      if(toptag_mass_btag.at(wp)){
+        h_effi_1000to2000_btag_pass.at(wp)->fill_probe(event, probe_jet);
+      }
+      else h_effi_1000to2000_btag_fail.at(wp)->fill_probe(event, probe_jet);
     }
   }
 

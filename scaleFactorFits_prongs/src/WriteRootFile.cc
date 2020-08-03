@@ -12,7 +12,8 @@ int main(int argc, char* argv[]){
   TFile* outfile_nomass = new TFile(year+"TopTaggingScaleFactors_NoMassCut.root", "RECREATE");
 
   TString dir="/afs/desy.de/user/s/schwarzd/Plots/TopTagging/ScaleFactors_FSR_f_prongs/"+year+"/";
-  vector<TString> jetcols = {"PUPPI", "PUPPI_btag", "CHS", "CHS_btag", "HOTVR"};
+  // vector<TString> jetcols = {"PUPPI", "PUPPI_btag", "CHS", "CHS_btag", "HOTVR"};
+  vector<TString> jetcols = {"PUPPI", "PUPPI_btag", "HOTVR"};
   vector<TString> wps_HOTVR = {""};
   vector<TString> wps_PUPPI = {"wp1", "wp2", "wp3", "wp4", "wp5"};
   vector<TString> wps_PUPPI_btag = {"wp1_btag", "wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"};

@@ -22,6 +22,7 @@ int main(int argc, char* argv[]){
   histnames.push_back("Muon_sel/pt");
   histnames.push_back("Event_sel/MET");
   histnames.push_back("Jet_sel/number");
+  histnames.push_back("Jet_sel/pt_jet");
   histnames.push_back("ProbeJet_All_Pt400/pt");
   histnames.push_back("ProbeJet_All_Pt400/mass_sub");
   histnames.push_back("ProbeJet_All_Pt400/tau32");
@@ -57,8 +58,16 @@ int main(int argc, char* argv[]){
       for(auto file: f_data)   h_data.push_back((TH1F*) file->Get(hname));
       for(auto file: f_ttbar)  h_ttbar.push_back((TH1F*) file->Get(hname));
       if(hname.Contains("pt") || hname.Contains("mass") || hname.Contains("MET")){
-        for(auto h: h_data) h->Rebin(5);
-        for(auto h: h_ttbar) h->Rebin(5);
+        for(auto h: h_data) h->Rebin(2);
+        for(auto h: h_ttbar) h->Rebin(2);
+      }
+      if(hname.Contains("ProbeJet_All_Pt400/pt")){
+        for(auto h: h_data) h->GetXaxis()->SetRangeUser(400, 1000);
+        for(auto h: h_ttbar) h->GetXaxis()->SetRangeUser(400, 1000);
+      }
+      if(hname.Contains("pt_jet")){
+        for(auto h: h_data) h->GetXaxis()->SetRangeUser(30, 1500);
+        for(auto h: h_ttbar) h->GetXaxis()->SetRangeUser(30, 1500);
       }
       PlotHists(h_data, "data", true, jet+"__"+hname+"__NORM");
       PlotHists(h_ttbar, "tt", true, jet+"__"+hname+"__NORM");
@@ -99,7 +108,7 @@ void PlotHists(vector<TH1F*> hists_, TString datamc, bool norm, TString filename
   // TGaxis::SetMaxDigits(3);
 
   hists[0]->SetTitle(" ");
-  if(norm) hists[0]->GetYaxis()->SetTitle("a.u.");
+  if(norm) hists[0]->GetYaxis()->SetTitle("#Delta N / N");
   else     hists[0]->GetYaxis()->SetTitle("events");
   hists[0]->GetYaxis()->SetTitleSize(0.06);
   hists[0]->GetXaxis()->SetTitleSize(0.05);
@@ -110,12 +119,13 @@ void PlotHists(vector<TH1F*> hists_, TString datamc, bool norm, TString filename
   hists[0]->GetXaxis()->SetNdivisions(505);
   hists[0]->GetYaxis()->SetNdivisions(505);
   hists[0]->GetYaxis()->SetRangeUser(0, ymax*1.2);
-  if(filename.Contains("tau32")) hists[0]->GetXaxis()->SetTitle("#tau_{32}");
+  if(filename.Contains("tau32")) hists[0]->GetXaxis()->SetTitle("Probe jet #tau_{32}");
   if(filename.Contains("pt")){
     if(filename.Contains("Muon")) hists[0]->GetXaxis()->SetTitle("muon p_{T}");
-    else                          hists[0]->GetXaxis()->SetTitle("probe jet p_{T}");
+    else if(filename.Contains("pt_jet")) hists[0]->GetXaxis()->SetTitle("AK4 jet p_{T}");
+    else                          hists[0]->GetXaxis()->SetTitle("Probe jet p_{T}");
   }
-  if(filename.Contains("mass")) hists[0]->GetXaxis()->SetTitle("probe jet m_{jet}");
+  if(filename.Contains("mass")) hists[0]->GetXaxis()->SetTitle("Probe jet m_{jet}");
   if(filename.Contains("MET")) hists[0]->GetXaxis()->SetTitle("p_{T}^{miss}");
   if(filename.Contains("number")) hists[0]->GetXaxis()->SetTitle("number of AK4 jets");
 
@@ -144,7 +154,7 @@ void PlotHists(vector<TH1F*> hists_, TString datamc, bool norm, TString filename
   if(isDATA) legoption = "pel";
 
   TString type = "t#bar{t}";
-  if(isDATA) type = "data";
+  if(isDATA) type = "Data";
 
   double x1 = 0.55;
   double y1 = 0.65;
@@ -153,7 +163,11 @@ void PlotHists(vector<TH1F*> hists_, TString datamc, bool norm, TString filename
 
   TLegend* leg = new TLegend(x1, y1, x1+0.3, y1+0.2);
   for(unsigned int i=0; i<hists.size(); i++){
-    leg->AddEntry(hists[i], type + " " + years[i], legoption);
+    TString leglabel = "2018";
+    if(years[i] == "2016v3") leglabel = "2016";
+    else if(years[i] == "2017v2") leglabel = "2017";
+
+    leg->AddEntry(hists[i], type + " " + leglabel, legoption);
   }
   leg->SetBorderSize(0);
   leg->Draw();
@@ -203,14 +217,15 @@ void PlotHists(vector<TH1F*> hists_, TString datamc, bool norm, TString filename
   ratios[0]->GetYaxis()->SetNdivisions(505);
   ratios[0]->SetTitle(" ");
   ratios[0]->GetYaxis()->SetRangeUser(0.2, 1.8);
-  if(filename.Contains("tau32")) ratios[0]->GetXaxis()->SetTitle("#tau_{32}");
+  if(filename.Contains("tau32")) ratios[0]->GetXaxis()->SetTitle("Probe jet #tau_{32}");
   if(filename.Contains("pt")){
-    if(filename.Contains("Muon")) ratios[0]->GetXaxis()->SetTitle("muon p_{T}");
-    else                          ratios[0]->GetXaxis()->SetTitle("probe jet p_{T}");
+    if(filename.Contains("Muon")) ratios[0]->GetXaxis()->SetTitle("Muon p_{T}");
+    else if(filename.Contains("pt_jet")) ratios[0]->GetXaxis()->SetTitle("AK4 jet p_{T}");
+    else                          ratios[0]->GetXaxis()->SetTitle("Probe jet p_{T}");
   }
-  if(filename.Contains("mass")) ratios[0]->GetXaxis()->SetTitle("probe jet m_{jet}");
+  if(filename.Contains("mass")) ratios[0]->GetXaxis()->SetTitle("Probe jet m_{jet}");
   if(filename.Contains("MET")) ratios[0]->GetXaxis()->SetTitle("p_{T}^{miss}");
-  if(filename.Contains("number")) ratios[0]->GetXaxis()->SetTitle("number of AK4 jets");
+  if(filename.Contains("number")) ratios[0]->GetXaxis()->SetTitle("Number of AK4 jets");
 
 
 

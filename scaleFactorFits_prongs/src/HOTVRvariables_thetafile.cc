@@ -2,15 +2,13 @@
 
 using namespace std;
 
-void HistCosmetics(TH1F* hist, double min);
+void HistCosmetics(TH1F* hist,TString histname);
 TString year = "2018";
 
 int main(int argc, char* argv[]){
   if(argc > 1) year = argv[1];
 
-  TString InputPath_PUPPI = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel/";
-  TString InputPath_CHS = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel_CHS/";
-  TString InputPath_HOTVR = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel_HOTVR/";
+  TString InputPath = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel_HOTVR/";
 
   std::vector<TString> MCNames {"TTbar_mergedTop_2018", "TTbar_semimerged_2018", "TTbar_notmerged_2018", "SingleTop_mergedTop_2018", "SingleTop_semimerged_2018", "SingleTop_notmerged_2018", "QCD_2018", "DYJets_2018", "WJets_2018"};
 
@@ -28,67 +26,53 @@ int main(int argc, char* argv[]){
   };
 
 
-  std::vector<TString> Jets {"PUPPI", "HOTVR"};
-  // std::vector<TString> Jets {"PUPPI"};
+  vector<TString> histdirs = {"ProbeJet_All_Pt200to250", "ProbeJet_All_Pt250to300", "ProbeJet_All_Pt300to400", "ProbeJet_All_Pt400"};
+  vector<TString> histnames = {"min_pairmass", "Nsub", "rel_ptSub_ratio"};
+  vector<TString> outnames = {"MinMass", "Nsub", "SubjetRatio"};
 
-  for(auto jet: Jets){
-    double ptmin = 300;
 
-    vector<TString> histname = {"ProbeJet_All_Pt300to400/pt", "ProbeJet_All_Pt400/pt"};
-    TString InputPath = InputPath_PUPPI;
-    if(jet == "HOTVR"){
-      InputPath = InputPath_HOTVR;
-      histname = {"ProbeJet_All_Pt200to250/pt",
-      "ProbeJet_All_Pt250to300/pt",
-      "ProbeJet_All_Pt300to400/pt",
-      "ProbeJet_All_Pt400/pt"
-      };
-      ptmin = 200;
-    }
-    if(jet == "CHS"){
-      InputPath = InputPath_CHS;
-    }
-    TFile *outputFile = new TFile("thetaFile_pt_"+year+"_"+jet+".root","RECREATE");
+  for(unsigned int i=0; i<histnames.size(); i++){
+    TFile *outputFile = new TFile("thetaFile_HOTVR_"+outnames[i]+"_"+year+".root","RECREATE");
     // first get and write data
     cout << "write data..." << endl;
     TString dataname = "uhh2.AnalysisModuleRunner.DATA.SingleMu_2018.root";
     if(year == "2016")      dataname.ReplaceAll("2018", "2016v3");
     else if(year == "2017") dataname.ReplaceAll("2018", "2017v2");
     TFile* f_data = new TFile(InputPath+dataname);
-    TH1F* h_data = (TH1F*) f_data->Get(histname[0]);
-    for(int i=1; i<histname.size(); i++){
-      TH1F* h = (TH1F*) f_data->Get(histname[i]);
+    TH1F* h_data = (TH1F*) f_data->Get(histdirs[0]+"/"+histnames[i]);
+    for(unsigned int j=1; j<histdirs.size(); j++){
+      TH1F* h = (TH1F*) f_data->Get(histdirs[j]+"/"+histnames[i]);
       h_data->Add(h);
     }
-    HistCosmetics(h_data, ptmin);
+    HistCosmetics(h_data, outnames[i]);
     outputFile->cd();
-    h_data->Write("pt__DATA");
+    h_data->Write(outnames[i]+"__DATA");
     for(auto mcname: MCNames){
       if(year == "2016")      mcname.ReplaceAll("2018", "2016v3");
       else if(year == "2017") mcname.ReplaceAll("2018", "2017v2");
       // then write nominal hist
       cout << "write " << mcname << "..." << endl;
       TFile* f_nom = new TFile(InputPath+"uhh2.AnalysisModuleRunner.MC."+mcname+".root");
-      TH1F* h_nom = (TH1F*) f_nom->Get(histname[0]);
-      for(int i=1; i<histname.size(); i++){
-        TH1F* h = (TH1F*) f_nom->Get(histname[i]);
+      TH1F* h_nom = (TH1F*) f_nom->Get(histdirs[0]+"/"+histnames[i]);
+      for(unsigned int j=1; j<histdirs.size(); j++){
+        TH1F* h = (TH1F*) f_nom->Get(histdirs[j]+"/"+histnames[i]);
         h_nom->Add(h);
       }
-      HistCosmetics(h_nom, ptmin);
+      HistCosmetics(h_nom, outnames[i]);
       outputFile->cd();
-      h_nom->Write("pt__" + mcname);
+      h_nom->Write(outnames[i]+"__" + mcname);
       for(auto sys: systematics){
         // now do all systematics
         cout << "write " << mcname << "(" << sys[0] << ")" <<"..." << endl;
         TFile * f_sys = new TFile(InputPath+sys[1]+"/"+"uhh2.AnalysisModuleRunner.MC."+mcname+".root");
-        TH1F* h_sys = (TH1F*) f_sys->Get(histname[0]);
-        for(int i=1; i<histname.size(); i++){
-          TH1F* h = (TH1F*) f_sys->Get(histname[i]);
+        TH1F* h_sys = (TH1F*) f_sys->Get(histdirs[0]+"/"+histnames[i]);
+        for(unsigned int j=1; j<histdirs.size(); j++){
+          TH1F* h = (TH1F*) f_sys->Get(histdirs[j]+"/"+histnames[i]);
           h_sys->Add(h);
         }
-        HistCosmetics(h_sys, ptmin);
+        HistCosmetics(h_sys,outnames[i]);
         outputFile->cd();
-        h_sys->Write("pt__" + mcname + "__" + sys[0]);
+        h_sys->Write(outnames[i]+"__" + mcname + "__" + sys[0]);
       }
     }
     outputFile->Close();
@@ -96,7 +80,21 @@ int main(int argc, char* argv[]){
   return 0;
 }
 
-void HistCosmetics(TH1F* hist, double min){
-  hist->Rebin(2);
-  hist->GetXaxis()->SetRangeUser(min, 1000);
+void HistCosmetics(TH1F* hist, TString histname){
+  if(histname == "MinMass"){
+    hist->Rebin(2);
+    hist->GetXaxis()->SetRangeUser(0, 300);
+  }
+  else if(histname == "Nsub"){
+    // hist->GetXaxis()->SetRangeUser(0, 500);
+    // hist->GetXaxis()->SetTitle("Muon #it{p}_{T}");
+    hist->SetTitle("Nsub");
+  }
+  else if(histname == "SubjetRatio"){
+    hist->Rebin(2);
+    hist->SetTitle("SubjetRatio");
+
+    // hist->GetXaxis()->SetRangeUser(0, 1.5);
+    // hist->GetXaxis()->SetTitle("#frac{Leading subjet #it{p}_{T}}{Probe jet #it{p}_{T}}");
+  }
 }

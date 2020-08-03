@@ -29,7 +29,7 @@ int main(int argc, char* argv[]){
 
 
   // std::vector<TString> Jets {"PUPPI", "HOTVR", "CHS"};
-  std::vector<TString> Jets {"PUPPI"};
+  std::vector<TString> Jets {"PUPPI", "HOTVR"};
 
   for(auto jet: Jets){
 
@@ -40,7 +40,17 @@ int main(int argc, char* argv[]){
       "ProbeJet_pt600_all_pass/tau32"
     };
 
+    if(jet == "HOTVR"){
+      histnames = {
+        "ProbeJet_All_Pt200to250/tau32_groomed",
+        "ProbeJet_All_Pt250to300/tau32_groomed",
+        "ProbeJet_All_Pt300to400/tau32_groomed",
+        "ProbeJet_All_Pt400/tau32_groomed",
+      };
+    }
+
     TString InputPath = InputPath_PUPPI;
+    if(jet == "HOTVR") InputPath = InputPath_HOTVR;
     TFile *outputFile = new TFile("thetaFile_tau32_incl_"+year+"_"+jet+".root","RECREATE");
     // first get and write data
     cout << "write data..." << endl;

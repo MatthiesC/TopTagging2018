@@ -28,7 +28,7 @@ int main(int argc, char* argv[]){
   };
 
 
-  std::vector<TString> Jets {"PUPPI"};
+  std::vector<TString> Jets {"PUPPI", "HOTVR"};
 
   for(auto jet: Jets){
 
@@ -39,10 +39,21 @@ int main(int argc, char* argv[]){
       "ProbeJet_pt600_all_pass/mass_sub"
     };
 
+    if(jet == "HOTVR"){
+      histnames = {
+        "ProbeJet_pt200to250_all_pass/mass_sub",
+        "ProbeJet_pt250to300_all_pass/mass_sub",
+        "ProbeJet_pt300to400_all_pass/mass_sub",
+        "ProbeJet_pt400to480_all_pass/mass_sub",
+        "ProbeJet_pt480to600_all_pass/mass_sub",
+        "ProbeJet_pt600_all_pass/mass_sub"
+      };
+    }
+
 
     TString InputPath = InputPath_PUPPI;
-
-    TFile *outputFile = new TFile("DPnote_thetaFile_tau32_"+year+"_"+jet+".root","RECREATE");
+    if(jet == "HOTVR") InputPath = InputPath_HOTVR;
+    TFile *outputFile = new TFile("DPnote_thetaFile_mass_"+year+"_"+jet+".root","RECREATE");
     // first get and write data
     cout << "write data..." << endl;
     TString dataname = "uhh2.AnalysisModuleRunner.DATA.SingleMu_2018.root";
@@ -52,7 +63,7 @@ int main(int argc, char* argv[]){
     TH1F* h_data = (TH1F*) f_data->Get(histnames[0]);
     for(unsigned int i=1; i<histnames.size(); i++) h_data->Add( (TH1F*) f_data->Get(histnames[i]) );
     outputFile->cd();
-    h_data->Write("tau32__DATA");
+    h_data->Write("mass__DATA");
     for(auto mcname: MCNames){
       if(year == "2016")      mcname.ReplaceAll("2018", "2016v3");
       else if(year == "2017") mcname.ReplaceAll("2018", "2017v2");
@@ -62,7 +73,7 @@ int main(int argc, char* argv[]){
       TH1F* h_nom = (TH1F*) f_nom->Get(histnames[0]);
       for(unsigned int i=1; i<histnames.size(); i++) h_nom->Add( (TH1F*) f_data->Get(histnames[i]) );
       outputFile->cd();
-      h_nom->Write("tau32__" + mcname);
+      h_nom->Write("mass__" + mcname);
       for(auto sys: systematics){
         // now do all systematics
         cout << "write " << mcname << "(" << sys[0] << ")" <<"..." << endl;
@@ -70,7 +81,7 @@ int main(int argc, char* argv[]){
         TH1F* h_sys = (TH1F*) f_sys->Get(histnames[0]);
         for(unsigned int i=1; i<histnames.size(); i++) h_sys->Add( (TH1F*) f_data->Get(histnames[i]) );
         outputFile->cd();
-        h_sys->Write("tau32__" + mcname + "__" + sys[0]);
+        h_sys->Write("mass__" + mcname + "__" + sys[0]);
       }
     }
     outputFile->Close();

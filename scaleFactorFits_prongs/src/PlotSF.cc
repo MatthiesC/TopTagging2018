@@ -50,8 +50,8 @@ void PlotSF(TString dir, TString jet, TString wp){
     gPad->SetLeftMargin(0.15);
     SFs_stat[i]->Draw("AP");
     SFs_stat[i]->SetTitle(" ");
-    SFs_stat[i]->GetXaxis()->SetTitle("probe jet p_{T}");
-    SFs_stat[i]->GetYaxis()->SetTitle("scale factor");
+    SFs_stat[i]->GetXaxis()->SetTitle("Probe jet #it{p}_{T}");
+    SFs_stat[i]->GetYaxis()->SetTitle("Scale factor");
     SFs_stat[i]->GetXaxis()->SetTitleOffset(1.1);
     SFs_stat[i]->GetYaxis()->SetTitleOffset(1.2);
     double xmin;
@@ -68,11 +68,28 @@ void PlotSF(TString dir, TString jet, TString wp){
     SFs_stat[i]->Draw("E2 SAME");
     SFs_stat[i]->Draw("PX SAME");
     TLegend *leg = new TLegend(0.5, 0.6, 0.85, 0.85);
-    leg->AddEntry(SFs_stat[i], "scale factor", "p");
-    leg->AddEntry(SFs_stat[i], "stat uncertainty", "f");
-    leg->AddEntry(SFs_tot[i], "total uncertainty", "f");
+    leg->AddEntry(SFs_stat[i], "Scale factor", "p");
+    leg->AddEntry(SFs_stat[i], "Stat uncertainty", "f");
+    leg->AddEntry(SFs_tot[i], "Total uncertainty", "f");
+    TString leglabel2 = procnames[i];
+    if(procnames[i].Contains("TTbar_mergedTop")) leglabel2 = "t#bar{t} merged top";
+    if(procnames[i].Contains("TTbar_semimerged")) leglabel2 = "t#bar{t} semimerged top";
+    if(procnames[i].Contains("TTbar_notmerged")) leglabel2 = "t#bar{t} unmerged top";
+    leg->AddEntry((TObject*)0, leglabel2, "");
     leg->Draw();
     gPad->RedrawAxis();
+
+    TString jettext = "AK8 PUPPI";
+    if(jet.Contains("HOTVR")) jettext = "HOTVR PUPPI";
+    TLatex* jet_label = new TLatex(3.5, 24, jettext);
+    jet_label->SetX(0.15);
+    jet_label->SetY(0.915);
+    jet_label->SetNDC();
+    jet_label->SetTextAlign(11);
+    jet_label->SetTextFont(42);
+    jet_label->SetTextSize(0.045);
+    jet_label->Draw();
+
     TString procname = procnames[i];
     if(year == "2016")      procname.ReplaceAll("2018", "2016v3");
     else if(year == "2017") procname.ReplaceAll("2018", "2017v2");
