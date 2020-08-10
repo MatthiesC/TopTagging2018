@@ -73,22 +73,25 @@ void TopJetCorrections::init(Context & ctx){
     tjet_corrector_MC->setup2017(std::make_shared<TopJetCorrector>(ctx, JERFiles::JECFilesMC(tjec_tag_2017, tjec_ver_2017, tjec_tjet_coll)));
     tjet_corrector_MC->setup2018(std::make_shared<TopJetCorrector>(ctx, JERFiles::JECFilesMC(tjec_tag_2018, tjec_ver_2018, tjec_tjet_coll)));
 
-    JERSmearing::SFtype1 JER_sf;
+    std::string sfFilename = "";
     std::string resFilename = "";
     if (year == Year::is2016v2 || year == Year::is2016v3) {
-      JER_sf = JERSmearing::SF_13TeV_Summer16_25nsV1;
+      sfFilename = "2016/Summer16_25nsV1_MC_SF_"+algo+pus+".txt"; 
       resFilename = "2016/Summer16_25nsV1_MC_PtResolution_"+algo+pus+".txt";
     } else if (year == Year::is2017v1 || year == Year::is2017v2) {
-      JER_sf = JERSmearing::SF_13TeV_Fall17_V3;
+      sfFilename = "2017/Fall17_V3_MC_SF_"+algo+pus+".txt";   
       resFilename = "2017/Fall17_V3_MC_PtResolution_"+algo+pus+".txt";
     } else if (year == Year::is2018) {
-      JER_sf = JERSmearing::SF_13TeV_Autumn18_RunABCD_V4;
+      sfFilename = "2018/Autumn18_V4_MC_SF_"+algo+pus+".txt";
       resFilename = "2018/Autumn18_V4_MC_PtResolution_"+algo+pus+".txt";
+    } else if (year == Year::is2017UL) {
+      sfFilename = "";                                                                                                                                                                                     
+      resFilename = "t";
     } else {
       throw runtime_error("Cannot find suitable jet resolution file & scale factors for this year for JetResolutionSmearer");
     }
-
-    tjet_resolution_smearer.reset(new GenericJetResolutionSmearer(ctx, "topjets", "gentopjets", JER_sf, resFilename));
+   
+    tjet_resolution_smearer.reset(new GenericJetResolutionSmearer(ctx, "topjets", "gentopjets", sfFilename, resFilename));
   }
   else{
     tjec_switcher_16.reset(new RunSwitcher(ctx, "2016"));
