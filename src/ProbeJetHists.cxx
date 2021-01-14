@@ -32,6 +32,7 @@ ProbeJetHists::ProbeJetHists(Context & ctx, const string & dirname, const TStrin
 
   book<TH1F>("mass", "Probe jet mass [GeV]", 100, 0, 500);
   book<TH1F>("mass_sub", "Soft drop mass [GeV]", 100, 0, 500);
+  book<TH1F>("mass_raw", "Raw jet mass [GeV]", 100, 0, 500);
 
   book<TH1F>("mass_SD", "Probe jet soft drop mass raw [GeV]", 100, 0, 500);
   book<TH1F>("mass_SD_Corr", "Probe jet soft drop mass corrected [GeV]", 100, 0, 500);
@@ -66,6 +67,10 @@ ProbeJetHists::ProbeJetHists(Context & ctx, const string & dirname, const TStrin
   book<TH1F>("subDeepJet", "subjets DeepJet discriminator", 100, 0., 1.);
   book<TH1F>("subDeepJet_highest", "highest subjet DeepJet discriminator", 100, 0., 1.);
 
+  book<TH1F>("ak4CSV", "AK4 jets DeepJet discriminator", 100, 0., 1.);
+  book<TH1F>("ak4DeepCSV", "AK4 jets DeepJet discriminator", 100, 0., 1.);
+  book<TH1F>("ak4DeepJet", "AK4 jets DeepJet discriminator", 100, 0., 1.);
+
   book<TH1F>("subjetPT", "PT of subjet with highest CSV", 100, 0., 1500.);
   book<TH1F>("subjethadronFlavor", "hadronFlavour of subjet with highest CSV", 100, 0., 1.);
 
@@ -98,6 +103,8 @@ ProbeJetHists::ProbeJetHists(Context & ctx, const string & dirname, const TStrin
   book<TH1F>("rel_mSub_ratio", "#frac{m_{subjet1}}{m_{subjet1}+m_{subjet2}}(mass sorted)", 50, 0, 1);
   book<TH1F>("ptSub_ratio", "p_{T, subjet1}/p_{T, subjet2}", 40, 0, 10);
   book<TH1F>("rel_ptSub_ratio", "#frac{p_{T, subjet1}}{p_{T, subjet1}+p_{T, subjet2}}", 50, 0.0, 1);
+  book<TH1F>("pt_sub_leading_true", "1st subjet is p_{T} leading", 2, -0.5, 1.5);
+  book<TH1F>("first3subtrue", "Leading 3 subjets are correct", 2, -0.5, 1.5);
 
   //scatter plots
   h_ratio_mLB_vs_mB = book<TH2D>("ratio_mLB_vs_mB", ";m_{probe jet}/m_{b-jet+#mu};m_{probe jet}/m_{b-jet}",  100, 0., 10., 1000, 0., 100.);
@@ -179,7 +186,35 @@ void ProbeJetHists::fill_probe(const Event & event, const TopJet & jet){
   hist("pt")->Fill(jet.pt(), weight);
   hist("eta")->Fill(jet.eta(), weight);
 
+
+  for(auto ak4jet: *event.jets){
+    hist("ak4CSV")->Fill(ak4jet.btag_combinedSecondaryVertex(), weight);
+    hist("ak4DeepCSV")->Fill(ak4jet.btag_DeepCSV(), weight);
+    hist("ak4DeepJet")->Fill(ak4jet.btag_DeepJet(), weight);
+  }
+
   auto subjets = jet.subjets();
+
+  if(subjets.size()){
+    double ptfirst = subjets[0].pt();
+    bool foundlargerpt = false;
+    for(unsigned int i=1; i<subjets.size(); i++){
+      if(subjets[i].pt() > ptfirst) foundlargerpt = true;
+    }
+    if(foundlargerpt) hist("pt_sub_leading_true")->Fill(0.0, weight);
+    else              hist("pt_sub_leading_true")->Fill(1.0, weight);
+  }
+  if(subjets.size() <= 3) hist("first3subtrue")->Fill(1.0, weight);
+  else{
+    double ptthird = subjets[2].pt();
+    bool foundlargerpt = false;
+    for(unsigned int i=3; i<subjets.size(); i++){
+      if(subjets[i].pt() > ptthird) foundlargerpt = true;
+    }
+    if(foundlargerpt) hist("first3subtrue")->Fill(0.0, weight);
+    else hist("first3subtrue")->Fill(1.0, weight);
+  }
+
   sort_by_pt(subjets);
 
   hist("Nsub")->Fill(subjets.size(), weight);
@@ -217,22 +252,28 @@ void ProbeJetHists::fill_probe(const Event & event, const TopJet & jet){
     hist("min_pairmass")->Fill(min_mass, weight);
   }
 
-
   LorentzVector subjet_sum(0,0,0,0);
+  LorentzVector subjet_sum_raw(0,0,0,0);
+
   for (const auto s : subjets) {
     hist("pt_subjets")->Fill(s.pt(), weight);
     subjet_sum += s.v4();
+    subjet_sum_raw += s.v4()*s.JEC_factor_raw();
   }
 
   hist("mass")->Fill(jet.v4().M(), weight);
+
   //if(subjet_sum.isTimelike())
 
   //hardcoded because of limited time (SAME VALUES IN PostSelectionModule!! ALWAYS CHANGE BOTH!)
   double softdorpmass = subjet_sum.M();
+  double softdorpmass_raw = subjet_sum_raw.M();
+
   // if(mass_scale == "up") softdorpmass *= 1.01;
   //if(mass_scale == "down") softdorpmass *= 0.99;
 
   hist("mass_sub")->Fill(softdorpmass, weight);
+  hist("mass_raw")->Fill(softdorpmass_raw, weight);
 
   //fill pdf hists
   if(fill_PDF){

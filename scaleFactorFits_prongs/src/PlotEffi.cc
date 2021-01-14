@@ -108,12 +108,20 @@ void PlotEffi(TString dir, TString jet, TString wp, TString mass){
 
     TCanvas *c = new TCanvas("c", "c", 600, 600);
     gPad->SetLeftMargin(0.15);
+    gPad->SetBottomMargin(0.12);
+
     pre_tot[i]->Draw("AP");
     pre_tot[i]->SetTitle(" ");
-    pre_tot[i]->GetXaxis()->SetTitle("Probe jet #it{p}_{T}");
-    pre_tot[i]->GetYaxis()->SetTitle("Efficiency");
+    pre_tot[i]->GetXaxis()->SetTitle("Probe jet #it{p}_{T} [GeV]");
+
+    pre_tot[i]->GetYaxis()->SetTitle("#varepsilon^{tot}");
+    if(mass == "NoMass") pre_tot[i]->GetYaxis()->SetTitle("#varepsilon");
+    else if(mass == "MassOnly") pre_tot[i]->GetYaxis()->SetTitle("#varepsilon^{mass}");
     pre_tot[i]->GetXaxis()->SetTitleOffset(1.1);
     pre_tot[i]->GetYaxis()->SetTitleOffset(1.2);
+    pre_tot[i]->GetYaxis()->SetTitleSize(0.06);
+    pre_tot[i]->GetXaxis()->SetTitleSize(0.05);
+
     double xmin;
     if(jet == "PUPPI") xmin = 300;
     else xmin = 200;
@@ -138,7 +146,7 @@ void PlotEffi(TString dir, TString jet, TString wp, TString mass){
     post_stat[i]->SetMarkerSize(1);
     post_stat[i]->Draw("P E1 SAME");
 
-    TLegend *leg = new TLegend(0.4, 0.65, 0.85, 0.85);
+    TLegend *leg = new TLegend(0.3, 0.65, 0.85, 0.85);
     if(mass == "MassOnly") leg = new TLegend(0.4, 0.25, 0.85, 0.45);
     TString laglabel = "Total tagging efficiency";
     if(mass == "NoMass") laglabel = "Efficiency excluding mass window";

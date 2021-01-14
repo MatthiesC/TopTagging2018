@@ -51,6 +51,7 @@ int main(int argc, char* argv[]){
           "480 < #it{p}_{T} < 600 GeV",
         };
       }
+      cout << directory+"uhh2.AnalysisModuleRunner.MC.TTbar_"+year_tag+".root" << endl;
       TFile* file = new TFile(directory+"uhh2.AnalysisModuleRunner.MC.TTbar_"+year_tag+".root");
 
       vector<TH1F*> h_tt_mass;
@@ -69,7 +70,7 @@ int main(int argc, char* argv[]){
       gPad->SetBottomMargin(0.1);
       double legy = 0.60;
       if(jet == "HOTVR") legy = 0.55;
-      TLegend *leg = new TLegend(0.5, legy, 0.85, 0.85);
+      TLegend *leg = new TLegend(0.4, legy, 0.85, 0.85);
       for(unsigned int i=0; i<h_tt_mass.size(); i++){
         h_tt_mass[i]->Scale(1/h_tt_mass[i]->Integral());
         h_tt_mass[i]->Rebin(2);
@@ -98,14 +99,14 @@ int main(int argc, char* argv[]){
       leg->Draw();
 
       TString t = "AK8 PUPPI";
-      if(jet == "HOTVR") t = "HOTVR";
+      if(jet == "HOTVR") t = "HOTVR PUPPI";
       TLatex* text = new TLatex(3.5, 24, t);
-      text->SetX(0.20);
-      text->SetY(0.85);
+      text->SetX(0.155);
+      text->SetY(0.935);
       text->SetNDC();
       text->SetTextAlign(13);
       text->SetTextFont(42);
-      text->SetTextSize(0.03);
+      text->SetTextSize(0.04);
       text->Draw();
       a->SaveAs("/afs/desy.de/user/s/schwarzd/Plots/TopTagging/SimulationPlots/mjet_ptbins_"+year+"_"+jet+".pdf");
 

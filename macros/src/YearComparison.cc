@@ -3,7 +3,7 @@
 
 using namespace std;
 void PlotHists(vector<TH1F*>, TString, bool, TString);
-TH1F* GetRatio(TH1F* h1, TH1F* h2);
+TH1F* GetRatio(TH1F* h1, TH1F* h2, bool isData);
 vector<TString> years = {"2016v3", "2017v2", "2018"};
 
 
@@ -126,6 +126,9 @@ void PlotHists(vector<TH1F*> hists_, TString datamc, bool norm, TString filename
     else                          hists[0]->GetXaxis()->SetTitle("Probe jet p_{T}");
   }
   if(filename.Contains("mass")) hists[0]->GetXaxis()->SetTitle("Probe jet m_{jet}");
+  if(filename.Contains("mass_sub")) hists[0]->GetXaxis()->SetTitle("Soft drop mass m_{SD}");
+  if(filename.Contains("mass_raw")) hists[0]->GetXaxis()->SetTitle("Uncorrected jet mass m_{jet}^{raw}");
+
   if(filename.Contains("MET")) hists[0]->GetXaxis()->SetTitle("p_{T}^{miss}");
   if(filename.Contains("number")) hists[0]->GetXaxis()->SetTitle("number of AK4 jets");
 
@@ -194,9 +197,9 @@ void PlotHists(vector<TH1F*> hists_, TString datamc, bool norm, TString filename
   pad2->cd();
 
   vector<TH1F*> ratios;
-  ratios.push_back(GetRatio(hists[0], hists[2]));
-  ratios.push_back(GetRatio(hists[1], hists[2]));
-  ratios.push_back(GetRatio(hists[2], hists[2]));
+  ratios.push_back(GetRatio(hists[0], hists[2], isDATA));
+  ratios.push_back(GetRatio(hists[1], hists[2], isDATA));
+  ratios.push_back(GetRatio(hists[2], hists[2], isDATA));
 
   ratios[0]->GetXaxis()->SetTickLength(0.07);
   ratios[0]->GetXaxis()->SetTitleSize(25);
@@ -254,7 +257,7 @@ void PlotHists(vector<TH1F*> hists_, TString datamc, bool norm, TString filename
 }
 
 
-TH1F* GetRatio(TH1F* h1, TH1F* h2){
+TH1F* GetRatio(TH1F* h1, TH1F* h2, bool isData){
   TH1F* ratio = (TH1F*) h1->Clone();
   int Nbins = h1->GetSize() - 2;
   for(int i=1; i<=Nbins;i++){
@@ -263,7 +266,9 @@ TH1F* GetRatio(TH1F* h1, TH1F* h2){
     double E1 = h1->GetBinError(i);
     double E2 = h2->GetBinError(i);
     if(N1==0 || N2==0){
-      ratio->SetBinContent(i, 1);
+      if(isData) ratio->SetBinContent(i, 0);
+      else       ratio->SetBinContent(i, 1);
+
       ratio->SetBinError(i, 0);
     }
     else{

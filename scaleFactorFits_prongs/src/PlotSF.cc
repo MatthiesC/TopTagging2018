@@ -48,12 +48,16 @@ void PlotSF(TString dir, TString jet, TString wp){
     SetSameCentralValue(SFs_stat[i], SFs_tot[i]);
     TCanvas *c = new TCanvas("c", "c", 600, 600);
     gPad->SetLeftMargin(0.15);
+    gPad->SetBottomMargin(0.12);
+
     SFs_stat[i]->Draw("AP");
     SFs_stat[i]->SetTitle(" ");
-    SFs_stat[i]->GetXaxis()->SetTitle("Probe jet #it{p}_{T}");
+    SFs_stat[i]->GetXaxis()->SetTitle("Probe jet #it{p}_{T} [GeV]");
     SFs_stat[i]->GetYaxis()->SetTitle("Scale factor");
     SFs_stat[i]->GetXaxis()->SetTitleOffset(1.1);
     SFs_stat[i]->GetYaxis()->SetTitleOffset(1.2);
+    SFs_stat[i]->GetYaxis()->SetTitleSize(0.06);
+    SFs_stat[i]->GetXaxis()->SetTitleSize(0.05);
     double xmin;
     if(jet == "PUPPI") xmin = 300;
     else xmin = 200;

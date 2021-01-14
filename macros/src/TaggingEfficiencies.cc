@@ -11,11 +11,11 @@ int main(int argc, char* argv[]){
   TString dir_PUPPI = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel/";
   TString dir_HOTVR = "/nfs/dust/cms/user/schwarzd/TopTagging/PostSel_HOTVR/";
 
-  TFile* tt_PUPPI = new TFile(dir_PUPPI+"uhh2.AnalysisModuleRunner.MC.TTbar_2016v3.root");
-  TFile* tt_HOTVR = new TFile(dir_HOTVR+"uhh2.AnalysisModuleRunner.MC.TTbar_2016v3.root");
+  TFile* tt_PUPPI = new TFile(dir_PUPPI+"uhh2.AnalysisModuleRunner.MC.TTbar_2018.root");
+  TFile* tt_HOTVR = new TFile(dir_HOTVR+"uhh2.AnalysisModuleRunner.MC.TTbar_2018.root");
 
-  TFile* qcd_PUPPI = new TFile(dir_PUPPI+"uhh2.AnalysisModuleRunner.MC.QCD_2016v3.root");
-  TFile* qcd_HOTVR = new TFile(dir_HOTVR+"uhh2.AnalysisModuleRunner.MC.QCD_2016v3.root");
+  TFile* qcd_PUPPI = new TFile(dir_PUPPI+"uhh2.AnalysisModuleRunner.MC.QCD_2018.root");
+  TFile* qcd_HOTVR = new TFile(dir_HOTVR+"uhh2.AnalysisModuleRunner.MC.QCD_2018.root");
 
   vector<TString> wps_PUPPI = {"wp1","wp2", "wp3", "wp4", "wp5", "wp1_btag","wp2_btag", "wp3_btag", "wp4_btag", "wp5_btag"};
   vector<TString> wps_HOTVR = {" "};
@@ -43,8 +43,8 @@ int main(int argc, char* argv[]){
     return 1;
   }
 
-  vector<TString> jetcols = {"PUPPI"};
-  // vector<TString> jetcols = {"PUPPI", "HOTVR"};
+  // vector<TString> jetcols = {"PUPPI"};
+  vector<TString> jetcols = {"PUPPI", "HOTVR"};
 
   //// ---------------------------------------------------------------------------------------------------------------------
   //// ---------------------------------------------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]){
       effi->GetZaxis()->SetTitleOffset(0.9);
       effi->GetXaxis()->SetNdivisions(505);
       effi->GetYaxis()->SetNdivisions(505);
-      effi->GetXaxis()->SetTitle("Probe jet #it{p}_{T}");
+      effi->GetXaxis()->SetTitle("Probe jet #it{p}_{T} [GeV]");
       effi->GetYaxis()->SetTitle("Efficiency");
       effi->Draw("E1");
       TString t = jet;
@@ -131,7 +131,7 @@ int main(int argc, char* argv[]){
       mist->GetZaxis()->SetTitleOffset(0.9);
       mist->GetXaxis()->SetNdivisions(505);
       mist->GetYaxis()->SetNdivisions(505);
-      mist->GetXaxis()->SetTitle("Probe jet #it{p}_{T}");
+      mist->GetXaxis()->SetTitle("Probe jet #it{p}_{T} [GeV]");
       mist->GetYaxis()->SetTitle("Mistag rate");
       mist->Draw("E1");
       text->Draw();
