@@ -20,11 +20,11 @@
 #include "UHH2/common/include/MCWeight.h"
 #include "UHH2/common/include/TriggerSelection.h"
 #include "UHH2/common/include/TopPtReweight.h"
-#include "UHH2/TopTagging/include/TopTaggingSelections.h"
-#include "UHH2/TopTagging/include/ProbeJetHists.h"
+#include "UHH2/TopTagging2018/include/TopTaggingSelections.h"
+#include "UHH2/TopTagging2018/include/ProbeJetHists.h"
 #include <UHH2/common/include/Utils.h>
-#include "UHH2/TopTagging/include/TopTaggingUtils.h"
-#include "UHH2/TopTagging/include/TopJetCorrections.h"
+#include "UHH2/TopTagging2018/include/TopTaggingUtils.h"
+#include "UHH2/TopTagging2018/include/TopJetCorrections.h"
 #include "UHH2/HOTVR/include/HOTVRJetCorrectionModule.h"
 
 using namespace std;

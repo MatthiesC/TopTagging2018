@@ -22,6 +22,7 @@ private:
 
     std::unique_ptr<YearSwitcher> tjet_corrector_MC, tjet_corrector_data;
     std::shared_ptr<RunSwitcher> tjec_switcher_16, tjec_switcher_17, tjec_switcher_18;
+    std::shared_ptr<RunSwitcher> tjec_switcher_UL16, tjec_switcher_UL17, tjec_switcher_UL18;
     std::unique_ptr<GenericJetResolutionSmearer> tjet_resolution_smearer;
 
     bool is_mc;
@@ -33,5 +34,8 @@ private:
     std::string tjec_tag_2016, tjec_ver_2016;
     std::string tjec_tag_2017, tjec_ver_2017;
     std::string tjec_tag_2018, tjec_ver_2018;
+    std::string tjec_tag_UL16, tjec_ver_UL16;
+    std::string tjec_tag_UL17, tjec_ver_UL17;
+    std::string tjec_tag_UL18, tjec_ver_UL18;
     std::string tjec_tjet_coll;
 };

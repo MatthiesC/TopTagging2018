@@ -20,7 +20,7 @@
 #include "UHH2/common/include/TTbarGen.h"
 #include <UHH2/common/include/AdditionalSelections.h>
 #include <UHH2/common/include/Utils.h>
-#include "UHH2/TopTagging/include/TopTaggingSelections.h"
+#include "UHH2/TopTagging2018/include/TopTaggingSelections.h"
 
 
 using namespace std;

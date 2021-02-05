@@ -1,4 +1,4 @@
-#include "UHH2/TopTagging/include/ProbeJetHists.h"
+#include "UHH2/TopTagging2018/include/ProbeJetHists.h"
 #include "UHH2/core/include/Event.h"
 
 #include "UHH2/common/include/TopJetIds.h"
